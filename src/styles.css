@@ -163,3 +163,59 @@
 @utility sun-glow {
   background-image: var(--gradient-sun);
 }
+
+/* ===== Motion utilities ===== */
+@keyframes kk-fade-up {
+  from { opacity: 0; transform: translate3d(0, 32px, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+@keyframes kk-slide-left {
+  from { opacity: 0; transform: translate3d(-48px, 0, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+@keyframes kk-slide-right {
+  from { opacity: 0; transform: translate3d(48px, 0, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+@keyframes kk-zoom-in {
+  from { opacity: 0; transform: scale(0.94); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes kk-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+@keyframes kk-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+@keyframes kk-shine {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.reveal { opacity: 0; will-change: transform, opacity; }
+.reveal.is-visible { animation: kk-fade-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.reveal[data-anim="left"].is-visible  { animation-name: kk-slide-left; }
+.reveal[data-anim="right"].is-visible { animation-name: kk-slide-right; }
+.reveal[data-anim="zoom"].is-visible  { animation-name: kk-zoom-in; }
+
+.kk-caret {
+  display: inline-block;
+  width: 3px;
+  margin-left: 4px;
+  background: var(--sun-deep);
+  animation: kk-blink 1s steps(1) infinite;
+  vertical-align: -0.12em;
+}
+.kk-float { animation: kk-float 6s ease-in-out infinite; }
+.kk-shine {
+  background: linear-gradient(90deg, transparent, oklch(1 0 0 / 0.35), transparent);
+  background-size: 200% 100%;
+  animation: kk-shine 3s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal, .reveal.is-visible { opacity: 1; animation: none !important; }
+  .kk-caret, .kk-float, .kk-shine { animation: none !important; }
+}
