@@ -9,8 +9,44 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TarifsRouteImport } from './routes/tarifs'
+import { Route as RepetiteursRouteImport } from './routes/repetiteurs'
+import { Route as PaiementRouteImport } from './routes/paiement'
+import { Route as OffreRouteImport } from './routes/offre'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as AProposRouteImport } from './routes/a-propos'
 import { Route as IndexRouteImport } from './routes/index'
 
+const TarifsRoute = TarifsRouteImport.update({
+  id: '/tarifs',
+  path: '/tarifs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RepetiteursRoute = RepetiteursRouteImport.update({
+  id: '/repetiteurs',
+  path: '/repetiteurs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PaiementRoute = PaiementRouteImport.update({
+  id: '/paiement',
+  path: '/paiement',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OffreRoute = OffreRouteImport.update({
+  id: '/offre',
+  path: '/offre',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AProposRoute = AProposRouteImport.update({
+  id: '/a-propos',
+  path: '/a-propos',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +55,116 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/a-propos': typeof AProposRoute
+  '/contact': typeof ContactRoute
+  '/offre': typeof OffreRoute
+  '/paiement': typeof PaiementRoute
+  '/repetiteurs': typeof RepetiteursRoute
+  '/tarifs': typeof TarifsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/a-propos': typeof AProposRoute
+  '/contact': typeof ContactRoute
+  '/offre': typeof OffreRoute
+  '/paiement': typeof PaiementRoute
+  '/repetiteurs': typeof RepetiteursRoute
+  '/tarifs': typeof TarifsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/a-propos': typeof AProposRoute
+  '/contact': typeof ContactRoute
+  '/offre': typeof OffreRoute
+  '/paiement': typeof PaiementRoute
+  '/repetiteurs': typeof RepetiteursRoute
+  '/tarifs': typeof TarifsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/a-propos'
+    | '/contact'
+    | '/offre'
+    | '/paiement'
+    | '/repetiteurs'
+    | '/tarifs'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/a-propos'
+    | '/contact'
+    | '/offre'
+    | '/paiement'
+    | '/repetiteurs'
+    | '/tarifs'
+  id:
+    | '__root__'
+    | '/'
+    | '/a-propos'
+    | '/contact'
+    | '/offre'
+    | '/paiement'
+    | '/repetiteurs'
+    | '/tarifs'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AProposRoute: typeof AProposRoute
+  ContactRoute: typeof ContactRoute
+  OffreRoute: typeof OffreRoute
+  PaiementRoute: typeof PaiementRoute
+  RepetiteursRoute: typeof RepetiteursRoute
+  TarifsRoute: typeof TarifsRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/tarifs': {
+      id: '/tarifs'
+      path: '/tarifs'
+      fullPath: '/tarifs'
+      preLoaderRoute: typeof TarifsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/repetiteurs': {
+      id: '/repetiteurs'
+      path: '/repetiteurs'
+      fullPath: '/repetiteurs'
+      preLoaderRoute: typeof RepetiteursRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/paiement': {
+      id: '/paiement'
+      path: '/paiement'
+      fullPath: '/paiement'
+      preLoaderRoute: typeof PaiementRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/offre': {
+      id: '/offre'
+      path: '/offre'
+      fullPath: '/offre'
+      preLoaderRoute: typeof OffreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/a-propos': {
+      id: '/a-propos'
+      path: '/a-propos'
+      fullPath: '/a-propos'
+      preLoaderRoute: typeof AProposRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,6 +177,12 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AProposRoute: AProposRoute,
+  ContactRoute: ContactRoute,
+  OffreRoute: OffreRoute,
+  PaiementRoute: PaiementRoute,
+  RepetiteursRoute: RepetiteursRoute,
+  TarifsRoute: TarifsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
