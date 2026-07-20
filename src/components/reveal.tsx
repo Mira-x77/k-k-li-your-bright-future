@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { createElement, useEffect, useRef, useState, type ReactNode } from "react";
 
 type Anim = "up" | "left" | "right" | "zoom";
 
@@ -10,7 +10,7 @@ export function Reveal({
   className = "",
 }: {
   children: ReactNode;
-  as?: keyof JSX.IntrinsicElements;
+  as?: keyof React.JSX.IntrinsicElements;
   anim?: Anim;
   delay?: number;
   className?: string;
@@ -40,15 +40,14 @@ export function Reveal({
     return () => io.disconnect();
   }, []);
 
-  // @ts-expect-error dynamic tag
-  return (
-    <Tag
-      ref={ref}
-      data-anim={anim}
-      className={`reveal ${visible ? "is-visible" : ""} ${className}`}
-      style={{ animationDelay: delay ? `${delay}ms` : undefined }}
-    >
-      {children}
-    </Tag>
+  return createElement(
+    Tag,
+    {
+      ref,
+      "data-anim": anim,
+      className: `reveal ${visible ? "is-visible" : ""} ${className}`,
+      style: delay ? { animationDelay: `${delay}ms` } : undefined,
+    },
+    children,
   );
 }
