@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, BadgeCheck, HeartHandshake, MapPin, Sparkles } from "lucide-react";
 import tutoringImg from "@/assets/tutoring.jpg";
+import studentImg from "@/assets/hero-student.jpg";
 import { Reveal } from "@/components/reveal";
 import { CallbackCta, SectionHeading } from "@/components/marketing";
 
@@ -26,18 +27,18 @@ export const Route = createFileRoute("/a-propos")({
 const values = [
   {
     icon: BadgeCheck,
-    title: "Sélection exigeante",
-    desc: "Chaque répétiteur est évalué sur ses résultats académiques et sur un entretien pédagogique avant de rejoindre l'équipe.",
+    title: "Exigence sur le fond",
+    desc: "Nous tenons à ce qu'un répétiteur maîtrise le programme de sa matière en Première et Terminale, séries C & D, et sache l'expliquer simplement.",
   },
   {
     icon: Sparkles,
-    title: "Méthode Lumière",
-    desc: "Diagnostic, plan personnalisé, exercices guidés puis autonomie : une progression structurée et mesurable.",
+    title: "Une même façon de travailler",
+    desc: "Diagnostic, plan de travail, exercices guidés puis autonomie : nous tenons au même fil conducteur d'une séance à l'autre.",
   },
   {
     icon: HeartHandshake,
-    title: "Éthique & bienveillance",
-    desc: "Nous choisissons des enseignants qui croient au potentiel de chaque élève, sans jamais l'humilier.",
+    title: "Bienveillance",
+    desc: "Un élève doit pouvoir dire qu'il n'a pas compris sans craindre d'être humilié. C'est pour nous la condition d'un vrai progrès.",
   },
 ];
 
@@ -67,7 +68,7 @@ function AboutPage() {
             <div className="overflow-hidden rounded-[2rem] border border-border shadow-[var(--shadow-warm)]">
               <img
                 src={tutoringImg}
-                alt="Séance de tutorat en petit groupe"
+                alt="Jeunes gens réunis autour d'une table, penchés sur des livres et des cahiers ouverts"
                 className="h-full w-full object-cover"
                 loading="lazy"
                 width={1400}
@@ -103,12 +104,12 @@ function AboutPage() {
                   "Nous évaluons les acquis et fixons des objectifs clairs dès la première séance.",
                 ],
                 [
-                  "Répétiteurs sélectionnés",
-                  "Enseignants et étudiants avancés, formés à notre méthode pédagogique.",
+                  "Deux matières, deux niveaux",
+                  "Mathématiques et physique, en Première et en Terminale des séries C & D — et rien d'autre.",
                 ],
                 [
-                  "Suivi transparent aux parents",
-                  "Rapport de progression régulier via l'application mobile.",
+                  "Des parents tenus au courant",
+                  "Nous voulons que les parents sachent où en est leur enfant, sans avoir à le deviner.",
                 ],
               ].map(([t, d], i) => (
                 <Reveal key={t} anim="up" delay={i * 90}>
@@ -143,21 +144,42 @@ function AboutPage() {
       <section className="border-y border-border bg-card/50">
         <div className="mx-auto max-w-7xl px-6 py-20">
           <SectionHeading
-            eyebrow="Nos engagements"
-            title={<>Ce qui ne se négocie pas chez nous</>}
+            eyebrow="Notre façon de travailler"
+            title={<>Ce que nous visons</>}
+            intro="Non pas des promesses de résultats, mais les principes que nous voulons tenir séance après séance."
           />
-          <div className="mt-12 grid gap-5 md:grid-cols-3">
-            {values.map(({ icon: Icon, title, desc }, i) => (
-              <Reveal key={title} anim="up" delay={i * 100}>
-                <div className="h-full rounded-2xl border border-border bg-background p-7">
-                  <div className="mb-5 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-[color:var(--ink)] text-[color:var(--sun)]">
-                    <Icon className="h-5 w-5" />
+          <div className="mt-12 grid items-center gap-10 lg:grid-cols-[1.2fr_0.8fr] lg:gap-14">
+            <div className="grid gap-5">
+              {values.map(({ icon: Icon, title, desc }, i) => (
+                <Reveal key={title} anim="up" delay={i * 100}>
+                  <div className="flex h-full gap-5 rounded-2xl border border-border bg-background p-6 sm:p-7">
+                    <div className="inline-flex h-11 w-11 flex-none items-center justify-center rounded-xl bg-[color:var(--ink)] text-[color:var(--sun)]">
+                      <Icon className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-bold">{title}</h3>
+                      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{desc}</p>
+                    </div>
                   </div>
-                  <h3 className="text-lg font-bold">{title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{desc}</p>
-                </div>
-              </Reveal>
-            ))}
+                </Reveal>
+              ))}
+            </div>
+            <Reveal anim="right" delay={120}>
+              <div className="relative mx-auto w-full max-w-sm overflow-hidden rounded-[2rem] ring-1 ring-border shadow-[var(--shadow-warm)]">
+                <img
+                  src={studentImg}
+                  alt="Élève souriant assis à son bureau, un stylo à la main, devant un cahier ouvert"
+                  className="aspect-square w-full object-cover"
+                  loading="lazy"
+                  width={900}
+                  height={900}
+                />
+                <div
+                  className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent"
+                  aria-hidden
+                />
+              </div>
+            </Reveal>
           </div>
         </div>
       </section>

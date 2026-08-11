@@ -1,10 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, Home, Phone } from "lucide-react";
 
-import logoDark from "@/assets/logo-dark.png";
 import logoLight from "@/assets/logo-light.png";
 import { PHONE_DISPLAY, PHONE_HREF } from "@/components/marketing";
-import { ThemeToggle } from "@/components/theme-toggle";
 
 const NAV_LINKS = [
   { label: "Accueil", to: "/" },
@@ -25,14 +23,7 @@ export function Logo({ className = "" }: { className?: string }) {
         alt="Stage Kékéli"
         width={320}
         height={96}
-        className="h-20 w-auto max-w-[min(360px,68vw)] object-contain object-left md:h-28 dark:hidden"
-      />
-      <img
-        src={logoDark}
-        alt="Stage Kékéli"
-        width={320}
-        height={96}
-        className="hidden h-20 w-auto max-w-[min(360px,68vw)] object-contain object-left md:h-28 dark:block"
+        className="h-20 w-auto max-w-[min(360px,68vw)] object-contain object-left md:h-28"
       />
     </Link>
   );
@@ -72,7 +63,6 @@ export function SiteHeader() {
           </div>
         </nav>
         <div className="flex items-center justify-end gap-3">
-          <ThemeToggle />
           <Link
             to="/contact"
             className="hidden text-sm font-medium text-muted-foreground transition hover:text-foreground sm:inline-flex"

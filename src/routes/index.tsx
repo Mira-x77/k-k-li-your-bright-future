@@ -73,9 +73,9 @@ const HERO_FEATURES = [
 ];
 
 const FLOATING_BADGES = [
-  { icon: Lightbulb, className: "left-0 top-8 bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300" },
-  { icon: Award, className: "right-4 top-16 bg-violet-100 text-violet-700 dark:bg-violet-950 dark:text-violet-300" },
-  { icon: Target, className: "bottom-16 left-1/4 bg-orange-100 text-orange-700 dark:bg-orange-950 dark:text-orange-300" },
+  { icon: Lightbulb, className: "left-0 top-8 bg-emerald-100 text-emerald-700" },
+  { icon: Award, className: "right-4 top-16 bg-violet-100 text-violet-700" },
+  { icon: Target, className: "bottom-16 left-1/4 bg-orange-100 text-orange-700" },
 ];
 
 function Hero() {
@@ -85,7 +85,7 @@ function Hero() {
         src={classroomBg}
         alt=""
         aria-hidden
-        className="pointer-events-none absolute inset-0 h-full w-full object-cover object-center opacity-100 dark:opacity-70"
+        className="pointer-events-none absolute inset-0 h-full w-full object-cover object-center opacity-100"
       />
       <div
         className="pointer-events-none absolute inset-0 bg-gradient-to-r from-background from-0% via-background/90 via-40% to-transparent to-80%"
@@ -204,7 +204,7 @@ function Teasers() {
       to: "/repetiteurs" as const,
       eyebrow: "Nos répétiteurs",
       title: "Des enseignants qui inspirent",
-      desc: "Sélectionnés pour leur excellence académique et leur sens de la transmission.",
+      desc: "Des répétiteurs de mathématiques et de physique, pour la Première et la Terminale, séries C & D.",
       icon: Users,
     },
     {
@@ -285,7 +285,7 @@ function WhySection() {
               <img
                 src={lateNightImg}
                 alt="Un élève endormi sur son bureau, la tête posée sur ses bras, au milieu de feuilles éparpillées, de notes autocollantes et d'un ordinateur portable"
-                className="aspect-square w-full object-cover dark:opacity-85"
+                className="aspect-square w-full object-cover"
                 loading="lazy"
                 width={735}
                 height={735}
@@ -306,9 +306,9 @@ function WhySection() {
               Travailler beaucoup, sans savoir si l'on travaille juste
             </h2>
             <p className="mt-5 leading-relaxed text-muted-foreground">
-              Un chapitre repris une troisième fois, des feuilles volantes qui s'empilent, un soir de
-              plus à relire sans être sûr d'avoir compris. Le problème est rarement l'effort — c'est
-              de ne pas savoir où le porter, et de devoir le décider seul.
+              Un chapitre repris une troisième fois, des feuilles volantes qui s'empilent, un soir
+              de plus à relire sans être sûr d'avoir compris. Le problème est rarement l'effort —
+              c'est de ne pas savoir où le porter, et de devoir le décider seul.
             </p>
             <ul className="mt-8 space-y-4">
               {WHY_POINTS.map(([title, desc], i) => (

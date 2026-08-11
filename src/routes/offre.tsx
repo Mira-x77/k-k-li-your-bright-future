@@ -88,8 +88,8 @@ const method = [
   },
   {
     icon: LineChart,
-    title: "Suivi mesuré",
-    desc: "Rapport hebdomadaire, bilans mensuels et point trimestriel aux parents.",
+    title: "Suivi partagé",
+    desc: "Nous tenons à ce que l'élève et ses parents sachent ce qui progresse et ce qui reste à travailler.",
   },
 ];
 
@@ -308,7 +308,7 @@ function OffrePage() {
 
       <section className="mx-auto max-w-7xl px-6 py-20">
         <SectionHeading
-          eyebrow="Méthode Lumière"
+          eyebrow="Notre approche"
           title={<>Trois étapes pour révéler chaque élève</>}
         />
         <div className="mt-12 grid items-center gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-14">
@@ -317,7 +317,7 @@ function OffrePage() {
               <img
                 src={studyGroupImg}
                 alt="Trois élèves assis à une table de bibliothèque devant un ordinateur portable, l'un montrant un détail à l'écran"
-                className="aspect-[3/2] w-full object-cover dark:opacity-85"
+                className="aspect-[3/2] w-full object-cover"
                 loading="lazy"
                 width={630}
                 height={420}

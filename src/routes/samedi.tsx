@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, BookOpen, CalendarDays, Check, Clock, Target, Users } from "lucide-react";
 import groupTableImg from "@/assets/study-group-table.png";
+import { SESSION_STEPS as SEANCE_STEPS } from "@/components/marketing";
 import { Reveal } from "@/components/reveal";
 
 export const Route = createFileRoute("/samedi")({
@@ -117,21 +118,39 @@ function SamediPage() {
             </p>
           </div>
         </Reveal>
-        <div className="mt-12 grid gap-5 sm:grid-cols-2">
-          {SESSION_STEPS.map(({ icon: Icon, title, desc }, i) => (
-            <Reveal key={title} anim="up" delay={i * 80}>
-              <div className="h-full rounded-2xl border border-border bg-card p-7">
-                <div className="mb-5 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-[color:var(--ink)] text-[color:var(--sun)]">
-                  <Icon className="h-5 w-5" />
+        <div className="mt-12 grid items-center gap-10 lg:grid-cols-[0.75fr_1.25fr] lg:gap-14">
+          <Reveal anim="left">
+            <div className="relative mx-auto w-full max-w-sm overflow-hidden rounded-[2rem] ring-1 ring-border shadow-[var(--shadow-warm)]">
+              <img
+                src={groupTableImg}
+                alt="Quatre élèves réunis autour d'une table ronde avec un ordinateur portable, des cahiers et des tasses, en train de travailler ensemble"
+                className="aspect-[3/4] w-full object-cover"
+                loading="lazy"
+                width={735}
+                height={980}
+              />
+              <div
+                className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent"
+                aria-hidden
+              />
+            </div>
+          </Reveal>
+          <div className="grid gap-5 sm:grid-cols-2">
+            {SESSION_STEPS.map(({ icon: Icon, title, desc }, i) => (
+              <Reveal key={title} anim="up" delay={i * 80}>
+                <div className="h-full rounded-2xl border border-border bg-card p-7">
+                  <div className="mb-5 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-[color:var(--ink)] text-[color:var(--sun)]">
+                    <Icon className="h-5 w-5" />
+                  </div>
+                  <div className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
+                    Temps {i + 1}
+                  </div>
+                  <h3 className="mt-1 text-xl font-bold">{title}</h3>
+                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{desc}</p>
                 </div>
-                <div className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">
-                  Temps {i + 1}
-                </div>
-                <h3 className="mt-1 text-xl font-bold">{title}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{desc}</p>
-              </div>
-            </Reveal>
-          ))}
+              </Reveal>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -169,6 +188,31 @@ function SamediPage() {
                       </li>
                     ))}
                   </ul>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+
+          <div className="mx-auto mt-5 grid max-w-4xl gap-5 sm:grid-cols-2">
+            {SEANCE_STEPS.map((step, i) => (
+              <Reveal key={step.title} anim="up" delay={i * 80}>
+                <div className="h-full rounded-2xl border border-border bg-background p-7">
+                  <div className="flex items-center gap-3">
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[color:var(--sun-deep)] text-xs font-bold text-white">
+                      {i + 1}
+                    </span>
+                    <h3 className="text-lg font-bold leading-snug">{step.title}</h3>
+                  </div>
+                  <ol className="mt-5 space-y-3">
+                    {step.points.map((point, j) => (
+                      <li key={point} className="flex gap-3">
+                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[color:var(--sun)]/30 text-[11px] font-bold text-[color:var(--sun-deep)]">
+                          {j + 1}
+                        </span>
+                        <span className="text-sm leading-relaxed text-foreground/85">{point}</span>
+                      </li>
+                    ))}
+                  </ol>
                 </div>
               </Reveal>
             ))}

@@ -186,7 +186,7 @@ function PricingPage() {
         <SectionHeading
           eyebrow="Comment s'inscrire"
           title={<>Trois étapes, sans détour</>}
-          intro="De votre premier message à la première séance, le parcours est volontairement court."
+          intro="De votre premier message à la première séance, voici comment se passe l'inscription."
         />
         <div className="mt-12 grid gap-5 md:grid-cols-3">
           {[
@@ -196,7 +196,7 @@ function PricingPage() {
             },
             {
               t: "Nous cadrons le programme",
-              d: "Un répétiteur fait le point sur les acquis de votre enfant et propose un plan de travail écrit.",
+              d: "Un répétiteur fait le point avec vous sur la classe, les matières et les chapitres à travailler.",
             },
             {
               t: "Inscription et démarrage",

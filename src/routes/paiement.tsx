@@ -38,7 +38,7 @@ const PAYMENT_FAQ: FaqItem[] = [
   },
   {
     q: "Comment obtenir un justificatif ?",
-    a: "Un reçu numérique est envoyé par SMS immédiatement après la transaction, et reste disponible dans l'espace parent de l'application. Une attestation annuelle peut être délivrée sur demande.",
+    a: "Un reçu numérique est envoyé par SMS après la transaction. Pour tout autre justificatif, appelez-nous au +228 92 09 35 07.",
   },
   {
     q: "Le paiement est-il sécurisé ?",
@@ -150,8 +150,8 @@ function PaymentPage() {
                   },
                   {
                     icon: Receipt,
-                    t: "Reçu numérique immédiat",
-                    d: "Envoyé par SMS et disponible à tout moment dans l'espace parent.",
+                    t: "Reçu numérique par SMS",
+                    d: "Envoyé sur le téléphone du parent après la transaction.",
                   },
                   {
                     icon: ShieldCheck,
@@ -314,8 +314,8 @@ function PaymentPage() {
           <SectionHeading eyebrow="Moyens de paiement" title={<>Payez comme cela vous arrange</>} />
           <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {[
-              { t: "MTN Mobile Money", d: "Confirmation par code USSD, reçu SMS immédiat." },
-              { t: "Moov Money", d: "Même parcours, même délai de confirmation." },
+              { t: "MTN Mobile Money", d: "Confirmation par code USSD, puis reçu par SMS." },
+              { t: "Moov Money", d: "Même parcours de confirmation." },
               { t: "Orange Money", d: "Disponible pour les règlements mensuels et annuels." },
               {
                 t: "Virement ou espèces",

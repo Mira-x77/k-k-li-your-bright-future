@@ -30,15 +30,15 @@ export const Route = createFileRoute("/contact")({
 const CONTACT_FAQ: FaqItem[] = [
   {
     q: "Quelles classes accompagnez-vous ?",
-    a: "Uniquement les classes de Première et de Terminale des séries C & D. Précisez la classe de votre enfant dans le formulaire pour que nous vous orientions vers le bon groupe.",
+    a: "Uniquement les classes de Première et de Terminale des séries C & D. Précisez la classe de votre enfant dans le formulaire pour que nous puissions vous répondre précisément.",
   },
   {
     q: "Que faut-il préparer pour le premier échange ?",
-    a: "La classe de votre enfant et les chapitres de mathématiques ou de physique qui posent difficulté, avec si possible ses derniers bulletins. Cela nous permet de proposer un plan de travail précis.",
+    a: "La classe de votre enfant et les chapitres de mathématiques ou de physique qui posent difficulté, avec si possible ses derniers bulletins. Cela nous permet d'en parler concrètement dès le premier échange.",
   },
   {
     q: "Prenez-vous des inscriptions en cours d'année ?",
-    a: "Oui, à tout moment de l'année scolaire, dans la limite des places disponibles dans chaque groupe de niveau.",
+    a: "Il est possible de nous rejoindre en cours d'année scolaire. Appelez-nous pour que nous voyions ensemble ce qui peut être organisé.",
   },
 ];
 
@@ -154,7 +154,8 @@ function ContactPage() {
           >
             <h2 className="text-xl font-black tracking-tight">Nous écrire</h2>
             <p className="mt-2 text-sm text-muted-foreground">
-              Remplissez ce formulaire et nous reviendrons vers vous.
+              Renseignez la classe, les matières et vos disponibilités — ou appelez-nous
+              directement au {PHONE_DISPLAY}.
             </p>
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
               <Field label="Nom du parent" placeholder="Kokou A." />

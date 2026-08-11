@@ -164,7 +164,7 @@ function TutorsPage() {
                 Notre engagement
               </div>
               <h2 className="mt-4 text-4xl md:text-5xl">
-                Une équipe <span className="italic">exigeante</span>, choisie avec soin.
+                Ce à quoi nous <span className="italic">tenons</span>.
               </h2>
             </div>
           </Reveal>
