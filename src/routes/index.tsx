@@ -1,17 +1,30 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import heroImg from "@/assets/hero-student.jpg";
+import classroomBg from "@/assets/hero-classroom.png";
 import tutoringImg from "@/assets/tutoring.jpg";
+import lateNightImg from "@/assets/student-late-night.png";
 import {
   ArrowRight,
+  Award,
   BookOpen,
   GraduationCap,
+  Lightbulb,
+  Phone,
+  Search,
   ShieldCheck,
-  Sparkles,
-  Clock,
+  Target,
   Users,
 } from "lucide-react";
 import { Reveal } from "@/components/reveal";
 import { Typewriter } from "@/components/typewriter";
+import {
+  CallbackCta,
+  FaqSection,
+  PHONE_DISPLAY,
+  PHONE_HREF,
+  SectionHeading,
+  SessionFlow,
+} from "@/components/marketing";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -20,7 +33,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Cours de répétition et accompagnement scolaire à Lomé, Togo. Collège & Lycée — répétiteurs qualifiés, suivi personnalisé, paiement Mobile Money.",
+          "Cours de répétition en mathématiques et en physique à Lomé, Togo. Première et Terminale, séries C & D — 2 500 FCFA par mois et par matière, accompagnement personnalisé, paiement Mobile Money.",
       },
     ],
   }),
@@ -31,135 +44,148 @@ function Home() {
   return (
     <>
       <Hero />
-      <Trust />
       <Teasers />
+      <WhySection />
+      <SessionFlow />
       <FinalCTA />
+      <FaqSection />
+      <CallbackCta />
     </>
   );
 }
 
+const HERO_FEATURES = [
+  {
+    label: "Nouveau",
+    title: "Avez-vous choisi le bon accompagnement ?",
+    to: "/offre" as const,
+  },
+  {
+    label: "Répétiteurs",
+    title: "Où voulez-vous progresser aujourd'hui ?",
+    to: "/repetiteurs" as const,
+  },
+  {
+    label: "Parents",
+    title: "Offrez la lumière — accompagnez votre enfant",
+    to: "/tarifs" as const,
+  },
+];
+
+const FLOATING_BADGES = [
+  { icon: Lightbulb, className: "left-0 top-8 bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300" },
+  { icon: Award, className: "right-4 top-16 bg-violet-100 text-violet-700 dark:bg-violet-950 dark:text-violet-300" },
+  { icon: Target, className: "bottom-16 left-1/4 bg-orange-100 text-orange-700 dark:bg-orange-950 dark:text-orange-300" },
+];
+
 function Hero() {
   return (
-    <section className="relative overflow-hidden">
-      <div className="absolute inset-0 sun-glow opacity-70" aria-hidden />
-      <div className="relative mx-auto grid max-w-7xl gap-14 px-6 py-20 md:grid-cols-[1.05fr_0.95fr] md:py-28 lg:py-32">
-        <div className="flex flex-col justify-center">
-          <Reveal anim="left">
-            <span className="inline-flex w-fit items-center gap-2 rounded-full border border-border bg-card/70 px-3 py-1 text-xs font-medium uppercase tracking-[0.18em] text-foreground/70 backdrop-blur">
-              <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--sun-deep)]" />
-              Cours de répétition — Lomé, Togo
-            </span>
-          </Reveal>
-          <Reveal anim="left" delay={100}>
-            <h1 className="mt-6 text-5xl leading-[1.02] md:text-6xl lg:text-7xl">
-              La lumière qui guide
-              <br />
-              vers la{" "}
-              <span className="italic text-[color:var(--sun-deep)]">
-                <Typewriter
-                  words={["réussite.", "confiance.", "excellence.", "lumière."]}
+    <section className="hero-clean-bg relative overflow-hidden">
+      <img
+        src={classroomBg}
+        alt=""
+        aria-hidden
+        className="pointer-events-none absolute inset-0 h-full w-full object-cover object-center opacity-100 dark:opacity-70"
+      />
+      <div
+        className="pointer-events-none absolute inset-0 bg-gradient-to-r from-background from-0% via-background/90 via-40% to-transparent to-80%"
+        aria-hidden
+      />
+      <div
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background to-transparent"
+        aria-hidden
+      />
+      <div className="relative mx-auto max-w-7xl px-6 pb-4 pt-10 md:pt-14 lg:pt-16">
+        <div className="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
+          <div className="max-w-xl">
+            <Reveal anim="left">
+              <h1 className="text-foreground">
+                <span
+                  className="block text-4xl italic leading-[1.05] sm:text-5xl lg:text-6xl"
+                  style={{ fontFamily: "var(--font-display)", fontWeight: 500 }}
+                >
+                  Inspirer
+                </span>
+                <span
+                  className="-mt-1 block text-5xl font-black uppercase leading-[0.95] tracking-tight sm:text-6xl lg:text-7xl"
+                  style={{ fontFamily: "var(--font-sans)" }}
+                >
+                  la{" "}
+                  <Typewriter
+                    words={["réussite", "confiance", "lumière", "excellence"]}
+                    className="inline-block min-w-[7ch] align-top text-[color:var(--sun-deep)]"
+                  />
+                </span>
+              </h1>
+            </Reveal>
+            <Reveal anim="left" delay={80}>
+              <p className="mt-6 max-w-lg text-base leading-relaxed text-muted-foreground sm:text-lg">
+                Trouvez l'accompagnement qu'il vous faut en mathématiques et en physique — pour les
+                élèves de Première et Terminale, séries C & D, à Lomé.
+              </p>
+            </Reveal>
+            <Reveal anim="up" delay={160}>
+              <form
+                className="mt-10 flex flex-col gap-3 rounded-full bg-card p-2 shadow-[var(--shadow-search)] ring-1 ring-border/60 sm:flex-row sm:items-center sm:pl-6"
+                onSubmit={(e) => e.preventDefault()}
+              >
+                <label htmlFor="hero-search" className="sr-only">
+                  Rechercher une matière ou un niveau
+                </label>
+                <input
+                  id="hero-search"
+                  type="search"
+                  placeholder="Cherchez une matière, un niveau…"
+                  className="min-w-0 flex-1 bg-transparent px-4 py-3 text-sm text-foreground outline-none placeholder:text-muted-foreground sm:px-0 sm:py-2.5"
                 />
-              </span>
-            </h1>
-          </Reveal>
-          <Reveal anim="left" delay={200}>
-            <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">
-              <em>« Kékéli »</em> signifie la lumière en éwé. Nous accompagnons chaque
-              élève du collège et du lycée avec des répétiteurs qualifiés, un suivi
-              personnalisé et un rapport transparent aux parents.
-            </p>
-          </Reveal>
-          <Reveal anim="up" delay={300}>
-            <div className="mt-9 flex flex-wrap items-center gap-4">
-              <Link
-                to="/tarifs"
-                className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3.5 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-warm)] transition hover:-translate-y-0.5 hover:opacity-90"
-              >
-                Inscrire mon enfant <ArrowRight className="h-4 w-4" />
-              </Link>
-              <Link
-                to="/offre"
-                className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-6 py-3.5 text-sm font-semibold text-foreground transition hover:bg-muted"
-              >
-                Découvrir nos matières
-              </Link>
-            </div>
-          </Reveal>
-          <Reveal anim="up" delay={400}>
-            <dl className="mt-12 grid max-w-lg grid-cols-3 gap-6 border-t border-border pt-8">
-              {[
-                ["+250", "élèves accompagnés"],
-                ["12", "matières enseignées"],
-                ["96%", "de parents satisfaits"],
-              ].map(([n, l]) => (
-                <div key={l}>
-                  <dt
-                    className="font-display text-3xl text-foreground"
-                    style={{ fontFamily: "var(--font-display)" }}
-                  >
-                    {n}
-                  </dt>
-                  <dd className="mt-1 text-xs uppercase tracking-wider text-muted-foreground">
-                    {l}
-                  </dd>
+                <Link
+                  to="/repetiteurs"
+                  className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-[color:var(--sage)] px-7 py-3.5 text-sm font-semibold text-white transition hover:opacity-90"
+                >
+                  <Search className="h-4 w-4" />
+                  Rechercher
+                </Link>
+              </form>
+            </Reveal>
+          </div>
+
+          <Reveal anim="right" delay={120}>
+            <div className="relative mx-auto max-w-md lg:max-w-none lg:mx-0">
+              <div className="relative overflow-hidden rounded-[2rem] bg-card/40 shadow-[var(--shadow-soft)]">
+                <img
+                  src={heroImg}
+                  alt="Élève en cours de répétition"
+                  className="aspect-[4/5] w-full object-cover"
+                  width={900}
+                  height={1125}
+                />
+              </div>
+              {FLOATING_BADGES.map(({ icon: Icon, className }, i) => (
+                <div
+                  key={i}
+                  className={`absolute flex h-14 w-14 items-center justify-center rounded-2xl shadow-[var(--shadow-soft)] ${className}`}
+                >
+                  <Icon className="h-6 w-6" strokeWidth={1.75} />
                 </div>
               ))}
-            </dl>
+            </div>
           </Reveal>
         </div>
-        <Reveal anim="right" delay={150}>
-          <div className="relative">
-            <div
-              className="kk-float absolute -right-6 -top-6 h-64 w-64 rounded-full bg-[color:var(--sun)] blur-3xl opacity-60"
-              aria-hidden
-            />
-            <div className="relative overflow-hidden rounded-[2rem] border border-border shadow-[var(--shadow-warm)]">
-              <img
-                src={heroImg}
-                alt="Élève souriant au travail"
-                className="h-full w-full object-cover transition duration-700 hover:scale-[1.03]"
-                width={1400}
-                height={1600}
-              />
-            </div>
-            <div className="absolute -bottom-6 -left-6 hidden max-w-[16rem] rounded-2xl border border-border bg-card p-4 shadow-[var(--shadow-soft)] sm:block">
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--sun)] text-[color:var(--ink)]">
-                  <GraduationCap className="h-5 w-5" />
-                </div>
-                <div>
-                  <div className="text-sm font-semibold">Suivi personnalisé</div>
-                  <div className="text-xs text-muted-foreground">
-                    Rapport hebdomadaire aux parents
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </Reveal>
       </div>
-    </section>
-  );
-}
 
-function Trust() {
-  const items = [
-    { icon: Users, label: "Répétiteurs vérifiés" },
-    { icon: ShieldCheck, label: "Paiement sécurisé Mobile Money" },
-    { icon: Clock, label: "Séances flexibles, 7j/7" },
-    { icon: Sparkles, label: "Méthode « Lumière »" },
-  ];
-  return (
-    <section className="border-y border-border bg-card/50">
-      <div className="mx-auto grid max-w-7xl grid-cols-2 gap-6 px-6 py-8 md:grid-cols-4">
-        {items.map(({ icon: Icon, label }, i) => (
-          <Reveal key={label} anim="up" delay={i * 90}>
-            <div className="flex items-center gap-3">
-              <Icon className="h-5 w-5 text-[color:var(--sun-deep)]" />
-              <span className="text-sm font-medium text-foreground/80">{label}</span>
-            </div>
-          </Reveal>
-        ))}
+      <div className="mx-auto max-w-7xl px-6 pb-12 pt-8">
+        <div className="grid gap-8 border-t border-border/50 pt-10 md:grid-cols-3 md:gap-0 md:divide-x md:divide-border/50">
+          {HERO_FEATURES.map(({ label, title, to }, i) => (
+            <Reveal key={to} anim="up" delay={i * 80}>
+              <Link to={to} className="group block px-0 md:px-8 first:md:pl-0 last:md:pr-0">
+                <p className="text-xs font-medium text-[color:var(--sage)]">{label}</p>
+                <h2 className="mt-2 font-sans text-lg font-bold leading-snug text-foreground transition group-hover:text-[color:var(--sun-deep)] sm:text-xl">
+                  {title}
+                </h2>
+              </Link>
+            </Reveal>
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -170,8 +196,8 @@ function Teasers() {
     {
       to: "/offre" as const,
       eyebrow: "Notre offre",
-      title: "12 matières, du Collège à la Terminale",
-      desc: "Diagnostic initial, plan personnalisé, séances régulières animées par des répétiteurs qualifiés.",
+      title: "Mathématiques et physique, séries C & D",
+      desc: "Diagnostic initial, plan personnalisé et séances régulières animées par un répétiteur.",
       icon: BookOpen,
     },
     {
@@ -185,7 +211,12 @@ function Teasers() {
       to: "/tarifs" as const,
       eyebrow: "Tarifs",
       title: "Une grille simple et transparente",
-      desc: "À partir de 15 000 FCFA/mois pour le collège. Cours particuliers sur devis.",
+      desc: (
+        <>
+          <strong className="font-black text-foreground">2 500 FCFA par mois et par matière</strong>
+          , ou 22 500 FCFA par an et par matière. Inscription : 1 500 FCFA, frais uniques.
+        </>
+      ),
       icon: GraduationCap,
     },
     {
@@ -197,33 +228,28 @@ function Teasers() {
     },
   ];
   return (
-    <section className="mx-auto max-w-7xl px-6 py-24">
-      <Reveal>
-        <div className="mx-auto max-w-2xl text-center">
-          <div className="text-xs font-semibold uppercase tracking-[0.24em] text-[color:var(--sun-deep)]">
-            Explorer Stage Kékéli
-          </div>
-          <h2 className="mt-4 text-4xl md:text-5xl">
-            Tout ce qu'il faut pour <span className="italic">réussir</span>.
-          </h2>
-        </div>
-      </Reveal>
-      <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+    <section className="mx-auto max-w-7xl px-6 py-20">
+      <SectionHeading
+        eyebrow="Explorer Stage Kékéli"
+        title={<>Tout ce qu'il faut pour réussir</>}
+        intro="Un parcours complet, du diagnostic initial au suivi transmis aux parents."
+      />
+      <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {cards.map(({ icon: Icon, ...c }, i) => (
-          <Reveal key={c.to} anim="up" delay={i * 100}>
+          <Reveal key={c.to} anim="up" delay={i * 90}>
             <Link
               to={c.to}
-              className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card p-7 transition duration-300 hover:-translate-y-1 hover:shadow-[var(--shadow-warm)]"
+              className="group flex h-full flex-col rounded-2xl border border-border bg-card p-6 transition duration-300 hover:-translate-y-1 hover:border-[color:var(--sun-deep)]/40 hover:shadow-[var(--shadow-warm)]"
             >
-              <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-[color:var(--sun)]/30 text-[color:var(--sun-deep)] transition group-hover:bg-[color:var(--sun)]">
-                <Icon className="h-6 w-6" />
+              <div className="mb-5 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-[color:var(--sun)]/25 text-[color:var(--sun-deep)] transition group-hover:bg-[color:var(--sun)]">
+                <Icon className="h-5 w-5" />
               </div>
-              <div className="text-xs font-semibold uppercase tracking-[0.2em] text-[color:var(--sun-deep)]">
+              <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-[color:var(--sun-deep)]">
                 {c.eyebrow}
               </div>
-              <h3 className="mt-2 text-xl">{c.title}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{c.desc}</p>
-              <div className="mt-auto pt-6 text-sm font-semibold text-foreground inline-flex items-center gap-1 transition group-hover:gap-2">
+              <h3 className="mt-2 text-lg font-bold leading-snug">{c.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{c.desc}</p>
+              <div className="mt-auto inline-flex items-center gap-1 pt-6 text-sm font-bold text-foreground transition group-hover:gap-2">
                 En savoir plus <ArrowRight className="h-4 w-4" />
               </div>
             </Link>
@@ -234,9 +260,91 @@ function Teasers() {
   );
 }
 
+const WHY_POINTS = [
+  [
+    "Savoir d'où l'on part",
+    "Le diagnostic de la première séance situe ce qui est acquis et ce qui ne l'est pas, avant d'ajouter du travail.",
+  ],
+  [
+    "Savoir quoi travailler d'abord",
+    "Un plan de travail par matière, en mathématiques comme en physique, pour ne plus ouvrir ses cahiers au hasard.",
+  ],
+  [
+    "Ne pas rester bloqué seul",
+    "Un répétiteur avec qui reprendre le raisonnement, et pas seulement la réponse.",
+  ],
+];
+
+function WhySection() {
+  return (
+    <section>
+      <div className="mx-auto grid max-w-7xl gap-12 px-6 pb-20 md:grid-cols-2 md:items-center md:gap-16">
+        <Reveal anim="left">
+          <div className="relative mx-auto w-full max-w-md">
+            <div className="relative overflow-hidden rounded-[2rem] ring-1 ring-border shadow-[var(--shadow-warm)]">
+              <img
+                src={lateNightImg}
+                alt="Un élève endormi sur son bureau, la tête posée sur ses bras, au milieu de feuilles éparpillées, de notes autocollantes et d'un ordinateur portable"
+                className="aspect-square w-full object-cover dark:opacity-85"
+                loading="lazy"
+                width={735}
+                height={735}
+              />
+              <div
+                className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent"
+                aria-hidden
+              />
+            </div>
+          </div>
+        </Reveal>
+        <Reveal anim="right">
+          <div>
+            <div className="text-xs font-bold uppercase tracking-[0.24em] text-[color:var(--sun-deep)]">
+              Pourquoi Stage Kékéli existe
+            </div>
+            <h2 className="mt-4 text-3xl font-black tracking-tight sm:text-4xl md:text-5xl">
+              Travailler beaucoup, sans savoir si l'on travaille juste
+            </h2>
+            <p className="mt-5 leading-relaxed text-muted-foreground">
+              Un chapitre repris une troisième fois, des feuilles volantes qui s'empilent, un soir de
+              plus à relire sans être sûr d'avoir compris. Le problème est rarement l'effort — c'est
+              de ne pas savoir où le porter, et de devoir le décider seul.
+            </p>
+            <ul className="mt-8 space-y-4">
+              {WHY_POINTS.map(([title, desc], i) => (
+                <Reveal key={title} anim="up" delay={i * 90}>
+                  <li className="flex gap-4">
+                    <div className="mt-1.5 h-2 w-2 flex-none rounded-full bg-[color:var(--sun-deep)]" />
+                    <div>
+                      <div className="font-bold">{title}</div>
+                      <div className="mt-0.5 text-sm leading-relaxed text-muted-foreground">
+                        {desc}
+                      </div>
+                    </div>
+                  </li>
+                </Reveal>
+              ))}
+            </ul>
+            <p className="mt-8 max-w-lg text-sm leading-relaxed text-foreground/85">
+              Nous ne promettons pas de raccourci. Nous proposons un cadre, de la régularité, et
+              quelqu'un à côté de l'élève.
+            </p>
+            <Link
+              to="/offre"
+              className="mt-7 inline-flex items-center gap-2 rounded-full border border-border bg-background px-6 py-3.5 text-sm font-bold text-foreground transition hover:bg-muted"
+            >
+              Voir comment nous travaillons <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
 function FinalCTA() {
   return (
-    <section className="bg-card/60 border-y border-border">
+    <section className="border-y border-border bg-card/60">
       <div className="mx-auto grid max-w-7xl gap-12 px-6 py-24 md:grid-cols-2 md:items-center">
         <Reveal anim="left">
           <div className="overflow-hidden rounded-[2rem] border border-border shadow-[var(--shadow-warm)]">
@@ -252,28 +360,30 @@ function FinalCTA() {
         </Reveal>
         <Reveal anim="right">
           <div>
-            <div className="text-xs font-semibold uppercase tracking-[0.24em] text-[color:var(--sun-deep)]">
+            <div className="text-xs font-bold uppercase tracking-[0.24em] text-[color:var(--sun-deep)]">
               Prêts à commencer ?
             </div>
-            <h2 className="mt-4 text-4xl md:text-5xl">
-              Faisons briller <span className="italic">le potentiel</span> de votre enfant.
+            <h2 className="mt-4 text-3xl font-black tracking-tight sm:text-4xl md:text-5xl">
+              Faisons briller le potentiel de votre enfant
             </h2>
-            <p className="mt-6 text-muted-foreground">
-              Un conseiller vous répond sous 24h. Prise en charge dès la semaine suivante.
+            <p className="mt-5 text-muted-foreground">
+              Écrivez-nous pour échanger sur le niveau, les matières et le rythme qui conviennent à
+              votre enfant.
             </p>
-            <div className="mt-8 flex flex-wrap gap-4">
+            <div className="mt-8 flex flex-wrap gap-3">
               <Link
-                to="/contact"
-                className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3.5 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
+                to="/tarifs"
+                className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3.5 text-sm font-bold text-primary-foreground transition hover:opacity-90"
               >
-                Nous contacter <ArrowRight className="h-4 w-4" />
+                Inscrire mon enfant <ArrowRight className="h-4 w-4" />
               </Link>
-              <Link
-                to="/a-propos"
-                className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-6 py-3.5 text-sm font-semibold text-foreground transition hover:bg-muted"
+              <a
+                href={PHONE_HREF}
+                className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-6 py-3.5 text-sm font-bold text-foreground transition hover:bg-muted"
               >
-                Notre histoire
-              </Link>
+                <Phone className="h-4 w-4" />
+                {PHONE_DISPLAY}
+              </a>
             </div>
           </div>
         </Reveal>

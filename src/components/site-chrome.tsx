@@ -1,11 +1,16 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowRight } from "lucide-react";
-import logoAsset from "@/assets/logo.png.asset.json";
+import { ArrowRight, Home, Phone } from "lucide-react";
+
+import logoDark from "@/assets/logo-dark.png";
+import logoLight from "@/assets/logo-light.png";
+import { PHONE_DISPLAY, PHONE_HREF } from "@/components/marketing";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const NAV_LINKS = [
   { label: "Accueil", to: "/" },
   { label: "Notre offre", to: "/offre" },
   { label: "Répétiteurs", to: "/repetiteurs" },
+  { label: "Cours du samedi", to: "/samedi" },
   { label: "Tarifs", to: "/tarifs" },
   { label: "Paiement", to: "/paiement" },
   { label: "À propos", to: "/a-propos" },
@@ -14,45 +19,73 @@ const NAV_LINKS = [
 
 export function Logo({ className = "" }: { className?: string }) {
   return (
-    <Link to="/" className={`flex items-center gap-2.5 ${className}`}>
-      <img src={logoAsset.url} alt="Stage Kékéli" className="h-10 w-10 object-contain" />
-      <div className="leading-tight">
-        <div className="font-display text-lg tracking-tight" style={{ fontFamily: "var(--font-display)" }}>
-          Stage <span className="text-[color:var(--sun-deep)]">Kékéli</span>
-        </div>
-        <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-          Lumière & Réussite
-        </div>
-      </div>
+    <Link to="/" className={`inline-flex shrink-0 ${className}`} aria-label="Stage Kékéli — Accueil">
+      <img
+        src={logoLight}
+        alt="Stage Kékéli"
+        width={320}
+        height={96}
+        className="h-20 w-auto max-w-[min(360px,68vw)] object-contain object-left md:h-28 dark:hidden"
+      />
+      <img
+        src={logoDark}
+        alt="Stage Kékéli"
+        width={320}
+        height={96}
+        className="hidden h-20 w-auto max-w-[min(360px,68vw)] object-contain object-left md:h-28 dark:block"
+      />
     </Link>
   );
 }
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur-md">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-6 py-4">
-        <Logo />
-        <nav className="hidden items-center gap-7 lg:flex">
-          {NAV_LINKS.map((l) => (
-            <Link
-              key={l.to}
-              to={l.to}
-              activeOptions={{ exact: true }}
-              activeProps={{ className: "text-[color:var(--sun-deep)]" }}
-              inactiveProps={{ className: "text-foreground/80" }}
-              className="relative text-sm font-medium transition hover:text-[color:var(--sun-deep)] after:absolute after:-bottom-1 after:left-0 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-[color:var(--sun-deep)] after:transition-transform after:duration-300 hover:after:scale-x-100 data-[status=active]:after:scale-x-100"
-            >
-              {l.label}
-            </Link>
-          ))}
+    <header className="sticky top-0 z-40 bg-background/70 backdrop-blur-lg">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-6 py-3 lg:grid lg:grid-cols-[1fr_auto_1fr]">
+        <div className="flex items-center gap-3">
+          <Logo />
+          <Link
+            to="/"
+            activeOptions={{ exact: true }}
+            activeProps={{ className: "nav-pill-active text-foreground" }}
+            inactiveProps={{ className: "text-foreground/80 hover:text-foreground" }}
+            className="nav-pill relative inline-flex items-center gap-2 rounded-full bg-card/40 px-4 py-2 text-sm font-semibold ring-1 ring-border/50 backdrop-blur-xl transition-colors duration-300"
+          >
+            <Home className="h-4 w-4" />
+            Accueil
+          </Link>
+        </div>
+        <nav className="hidden justify-center lg:flex">
+          <div className="flex items-center gap-1 rounded-full bg-card/40 p-1.5 ring-1 ring-border/40 backdrop-blur-xl">
+            {NAV_LINKS.slice(1).map((l) => (
+              <Link
+                key={l.to}
+                to={l.to}
+                activeOptions={{ exact: true }}
+                activeProps={{ className: "nav-pill-active text-foreground" }}
+                inactiveProps={{ className: "text-muted-foreground hover:text-foreground" }}
+                className="nav-pill relative whitespace-nowrap rounded-full px-3 py-2 text-sm font-medium transition-colors duration-300"
+              >
+                {l.label}
+              </Link>
+            ))}
+          </div>
         </nav>
-        <Link
-          to="/contact"
-          className="hidden items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-[var(--shadow-soft)] transition hover:opacity-90 sm:inline-flex"
-        >
-          S'inscrire <ArrowRight className="h-4 w-4" />
-        </Link>
+        <div className="flex items-center justify-end gap-3">
+          <ThemeToggle />
+          <Link
+            to="/contact"
+            className="hidden text-sm font-medium text-muted-foreground transition hover:text-foreground sm:inline-flex"
+          >
+            Contact
+          </Link>
+          <Link
+            to="/tarifs"
+            className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
+          >
+            S'inscrire <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
       </div>
       <MobileNav />
     </header>
@@ -61,16 +94,16 @@ export function SiteHeader() {
 
 function MobileNav() {
   return (
-    <div className="border-t border-border/50 lg:hidden">
-      <div className="mx-auto flex max-w-7xl gap-4 overflow-x-auto px-6 py-2 text-sm">
+    <div className="lg:hidden">
+      <div className="mx-auto flex max-w-7xl gap-1.5 overflow-x-auto px-4 pb-3 pt-1 text-sm">
         {NAV_LINKS.map((l) => (
           <Link
             key={l.to}
             to={l.to}
             activeOptions={{ exact: true }}
-            activeProps={{ className: "text-[color:var(--sun-deep)] font-semibold" }}
-            inactiveProps={{ className: "text-foreground/70" }}
-            className="whitespace-nowrap"
+            activeProps={{ className: "nav-pill-active text-foreground font-semibold" }}
+            inactiveProps={{ className: "text-foreground/65" }}
+            className="nav-pill relative shrink-0 whitespace-nowrap rounded-full px-3.5 py-2 transition-colors duration-300"
           >
             {l.label}
           </Link>
@@ -88,7 +121,15 @@ export function SiteFooter() {
         <p className="text-xs text-muted-foreground">
           © {new Date().getFullYear()} Stage Kékéli · Lomé, Togo · Tous droits réservés
         </p>
-        <div className="flex flex-wrap gap-6 text-xs text-muted-foreground">
+        <div className="flex flex-wrap items-center gap-6 text-xs text-muted-foreground">
+          <a
+            href={PHONE_HREF}
+            className="inline-flex items-center gap-1.5 font-semibold text-foreground/80 hover:text-foreground"
+          >
+            <Phone className="h-3.5 w-3.5" />
+            {PHONE_DISPLAY}
+          </a>
+          <Link to="/" className="hover:text-foreground">Accueil</Link>
           <Link to="/offre" className="hover:text-foreground">Offre</Link>
           <Link to="/tarifs" className="hover:text-foreground">Tarifs</Link>
           <Link to="/paiement" className="hover:text-foreground">Paiement</Link>

@@ -12,6 +12,9 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SiteHeader, SiteFooter } from "@/components/site-chrome";
+import { ThemeProvider } from "@/components/theme-provider";
+
+const themeInitScript = `(function(){try{var t=localStorage.getItem("kekeli-theme");if(t==="dark"||(!t&&window.matchMedia("(prefers-color-scheme: dark)").matches))document.documentElement.classList.add("dark");}catch(e){}})();`;
 
 function NotFoundComponent() {
   return (
@@ -82,14 +85,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         name: "description",
         content:
-          "Stage Kékéli accompagne les élèves du collège et du lycée à Lomé. Cours de répétition, soutien scolaire et suivi personnalisé — la lumière qui guide vers la réussite.",
+          "Stage Kékéli accompagne les élèves de Première et Terminale, séries C & D, à Lomé. Cours de répétition, soutien scolaire et suivi personnalisé — la lumière qui guide vers la réussite.",
       },
       { name: "author", content: "Stage Kékéli" },
       { property: "og:title", content: "Stage Kékéli — La lumière qui guide vers la réussite" },
       {
         property: "og:description",
         content:
-          "Cours de répétition et accompagnement scolaire à Lomé, Togo. Collège & Lycée.",
+          "Cours de répétition et accompagnement scolaire à Lomé, Togo. Première et Terminale, séries C & D.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -104,7 +107,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,400&display=swap",
       },
     ],
   }),
@@ -116,9 +119,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="fr" suppressHydrationWarning>
       <head>
         <HeadContent />
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
       <body>
         {children}
@@ -133,14 +137,16 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="flex min-h-screen flex-col bg-background text-foreground">
-        <SiteHeader />
-        <main className="flex-1">
-          {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-          <Outlet />
-        </main>
-        <SiteFooter />
-      </div>
+      <ThemeProvider>
+        <div className="flex min-h-screen flex-col bg-background text-foreground">
+          <SiteHeader />
+          <main className="flex-1">
+            {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+            <Outlet />
+          </main>
+          <SiteFooter />
+        </div>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }

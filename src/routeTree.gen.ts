@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TarifsRouteImport } from './routes/tarifs'
+import { Route as SamediRouteImport } from './routes/samedi'
 import { Route as RepetiteursRouteImport } from './routes/repetiteurs'
 import { Route as PaiementRouteImport } from './routes/paiement'
 import { Route as OffreRouteImport } from './routes/offre'
@@ -20,6 +21,11 @@ import { Route as IndexRouteImport } from './routes/index'
 const TarifsRoute = TarifsRouteImport.update({
   id: '/tarifs',
   path: '/tarifs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SamediRoute = SamediRouteImport.update({
+  id: '/samedi',
+  path: '/samedi',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RepetiteursRoute = RepetiteursRouteImport.update({
@@ -60,6 +66,7 @@ export interface FileRoutesByFullPath {
   '/offre': typeof OffreRoute
   '/paiement': typeof PaiementRoute
   '/repetiteurs': typeof RepetiteursRoute
+  '/samedi': typeof SamediRoute
   '/tarifs': typeof TarifsRoute
 }
 export interface FileRoutesByTo {
@@ -69,6 +76,7 @@ export interface FileRoutesByTo {
   '/offre': typeof OffreRoute
   '/paiement': typeof PaiementRoute
   '/repetiteurs': typeof RepetiteursRoute
+  '/samedi': typeof SamediRoute
   '/tarifs': typeof TarifsRoute
 }
 export interface FileRoutesById {
@@ -79,6 +87,7 @@ export interface FileRoutesById {
   '/offre': typeof OffreRoute
   '/paiement': typeof PaiementRoute
   '/repetiteurs': typeof RepetiteursRoute
+  '/samedi': typeof SamediRoute
   '/tarifs': typeof TarifsRoute
 }
 export interface FileRouteTypes {
@@ -90,6 +99,7 @@ export interface FileRouteTypes {
     | '/offre'
     | '/paiement'
     | '/repetiteurs'
+    | '/samedi'
     | '/tarifs'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -99,6 +109,7 @@ export interface FileRouteTypes {
     | '/offre'
     | '/paiement'
     | '/repetiteurs'
+    | '/samedi'
     | '/tarifs'
   id:
     | '__root__'
@@ -108,6 +119,7 @@ export interface FileRouteTypes {
     | '/offre'
     | '/paiement'
     | '/repetiteurs'
+    | '/samedi'
     | '/tarifs'
   fileRoutesById: FileRoutesById
 }
@@ -118,6 +130,7 @@ export interface RootRouteChildren {
   OffreRoute: typeof OffreRoute
   PaiementRoute: typeof PaiementRoute
   RepetiteursRoute: typeof RepetiteursRoute
+  SamediRoute: typeof SamediRoute
   TarifsRoute: typeof TarifsRoute
 }
 
@@ -128,6 +141,13 @@ declare module '@tanstack/react-router' {
       path: '/tarifs'
       fullPath: '/tarifs'
       preLoaderRoute: typeof TarifsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/samedi': {
+      id: '/samedi'
+      path: '/samedi'
+      fullPath: '/samedi'
+      preLoaderRoute: typeof SamediRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/repetiteurs': {
@@ -182,8 +202,19 @@ const rootRouteChildren: RootRouteChildren = {
   OffreRoute: OffreRoute,
   PaiementRoute: PaiementRoute,
   RepetiteursRoute: RepetiteursRoute,
+  SamediRoute: SamediRoute,
   TarifsRoute: TarifsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

@@ -1,10 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, BadgeCheck, Award, HeartHandshake } from "lucide-react";
+import { ArrowRight, BookOpen, ChevronLeft, ChevronRight, GraduationCap, HeartHandshake } from "lucide-react";
+import { useCallback, useState } from "react";
 import tutor1 from "@/assets/tutor-1.jpg";
 import tutor2 from "@/assets/tutor-2.jpg";
 import tutor3 from "@/assets/tutor-3.jpg";
 import { Reveal } from "@/components/reveal";
-import { PageHero } from "@/components/site-chrome";
+import {
+  TutorArcCarousel,
+  type TutorCarouselItem,
+} from "@/components/tutor-arc-carousel";
 
 export const Route = createFileRoute("/repetiteurs")({
   head: () => ({
@@ -13,101 +17,145 @@ export const Route = createFileRoute("/repetiteurs")({
       {
         name: "description",
         content:
-          "Découvrez les répétiteurs de Stage Kékéli à Lomé : enseignants et étudiants avancés, sélectionnés pour leur excellence académique et pédagogique.",
+          "Les répétiteurs de Stage Kékéli à Lomé : mathématiques et physique, pour les élèves de Première et Terminale, séries C & D.",
       },
       { property: "og:title", content: "Nos répétiteurs — Stage Kékéli" },
       {
         property: "og:description",
-        content: "Des enseignants qui inspirent — l'équipe pédagogique Stage Kékéli.",
+        content:
+          "L'équipe pédagogique Stage Kékéli en mathématiques et en physique, à Lomé.",
       },
     ],
   }),
   component: TutorsPage,
 });
 
-const tutors = [
+const tutors: TutorCarouselItem[] = [
   {
     img: tutor1,
     name: "Mme Adjo K.",
-    role: "Lettres & Français",
-    years: "8 ans d'expérience",
-    bio: "Agrégée de lettres, spécialiste de la dissertation et de la préparation au Bac de français.",
-    tags: ["Français", "Philosophie", "Méthodologie"],
+    role: "Mathématiques",
+    bio: "Reprend le cours puis les exercices d'application avec les élèves de Première C & D.",
+    tags: ["Mathématiques", "Première C & D"],
   },
   {
     img: tutor2,
     name: "Mlle Efua M.",
     role: "Mathématiques",
-    years: "Ingénieure — 5 ans",
-    bio: "Ingénieure diplômée. Passionnée par la démystification des maths et l'accompagnement à la Terminale S.",
-    tags: ["Maths", "Sciences", "Terminale"],
+    bio: "Accompagne les élèves des séries C & D, du cours aux exercices d'application.",
+    tags: ["Mathématiques", "Terminale C & D"],
   },
   {
     img: tutor3,
     name: "M. Kodjo A.",
-    role: "Physique-Chimie",
-    years: "Docteur — 10 ans",
-    bio: "Docteur en physique. Approche expérimentale, exercices ciblés et rigueur bienveillante.",
-    tags: ["Physique", "Chimie", "SVT"],
+    role: "Physique",
+    bio: "Exercices ciblés et rigueur bienveillante sur le programme de l'année.",
+    tags: ["Physique", "Terminale C & D"],
+  },
+  {
+    img: tutor2,
+    name: "M. Sena T.",
+    role: "Physique",
+    bio: "Travaille les notions du cours et la méthode de résolution des exercices.",
+    tags: ["Physique", "Première C & D"],
+  },
+  {
+    img: tutor1,
+    name: "Mme Afi L.",
+    role: "Mathématiques",
+    bio: "Met l'accent sur la compréhension du cours et la rédaction des raisonnements.",
+    tags: ["Mathématiques", "Première & Terminale"],
+  },
+  {
+    img: tutor3,
+    name: "M. Koffi D.",
+    role: "Physique",
+    bio: "Reprend les notions du programme et les applique sur des exercices guidés.",
+    tags: ["Physique", "Première & Terminale"],
   },
 ];
 
 const values = [
-  { icon: BadgeCheck, title: "Sélection exigeante", desc: "Chaque répétiteur est évalué sur ses compétences académiques et pédagogiques." },
-  { icon: Award, title: "Formation continue", desc: "Ateliers réguliers autour de la méthode Kékéli et des retours parents." },
-  { icon: HeartHandshake, title: "Éthique & bienveillance", desc: "Nous choisissons des enseignants qui croient au potentiel de chaque élève." },
+  {
+    icon: GraduationCap,
+    title: "Exigence académique",
+    desc: "Nous tenons à ce que chaque répétiteur maîtrise le programme de sa matière en Première et Terminale, séries C & D.",
+  },
+  {
+    icon: BookOpen,
+    title: "Clarté pédagogique",
+    desc: "Reprendre le cours, puis les exercices d'application, jusqu'à ce que la notion soit comprise.",
+  },
+  {
+    icon: HeartHandshake,
+    title: "Éthique & bienveillance",
+    desc: "Un cadre où l'élève ose poser ses questions et revenir sur ce qu'il n'a pas compris.",
+  },
 ];
 
 function TutorsPage() {
+  const [active, setActive] = useState(tutors[0]);
+
+  const handleActiveChange = useCallback((tutor: TutorCarouselItem) => {
+    setActive(tutor);
+  }, []);
+
   return (
     <>
-      <PageHero
-        eyebrow="Nos répétiteurs"
-        title={<>Des enseignants <span className="italic">qui inspirent</span>.</>}
-        intro="Enseignants confirmés et étudiants avancés — tous sélectionnés pour leur excellence académique et leur sens de la transmission."
-      />
-      <section className="mx-auto max-w-7xl px-6 py-20">
-        <div className="grid gap-8 md:grid-cols-3">
-          {tutors.map((t, i) => (
-            <Reveal key={t.name} anim="up" delay={i * 120}>
-              <figure className="group">
-                <div className="relative overflow-hidden rounded-2xl border border-border">
-                  <img
-                    src={t.img}
-                    alt={t.name}
-                    className="aspect-[4/5] w-full object-cover transition duration-700 group-hover:scale-[1.04]"
-                    loading="lazy"
-                    width={800}
-                    height={1000}
-                  />
-                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[color:var(--ink)]/85 to-transparent p-5">
-                    <div className="font-display text-2xl text-[color:var(--cream)]" style={{ fontFamily: "var(--font-display)" }}>
-                      {t.name}
-                    </div>
-                    <div className="text-sm text-[color:var(--sun)]">{t.role}</div>
-                  </div>
-                </div>
-                <figcaption className="mt-4">
-                  <div className="text-xs uppercase tracking-widest text-[color:var(--sun-deep)]">
-                    {t.years}
-                  </div>
-                  <p className="mt-2 text-sm text-muted-foreground">{t.bio}</p>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {t.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="rounded-full border border-border bg-card px-3 py-1 text-[11px] font-medium text-foreground/70"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </figcaption>
-              </figure>
-            </Reveal>
-          ))}
+      <section className="hero-clean-bg border-b border-border/40">
+        <div className="mx-auto max-w-7xl px-6 pb-6 pt-12 text-center md:pt-16">
+          <Reveal>
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[color:var(--sage)]">
+              Nos répétiteurs
+            </p>
+            <h1 className="mx-auto mt-4 max-w-2xl font-sans text-4xl font-bold tracking-tight md:text-5xl">
+              Des enseignants qui inspirent
+            </h1>
+            <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
+              Parcourez notre équipe de répétiteurs en mathématiques et en physique, pour la
+              Première et la Terminale, séries C & D.
+            </p>
+          </Reveal>
+        </div>
+
+        <div className="mx-auto max-w-7xl px-4 pb-4 pt-2 sm:px-6">
+          <TutorArcCarousel tutors={tutors} onActiveChange={handleActiveChange} />
+        </div>
+
+        <div className="mx-auto max-w-lg px-6 pb-10 pt-0 text-center">
+          <Reveal key={active.name}>
+            <div className="font-display text-2xl" style={{ fontFamily: "var(--font-display)" }}>
+              {active.name}
+            </div>
+            <div className="mt-1 text-sm font-medium text-[color:var(--sun-deep)]">
+              {active.role}
+            </div>
+            {active.years && (
+              <div className="mt-1 text-xs uppercase tracking-widest text-muted-foreground">
+                {active.years}
+              </div>
+            )}
+            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">{active.bio}</p>
+            <div className="mt-4 flex flex-wrap justify-center gap-2">
+              {active.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="rounded-full border border-border bg-card px-3 py-1 text-[11px] font-medium text-foreground/70"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </Reveal>
+
+          <div className="mt-8 flex items-center justify-center gap-3 text-xs text-muted-foreground">
+            <ChevronLeft className="h-4 w-4 opacity-40" aria-hidden />
+            <span>Défilement automatique · survolez pour pause</span>
+            <ChevronRight className="h-4 w-4 opacity-40" aria-hidden />
+          </div>
         </div>
       </section>
+
       <section className="border-y border-border bg-card/60">
         <div className="mx-auto max-w-7xl px-6 py-20">
           <Reveal>
