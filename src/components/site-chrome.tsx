@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { ArrowRight, Home, Phone } from "lucide-react";
 
 import logoLight from "@/assets/logo-light.png";
-import { PHONE_DISPLAY, PHONE_HREF } from "@/components/marketing";
+import { PHONE_DISPLAY, PHONE_HREF, WHATSAPP_HREF, WHATSAPP_LABEL, WhatsAppIcon } from "@/components/marketing";
 
 const NAV_LINKS = [
   { label: "Accueil", to: "/" },
@@ -118,6 +118,17 @@ export function SiteFooter() {
           >
             <Phone className="h-3.5 w-3.5" />
             {PHONE_DISPLAY}
+          </a>
+          <a
+            href={WHATSAPP_HREF}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={WHATSAPP_LABEL}
+            title={WHATSAPP_LABEL}
+            className="inline-flex items-center gap-1.5 font-semibold text-[#25D366] hover:text-[#128C7E] transition-colors"
+          >
+            <WhatsAppIcon className="h-4 w-4" />
+            WhatsApp
           </a>
           <Link to="/" className="hover:text-foreground">Accueil</Link>
           <Link to="/offre" className="hover:text-foreground">Offre</Link>

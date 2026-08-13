@@ -7,16 +7,16 @@ import { CallbackCta, FaqSection, SectionHeading, type FaqItem } from "@/compone
 export const Route = createFileRoute("/paiement")({
   head: () => ({
     meta: [
-      { title: "Paiement Mobile Money — Stage Kékéli" },
+      { title: "Paiement — Stage Kékéli" },
       {
         name: "description",
         content:
-          "Payez vos frais Stage Kékéli par MTN Mobile Money, Moov ou Orange Money : 2 500 FCFA par mois et par matière ou 22 500 FCFA par an, plus 1 500 FCFA d'inscription. TAF 10% intégrée au récapitulatif.",
+          "Payez vos frais Stage Kékéli par Moov Money ou en personne : 2 500 FCFA par mois et par matière ou 22 500 FCFA par an, plus 1 500 FCFA d'inscription. TAF 10% intégrée au récapitulatif.",
       },
-      { property: "og:title", content: "Paiement Mobile Money — Stage Kékéli" },
+      { property: "og:title", content: "Paiement — Stage Kékéli" },
       {
         property: "og:description",
-        content: "Simulateur et méthodes de paiement Mobile Money.",
+        content: "Simulateur et méthodes de paiement Moov Money et en personne.",
       },
     ],
   }),
@@ -34,11 +34,11 @@ const PAYMENT_FAQ: FaqItem[] = [
   },
   {
     q: "Quels opérateurs acceptez-vous ?",
-    a: "MTN Mobile Money, Moov Money et Orange Money. Le virement bancaire et l'espèce sont également possibles, pour un règlement mensuel comme pour un règlement annuel.",
+    a: "Moov Money et le paiement en personne. Le virement bancaire est également possible, pour un règlement mensuel comme pour un règlement annuel.",
   },
   {
     q: "Comment obtenir un justificatif ?",
-    a: "Un reçu numérique est envoyé par SMS après la transaction. Pour tout autre justificatif, appelez-nous au +228 92 09 35 07.",
+    a: "Un reçu numérique est envoyé par SMS après la transaction. Pour tout autre justificatif, appelez-nous au +228 98 93 02 11.",
   },
   {
     q: "Le paiement est-il sécurisé ?",
@@ -55,7 +55,7 @@ const LEVEL_LABEL = "Première & Terminale, séries C & D";
 const fmt = (n: number) => n.toLocaleString("fr-FR");
 
 function PaymentPage() {
-  const [operator, setOperator] = useState<"mtn" | "moov">("mtn");
+  const [operator, setOperator] = useState<"moov" | "especes">("moov");
   const [subjects, setSubjects] = useState<1 | 2>(1);
   const [plan, setPlan] = useState<"mensuel" | "annuel">("mensuel");
   const [withRegistration, setWithRegistration] = useState(true);
@@ -76,10 +76,10 @@ function PaymentPage() {
               Paiement sécurisé
             </div>
             <h1 className="mx-auto mt-4 max-w-3xl text-4xl font-black leading-[1.05] tracking-tight sm:text-5xl md:text-6xl">
-              Réglez vos frais par Mobile Money
+              Réglez vos frais simplement
             </h1>
             <p className="mx-auto mt-5 max-w-2xl text-muted-foreground">
-              MTN Mobile Money, Moov Money ou Orange Money. Chaque transaction est confirmée par SMS
+              Par Moov Money ou en personne. Chaque transaction est confirmée par SMS
               et un reçu numérique est envoyé au parent.
             </p>
           </Reveal>
@@ -275,17 +275,6 @@ function PaymentPage() {
               <div className="mt-6 grid grid-cols-2 gap-3">
                 <button
                   type="button"
-                  onClick={() => setOperator("mtn")}
-                  className={`rounded-xl px-4 py-3 text-sm font-bold transition ${
-                    operator === "mtn"
-                      ? "bg-[color:var(--sun)] text-[color:var(--ink)]"
-                      : "bg-background ring-1 ring-border hover:bg-muted"
-                  }`}
-                >
-                  MTN Mobile Money
-                </button>
-                <button
-                  type="button"
                   onClick={() => setOperator("moov")}
                   className={`rounded-xl px-4 py-3 text-sm font-bold transition ${
                     operator === "moov"
@@ -293,7 +282,18 @@ function PaymentPage() {
                       : "bg-background ring-1 ring-border hover:bg-muted"
                   }`}
                 >
-                  Moov / Orange
+                  Moov Money
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setOperator("especes")}
+                  className={`rounded-xl px-4 py-3 text-sm font-bold transition ${
+                    operator === "especes"
+                      ? "bg-[color:var(--sun)] text-[color:var(--ink)]"
+                      : "bg-background ring-1 ring-border hover:bg-muted"
+                  }`}
+                >
+                  En personne
                 </button>
               </div>
 
@@ -312,14 +312,12 @@ function PaymentPage() {
       <section className="border-y border-border bg-card/50">
         <div className="mx-auto max-w-7xl px-6 py-20">
           <SectionHeading eyebrow="Moyens de paiement" title={<>Payez comme cela vous arrange</>} />
-          <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-12 grid gap-5 sm:grid-cols-2">
             {[
-              { t: "MTN Mobile Money", d: "Confirmation par code USSD, puis reçu par SMS." },
-              { t: "Moov Money", d: "Même parcours de confirmation." },
-              { t: "Orange Money", d: "Disponible pour les règlements mensuels et annuels." },
+              { t: "Moov Money", d: "Confirmation par code USSD, puis reçu par SMS. Disponible pour les règlements mensuels et annuels." },
               {
-                t: "Virement ou espèces",
-                d: "À Lomé, pour un règlement mensuel comme pour un règlement annuel.",
+                t: "En personne",
+                d: "Règlement en espèces ou par virement bancaire directement à Lomé, pour un paiement mensuel comme annuel.",
               },
             ].map((m, i) => (
               <Reveal key={m.t} anim="up" delay={i * 80}>

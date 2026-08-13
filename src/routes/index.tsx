@@ -10,7 +10,6 @@ import {
   GraduationCap,
   Lightbulb,
   Phone,
-  Search,
   ShieldCheck,
   Target,
   Users,
@@ -123,29 +122,6 @@ function Hero() {
                 Trouvez l'accompagnement qu'il vous faut en mathématiques et en physique — pour les
                 élèves de Première et Terminale, séries C & D, à Lomé.
               </p>
-            </Reveal>
-            <Reveal anim="up" delay={160}>
-              <form
-                className="mt-10 flex flex-col gap-3 rounded-full bg-card p-2 shadow-[var(--shadow-search)] ring-1 ring-border/60 sm:flex-row sm:items-center sm:pl-6"
-                onSubmit={(e) => e.preventDefault()}
-              >
-                <label htmlFor="hero-search" className="sr-only">
-                  Rechercher une matière ou un niveau
-                </label>
-                <input
-                  id="hero-search"
-                  type="search"
-                  placeholder="Cherchez une matière, un niveau…"
-                  className="min-w-0 flex-1 bg-transparent px-4 py-3 text-sm text-foreground outline-none placeholder:text-muted-foreground sm:px-0 sm:py-2.5"
-                />
-                <Link
-                  to="/repetiteurs"
-                  className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-[color:var(--sage)] px-7 py-3.5 text-sm font-semibold text-white transition hover:opacity-90"
-                >
-                  <Search className="h-4 w-4" />
-                  Rechercher
-                </Link>
-              </form>
             </Reveal>
           </div>
 

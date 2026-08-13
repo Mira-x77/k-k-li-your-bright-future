@@ -5,6 +5,9 @@ import {
   FaqSection,
   PHONE_DISPLAY,
   PHONE_HREF,
+  WHATSAPP_HREF,
+  WHATSAPP_LABEL,
+  WhatsAppIcon,
   type FaqItem,
 } from "@/components/marketing";
 
@@ -15,12 +18,12 @@ export const Route = createFileRoute("/contact")({
       {
         name: "description",
         content:
-          "Contactez Stage Kékéli à Lomé, Togo — inscription en mathématiques et en physique pour les élèves de Première C & D et Terminale C & D. Téléphone : +228 92 09 35 07.",
+          "Contactez Stage Kékéli à Lomé, Togo — inscription en mathématiques et en physique pour les élèves de Première C & D et Terminale C & D. Téléphone : +228 98 93 02 11.",
       },
       { property: "og:title", content: "Contact — Stage Kékéli" },
       {
         property: "og:description",
-        content: "Appelez-nous au +228 92 09 35 07 ou écrivez-nous : Stage Kékéli, Lomé, Togo.",
+        content: "Appelez-nous au +228 98 93 02 11 ou écrivez-nous : Stage Kékéli, Lomé, Togo.",
       },
     ],
   }),
@@ -68,6 +71,16 @@ function ContactPage() {
                 Aller au formulaire <ArrowRight className="h-4 w-4" />
               </a>
               <a
+                href={WHATSAPP_HREF}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={WHATSAPP_LABEL}
+                className="inline-flex items-center gap-2 rounded-full border border-[#25D366]/30 bg-[#25D366]/10 px-6 py-3.5 text-sm font-bold text-[#128C7E] transition hover:bg-[#25D366]/20"
+              >
+                <WhatsAppIcon className="h-4 w-4" />
+                WhatsApp
+              </a>
+              <a
                 href={PHONE_HREF}
                 className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-6 py-3.5 text-sm font-bold transition hover:bg-muted"
               >
@@ -100,6 +113,13 @@ function ContactPage() {
             </p>
             <ul className="mt-8 space-y-4 text-sm">
               {[
+                {
+                  icon: WhatsAppIcon,
+                  t: "WhatsApp",
+                  d: WHATSAPP_LABEL,
+                  href: WHATSAPP_HREF,
+                  external: true,
+                },
                 {
                   icon: Phone,
                   t: PHONE_DISPLAY,
