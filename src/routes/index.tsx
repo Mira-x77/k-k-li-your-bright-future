@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import heroImg from "@/assets/hero-student.jpg";
+import heroImg from "@/assets/hero-students-group.jpg";
 import classroomBg from "@/assets/hero-classroom.png";
 import tutoringImg from "@/assets/tutoring.jpg";
 import lateNightImg from "@/assets/student-late-night.png";
@@ -130,7 +130,7 @@ function Hero() {
               <div className="relative overflow-hidden rounded-[2rem] bg-card/40 shadow-[var(--shadow-soft)]">
                 <img
                   src={heroImg}
-                  alt="Élève en cours de répétition"
+                  alt="Groupe d'élèves travaillant ensemble"
                   className="aspect-[4/5] w-full object-cover"
                   width={900}
                   height={1125}
