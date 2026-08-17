@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
-import { Search, Filter, Phone, CheckCircle, Clock, AlertCircle, Eye, Download, MessageSquare, Sparkles } from "lucide-react";
+import { Search, Filter, Phone, CheckCircle, Clock, AlertCircle, Eye, Download, MessageSquare, Sparkles, User } from "lucide-react";
 import { AdminShell } from "@/components/admin/admin-shell";
 import { getSignIns, updateSignInStatus, exportToCSV, generateWhatsAppReceiptLink, type ProgramSignIn } from "@/lib/admin-store";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -75,7 +75,7 @@ function AdminInscriptionsPage() {
               onClick={() => exportToCSV(filteredData)}
               size="sm"
               disabled={filteredData.length === 0}
-              className="bg-amber-400 text-slate-950 font-bold hover:bg-amber-300 text-xs gap-1.5 disabled:opacity-50"
+              className="bg-[#CDFE00] text-slate-950 font-bold hover:bg-[#b8e600] text-xs gap-1.5 disabled:opacity-50"
             >
               <Download className="h-4 w-4" />
               Exporter Sélection CSV
@@ -84,7 +84,7 @@ function AdminInscriptionsPage() {
         </div>
 
         {/* Filters and Search Bar */}
-        <Card className="bg-slate-900 border-slate-800 text-white">
+        <Card className="bg-[#14171D] border-slate-800 text-white">
           <CardContent className="p-4 space-y-4">
             <div className="grid gap-3 md:grid-cols-4">
               <div className="relative md:col-span-2">
@@ -93,7 +93,7 @@ function AdminInscriptionsPage() {
                   placeholder="Rechercher par élève, parent, téléphone ou ID..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-9 bg-slate-950 border-slate-800 text-white placeholder-slate-500 text-xs focus-visible:ring-amber-400"
+                  className="pl-9 bg-slate-950 border-slate-800 text-white placeholder-slate-500 text-xs focus-visible:ring-[#CDFE00]"
                 />
               </div>
 
@@ -101,7 +101,7 @@ function AdminInscriptionsPage() {
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value as any)}
-                  className="w-full h-9 rounded-md bg-slate-950 border border-slate-800 px-3 text-xs text-white focus:outline-none focus:border-amber-400"
+                  className="w-full h-9 rounded-md bg-slate-950 border border-slate-800 px-3 text-xs text-white focus:outline-none focus:border-[#CDFE00]"
                 >
                   <option value="Tous">Tous les Statuts</option>
                   <option value="Confirmé">Confirmé (Payé)</option>
@@ -114,7 +114,7 @@ function AdminInscriptionsPage() {
                 <select
                   value={seriesFilter}
                   onChange={(e) => setSeriesFilter(e.target.value)}
-                  className="w-full h-9 rounded-md bg-slate-950 border border-slate-800 px-3 text-xs text-white focus:outline-none focus:border-amber-400"
+                  className="w-full h-9 rounded-md bg-slate-950 border border-slate-800 px-3 text-xs text-white focus:outline-none focus:border-[#CDFE00]"
                 >
                   <option value="Toutes">Toutes les Séries</option>
                   <option value="Première C">Première C</option>
@@ -128,13 +128,13 @@ function AdminInscriptionsPage() {
         </Card>
 
         {/* Student Sign-ins Table */}
-        <Card className="bg-slate-900 border-slate-800 text-white">
+        <Card className="bg-[#14171D] border-slate-800 text-white">
           <CardContent className="p-0">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs text-slate-300">
                 <thead className="border-b border-slate-800 bg-slate-950/80 text-slate-400 uppercase text-[10px]">
                   <tr>
-                    <th className="py-3 px-4">ID Inscription</th>
+                    <th className="py-3 px-4">Photo & ID</th>
                     <th className="py-3 px-4">Élève & Série</th>
                     <th className="py-3 px-4">Matières Choisies</th>
                     <th className="py-3 px-4">Parent & Contact</th>
@@ -148,7 +148,7 @@ function AdminInscriptionsPage() {
                     <tr>
                       <td colSpan={7} className="py-12 text-center text-slate-400 text-xs">
                         <div className="max-w-xs mx-auto space-y-2">
-                          <Sparkles className="h-6 w-6 text-amber-400 mx-auto" />
+                          <Sparkles className="h-6 w-6 text-[#CDFE00] mx-auto" />
                           <p className="font-semibold text-white">Aucune inscription enregistrée</p>
                           <p className="text-[11px] text-slate-500">
                             Les fiches d'élèves apparaîtront automatiquement dès qu'une inscription sera soumise sur le site public.
@@ -159,7 +159,18 @@ function AdminInscriptionsPage() {
                   ) : (
                     filteredData.map((item) => (
                       <tr key={item.id} className="hover:bg-slate-800/40 transition-colors">
-                        <td className="py-3.5 px-4 font-mono font-semibold text-amber-400">{item.id}</td>
+                        <td className="py-3.5 px-4">
+                          <div className="flex items-center gap-2.5">
+                            <div className="h-9 w-9 rounded-full overflow-hidden border border-slate-700 bg-slate-950 flex items-center justify-center shrink-0">
+                              {item.photoUrl ? (
+                                <img src={item.photoUrl} alt={item.studentName} className="h-full w-full object-cover" />
+                              ) : (
+                                <User className="h-4 w-4 text-slate-400" />
+                              )}
+                            </div>
+                            <span className="font-mono font-bold text-[#CDFE00] text-xs">{item.id}</span>
+                          </div>
+                        </td>
                         <td className="py-3.5 px-4">
                           <div className="font-semibold text-white text-sm">{item.studentName}</div>
                           <div className="text-[11px] text-slate-400 font-medium">{item.series}</div>
@@ -198,7 +209,7 @@ function AdminInscriptionsPage() {
                           <select
                             value={item.status}
                             onChange={(e) => handleStatusChange(item.id, e.target.value as any)}
-                            className={`rounded px-2 py-1 text-[11px] font-bold border focus:outline-none ${
+                            className={`rounded px-2 py-1 text-[11px] font-bold border focus:outline-none cursor-pointer ${
                               item.status === "Confirmé"
                                 ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30"
                                 : item.status === "En attente"
@@ -233,41 +244,50 @@ function AdminInscriptionsPage() {
         {/* Student Details Card Modal */}
         {selectedStudent && (
           <Dialog open={!!selectedStudent} onOpenChange={() => setSelectedStudent(null)}>
-            <DialogContent className="bg-slate-900 border-slate-800 text-white max-w-lg">
+            <DialogContent className="bg-[#14171D] border-slate-800 text-white max-w-lg">
               <DialogHeader>
-                <DialogTitle className="text-xl font-bold text-amber-400 flex items-center justify-between">
+                <DialogTitle className="text-xl font-bold text-[#CDFE00] flex items-center justify-between">
                   <span>Fiche Inscription {selectedStudent.id}</span>
                 </DialogTitle>
               </DialogHeader>
 
               <div className="space-y-4 pt-2">
-                <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-3">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="text-lg font-bold text-white">{selectedStudent.studentName}</h3>
-                      <p className="text-xs text-amber-400 font-semibold">{selectedStudent.series}</p>
-                    </div>
-                    <Badge
-                      className={
-                        selectedStudent.status === "Confirmé"
-                          ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
-                          : "bg-amber-500/10 text-amber-400 border-amber-500/20"
-                      }
-                    >
-                      {selectedStudent.status}
-                    </Badge>
+                <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 flex items-center gap-4">
+                  <div className="h-16 w-16 rounded-full overflow-hidden border-2 border-[#CDFE00] bg-slate-900 flex items-center justify-center shrink-0">
+                    {selectedStudent.photoUrl ? (
+                      <img src={selectedStudent.photoUrl} alt={selectedStudent.studentName} className="h-full w-full object-cover" />
+                    ) : (
+                      <User className="h-8 w-8 text-slate-400" />
+                    )}
                   </div>
-
-                  <div className="grid grid-cols-2 gap-4 text-xs pt-2 border-t border-slate-800">
-                    <div>
-                      <span className="text-slate-500 block">Parent / Tuteur</span>
-                      <span className="font-semibold text-slate-200">{selectedStudent.parentName}</span>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h3 className="text-lg font-bold text-white truncate">{selectedStudent.studentName}</h3>
+                        <p className="text-xs text-[#CDFE00] font-semibold">{selectedStudent.series}</p>
+                      </div>
+                      <Badge
+                        className={
+                          selectedStudent.status === "Confirmé"
+                            ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
+                            : "bg-amber-500/10 text-amber-400 border-amber-500/20"
+                        }
+                      >
+                        {selectedStudent.status}
+                      </Badge>
                     </div>
-                    <div>
-                      <span className="text-slate-500 block">Téléphone SMS/WhatsApp</span>
-                      <a href={`tel:${selectedStudent.parentPhone}`} className="font-semibold text-amber-400 hover:underline">
-                        {selectedStudent.parentPhone}
-                      </a>
+
+                    <div className="grid grid-cols-2 gap-2 text-xs pt-2 mt-2 border-t border-slate-800">
+                      <div>
+                        <span className="text-slate-500 block">Parent</span>
+                        <span className="font-semibold text-slate-200">{selectedStudent.parentName}</span>
+                      </div>
+                      <div>
+                        <span className="text-slate-500 block">Téléphone</span>
+                        <a href={`tel:${selectedStudent.parentPhone}`} className="font-semibold text-[#CDFE00] hover:underline">
+                          {selectedStudent.parentPhone}
+                        </a>
+                      </div>
                     </div>
                   </div>
                 </div>

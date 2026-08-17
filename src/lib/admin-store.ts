@@ -12,6 +12,7 @@ export interface ProgramSignIn {
   totalAmountDue: number; // in FCFA
   status: "Confirmé" | "En attente" | "Relancé";
   saturdaySessionIncluded: boolean;
+  photoUrl?: string; // Base64 data URI or image URL
   createdAt: string; // ISO string
   readByAdmin?: boolean;
   notes?: string;
@@ -62,6 +63,7 @@ export function savePublicRegistration(entry: {
   paymentPlan: "mensuel" | "annuel";
   paymentMethod: "Moov Money" | "En personne" | "Virement";
   saturdaySessionIncluded?: boolean;
+  photoUrl?: string;
 }): ProgramSignIn {
   const current = getSignIns();
   const dateStr = new Date().toISOString().slice(2, 7).replace("-", "");
@@ -88,6 +90,7 @@ export function savePublicRegistration(entry: {
     totalAmountDue: totalDue,
     status: entry.paymentMethod === "Moov Money" ? "Confirmé" : "En attente",
     saturdaySessionIncluded: entry.saturdaySessionIncluded ?? true,
+    photoUrl: entry.photoUrl,
     createdAt: new Date().toISOString(),
     readByAdmin: false,
   };

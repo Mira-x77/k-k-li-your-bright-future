@@ -1,9 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Lock, Receipt, ShieldCheck, Smartphone, CheckCircle, Printer, MessageSquare, Phone } from "lucide-react";
+import { ArrowRight, Lock, Receipt, ShieldCheck, Smartphone, CheckCircle, Printer, MessageSquare, Phone, User } from "lucide-react";
 import { useState } from "react";
 import { Reveal } from "@/components/reveal";
 import { CallbackCta, FaqSection, SectionHeading, type FaqItem } from "@/components/marketing";
 import { savePublicRegistration, generateWhatsAppReceiptLink, type ProgramSignIn } from "@/lib/admin-store";
+import { ProfilePhotoCapture } from "@/components/profile-photo-capture";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
@@ -63,6 +64,7 @@ function PaymentPage() {
   const [studentName, setStudentName] = useState("");
   const [parentName, setParentName] = useState("");
   const [parentPhone, setParentPhone] = useState("");
+  const [photoUrl, setPhotoUrl] = useState("");
 
   // Confirmation Modal State
   const [receiptRecord, setReceiptRecord] = useState<ProgramSignIn | null>(null);
@@ -98,6 +100,7 @@ function PaymentPage() {
       paymentPlan: plan,
       paymentMethod: operator,
       saturdaySessionIncluded: true,
+      photoUrl: photoUrl || undefined,
     });
 
     setReceiptRecord(record);
@@ -115,7 +118,7 @@ function PaymentPage() {
               Réglez vos frais & validez l'inscription
             </h1>
             <p className="mx-auto mt-5 max-w-2xl text-muted-foreground">
-              Par Moov Money ou en personne. Renseignez les informations de l'élève ci-dessous pour générer votre reçu numérique officiel.
+              Par Moov Money ou en personne. Prenez la photo de profil de l'élève en direct et générez votre reçu numérique officiel.
             </p>
           </Reveal>
         </div>
@@ -208,6 +211,11 @@ function PaymentPage() {
                   Formulaire d'Inscription & Paiement
                 </div>
                 <Smartphone className="h-5 w-5 text-[color:var(--sun-deep)]" />
+              </div>
+
+              {/* Photo Capture Step */}
+              <div className="rounded-2xl border border-border bg-background p-4">
+                <ProfilePhotoCapture value={photoUrl} onChange={(photo) => setPhotoUrl(photo)} />
               </div>
 
               {/* Student & Parent Info */}
@@ -406,9 +414,20 @@ function PaymentPage() {
             </DialogHeader>
 
             <div className="space-y-4 pt-2 text-sm">
-              <div className="p-4 rounded-2xl bg-[color:var(--sun)]/15 border border-[color:var(--sun-deep)]/30 text-center">
+              <div className="p-4 rounded-2xl bg-[color:var(--sun)]/15 border border-[color:var(--sun-deep)]/30 text-center flex flex-col items-center">
+                {receiptRecord.photoUrl ? (
+                  <img
+                    src={receiptRecord.photoUrl}
+                    alt={receiptRecord.studentName}
+                    className="h-16 w-16 rounded-full object-cover border-2 border-[color:var(--sun-deep)] mb-2 shadow-md"
+                  />
+                ) : (
+                  <div className="h-16 w-16 rounded-full bg-slate-800 text-slate-300 flex items-center justify-center mb-2">
+                    <User className="h-8 w-8" />
+                  </div>
+                )}
                 <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Numéro de Référence Officiel</p>
-                <p className="text-2xl font-black text-foreground mt-1 tracking-tight font-mono">{receiptRecord.id}</p>
+                <p className="text-2xl font-black text-foreground mt-0.5 tracking-tight font-mono">{receiptRecord.id}</p>
                 <p className="text-xs font-semibold text-emerald-600 mt-1">Enregistré dans le système Stage Kékéli</p>
               </div>
 
