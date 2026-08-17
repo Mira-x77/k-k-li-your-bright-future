@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, Home, Phone } from "lucide-react";
+import { ArrowRight, Home, Phone, ShieldCheck } from "lucide-react";
 
 import logoLight from "@/assets/logo-light.png";
 import { PHONE_DISPLAY, PHONE_HREF, WHATSAPP_HREF, WHATSAPP_LABEL, WhatsAppIcon } from "@/components/marketing";
@@ -135,6 +135,13 @@ export function SiteFooter() {
           <Link to="/tarifs" className="hover:text-foreground">Tarifs</Link>
           <Link to="/paiement" className="hover:text-foreground">Paiement</Link>
           <Link to="/contact" className="hover:text-foreground">Contact</Link>
+          <Link
+            to="/admin"
+            className="inline-flex items-center gap-1 font-bold text-amber-500 hover:text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 rounded-md transition"
+          >
+            <ShieldCheck className="h-3.5 w-3.5" />
+            Espace Admin
+          </Link>
         </div>
       </div>
     </footer>

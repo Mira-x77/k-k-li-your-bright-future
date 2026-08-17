@@ -1,5 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { ArrowRight, Mail, MapPin, Phone } from "lucide-react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { ArrowRight, Mail, MapPin, Phone, CheckCircle, ShieldCheck, MessageSquare, LayoutDashboard } from "lucide-react";
+import { useState } from "react";
 import { Reveal } from "@/components/reveal";
 import {
   FaqSection,
@@ -10,6 +11,9 @@ import {
   WhatsAppIcon,
   type FaqItem,
 } from "@/components/marketing";
+import { savePublicRegistration, generateWhatsAppReceiptLink, type ProgramSignIn } from "@/lib/admin-store";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -41,11 +45,47 @@ const CONTACT_FAQ: FaqItem[] = [
   },
   {
     q: "Prenez-vous des inscriptions en cours d'année ?",
-    a: "Il est possible de nous rejoindre en cours d'année scolaire. Appelez-nous pour que nous voyions ensemble ce qui peut être organisé.",
+    a: "Il est possible de nous rejoindre en cours d'année scolaire. Appelez-nous au +228 98 93 02 11 pour que nous voyions ensemble ce qui peut être organisé.",
   },
 ];
 
 function ContactPage() {
+  const [parentName, setParentName] = useState("");
+  const [parentPhone, setParentPhone] = useState("");
+  const [studentName, setStudentName] = useState("");
+  const [series, setSeries] = useState<ProgramSignIn["series"]>("Terminale C");
+  const [mathSelected, setMathSelected] = useState(true);
+  const [physicsSelected, setPhysicsSelected] = useState(true);
+  const [message, setMessage] = useState("");
+
+  const [confirmationRecord, setConfirmationRecord] = useState<ProgramSignIn | null>(null);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!parentPhone.trim() || !studentName.trim()) {
+      alert("Veuillez renseigner le nom de l'élève et le numéro de téléphone.");
+      return;
+    }
+
+    const selectedSubjects: ("Mathématiques" | "Physique-Chimie")[] = [];
+    if (mathSelected) selectedSubjects.push("Mathématiques");
+    if (physicsSelected) selectedSubjects.push("Physique-Chimie");
+    if (selectedSubjects.length === 0) selectedSubjects.push("Mathématiques");
+
+    const record = savePublicRegistration({
+      studentName: studentName.trim(),
+      parentName: parentName.trim() || "Parent",
+      parentPhone: parentPhone.trim(),
+      series: series,
+      subjects: selectedSubjects,
+      paymentPlan: "mensuel",
+      paymentMethod: "En personne",
+      saturdaySessionIncluded: true,
+    });
+
+    setConfirmationRecord(record);
+  };
+
   return (
     <>
       <section className="hero-clean-bg border-b border-border/50">
@@ -58,8 +98,7 @@ function ContactPage() {
               Une question ? Parlons du parcours de votre enfant
             </h1>
             <p className="mx-auto mt-5 max-w-2xl text-muted-foreground">
-              Appelez-nous ou écrivez-nous pour échanger sur les mathématiques, la physique et le
-              rythme de travail de votre enfant en Première C & D ou en Terminale C & D.
+              Appelez-nous ou écrivez-nous. Toute demande d'information ou d'inscription saisie ci-dessous est directement transmise à l'administration Stage Kékéli.
             </p>
           </Reveal>
           <Reveal delay={80}>
@@ -87,13 +126,13 @@ function ContactPage() {
                 <Phone className="h-4 w-4" />
                 {PHONE_DISPLAY}
               </a>
-              <a
-                href="mailto:contact@stagekekeli.tg"
-                className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-6 py-3.5 text-sm font-bold transition hover:bg-muted"
+              <Link
+                to="/admin"
+                className="inline-flex items-center gap-2 rounded-full border border-amber-500/40 bg-amber-500/10 px-6 py-3.5 text-sm font-bold text-amber-600 hover:bg-amber-500/20 transition"
               >
-                <Mail className="h-4 w-4" />
-                contact@stagekekeli.tg
-              </a>
+                <LayoutDashboard className="h-4 w-4" />
+                Accès Admin (/admin)
+              </Link>
             </div>
           </Reveal>
         </div>
@@ -109,7 +148,7 @@ function ContactPage() {
               Joignez-nous directement
             </h2>
             <p className="mt-3 text-sm text-muted-foreground">
-              Par téléphone, par courriel ou via le formulaire ci-contre.
+              Par téléphone, par courriel ou via le formulaire ci-contre. Toutes les saisies s'enregistrent en direct dans le tableau de bord administration.
             </p>
             <ul className="mt-8 space-y-4 text-sm">
               {[
@@ -164,79 +203,180 @@ function ContactPage() {
                 </Reveal>
               ))}
             </ul>
+
+            {/* Direct Admin Banner */}
+            <div className="mt-8 rounded-2xl bg-amber-500/10 border border-amber-500/30 p-5 text-sm">
+              <div className="flex items-center gap-2 font-bold text-amber-600">
+                <LayoutDashboard className="h-4 w-4" />
+                Accès Administration Stage Kékéli
+              </div>
+              <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
+                Vous êtes administrateur ou associé fondateur ? Retrouvez toutes les demandes d'information et les inscriptions enregistrées sur le tableau de bord.
+              </p>
+              <Link
+                to="/admin"
+                className="mt-3 inline-flex items-center gap-1.5 text-xs font-bold text-amber-600 hover:underline"
+              >
+                Ouvrir le Tableau de Bord Admin →
+              </Link>
+            </div>
           </div>
         </Reveal>
 
         <Reveal anim="right">
           <form
-            className="rounded-3xl border border-border bg-card p-7 shadow-[var(--shadow-soft)] md:p-8"
-            onSubmit={(e) => e.preventDefault()}
+            className="rounded-3xl border border-border bg-card p-7 shadow-[var(--shadow-soft)] md:p-8 space-y-4"
+            onSubmit={handleSubmit}
           >
-            <h2 className="text-xl font-black tracking-tight">Nous écrire</h2>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Renseignez la classe, les matières et vos disponibilités — ou appelez-nous
-              directement au {PHONE_DISPLAY}.
+            <h2 className="text-xl font-black tracking-tight">Formulaire de Contact & Inscription</h2>
+            <p className="text-sm text-muted-foreground">
+              Renseignez les coordonnées pour enregistrer votre demande dans la base de données Stage Kékéli.
             </p>
-            <div className="mt-6 grid gap-4 sm:grid-cols-2">
-              <Field label="Nom du parent" placeholder="Kokou A." />
-              <Field label="Téléphone" placeholder="+228 …" />
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                  Nom du parent
+                </label>
+                <input
+                  type="text"
+                  placeholder="Ex: Mme Amouzou"
+                  value={parentName}
+                  onChange={(e) => setParentName(e.target.value)}
+                  className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition focus:border-[color:var(--sun-deep)] focus:ring-2"
+                />
+              </div>
+              <div>
+                <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                  Téléphone (+228) *
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="+228 90 12 34 56"
+                  value={parentPhone}
+                  onChange={(e) => setParentPhone(e.target.value)}
+                  className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition focus:border-[color:var(--sun-deep)] focus:ring-2"
+                />
+              </div>
             </div>
-            <div className="mt-4 grid gap-4 sm:grid-cols-2">
-              <Field label="Prénom de l'élève" placeholder="Amivi" />
-              <Field label="Classe" placeholder="Terminale D" />
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                  Prénom & Nom de l'élève *
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="Ex: Koffi Amouzou"
+                  value={studentName}
+                  onChange={(e) => setStudentName(e.target.value)}
+                  className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition focus:border-[color:var(--sun-deep)] focus:ring-2"
+                />
+              </div>
+              <div>
+                <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+                  Classe / Série
+                </label>
+                <select
+                  value={series}
+                  onChange={(e) => setSeries(e.target.value as any)}
+                  className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition focus:border-[color:var(--sun-deep)]"
+                >
+                  <option value="Première C">Première C</option>
+                  <option value="Première D">Première D</option>
+                  <option value="Terminale C">Terminale C</option>
+                  <option value="Terminale D">Terminale D</option>
+                </select>
+              </div>
             </div>
-            <div className="mt-4">
+            <div>
               <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
                 Matières souhaitées
               </label>
               <div className="mt-2 flex flex-wrap gap-2">
-                {["Mathématiques", "Physique"].map((s) => (
-                  <label
-                    key={s}
-                    className="cursor-pointer rounded-full border border-border bg-background px-3.5 py-1.5 text-xs font-semibold text-muted-foreground transition has-[:checked]:border-[color:var(--sun-deep)] has-[:checked]:bg-[color:var(--sun)]/25 has-[:checked]:text-foreground"
-                  >
-                    <input type="checkbox" name="matieres" value={s} className="sr-only" />
-                    {s}
-                  </label>
-                ))}
+                <button
+                  type="button"
+                  onClick={() => setMathSelected(!mathSelected)}
+                  className={`rounded-full px-3.5 py-1.5 text-xs font-semibold border transition ${
+                    mathSelected
+                      ? "border-[color:var(--sun-deep)] bg-[color:var(--sun)]/30 text-foreground font-bold"
+                      : "border-border bg-background text-muted-foreground"
+                  }`}
+                >
+                  Mathématiques
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPhysicsSelected(!physicsSelected)}
+                  className={`rounded-full px-3.5 py-1.5 text-xs font-semibold border transition ${
+                    physicsSelected
+                      ? "border-[color:var(--sun-deep)] bg-[color:var(--sun)]/30 text-foreground font-bold"
+                      : "border-border bg-background text-muted-foreground"
+                  }`}
+                >
+                  Physique-Chimie
+                </button>
               </div>
             </div>
-            <div className="mt-4">
+            <div>
               <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
-                Message
+                Message / Précisions
               </label>
               <textarea
-                rows={4}
+                rows={3}
                 placeholder="Disponibilités, objectifs, difficultés rencontrées…"
-                className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition focus:border-[color:var(--sun-deep)] focus:ring-2 focus:ring-[color:var(--sun)]/40"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition focus:border-[color:var(--sun-deep)] focus:ring-2"
               />
             </div>
             <button
               type="submit"
-              className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary px-6 py-3.5 text-sm font-bold text-primary-foreground transition hover:opacity-90"
+              className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary px-6 py-3.5 text-sm font-bold text-primary-foreground transition hover:opacity-90 cursor-pointer"
             >
-              Envoyer ma demande <ArrowRight className="h-4 w-4" />
+              Envoyer ma demande & Transmettre à l'Admin <ArrowRight className="h-4 w-4" />
             </button>
           </form>
         </Reveal>
       </section>
 
+      {/* Confirmation Modal */}
+      {confirmationRecord && (
+        <Dialog open={!!confirmationRecord} onOpenChange={() => setConfirmationRecord(null)}>
+          <DialogContent className="bg-card text-foreground border-border max-w-lg">
+            <DialogHeader>
+              <DialogTitle className="text-xl font-black text-center text-[color:var(--sun-deep)] flex items-center justify-center gap-2">
+                <CheckCircle className="h-6 w-6 text-emerald-500" />
+                Demande Enregistrée !
+              </DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 pt-2 text-sm text-center">
+              <p className="text-xs text-muted-foreground">
+                Votre demande a été enregistrée avec succès dans le système d'administration sous la référence :
+              </p>
+              <p className="text-2xl font-black font-mono text-foreground">{confirmationRecord.id}</p>
+              <p className="text-xs text-slate-500">
+                Élève : <strong>{confirmationRecord.studentName}</strong> ({confirmationRecord.series})
+              </p>
+              <div className="pt-2 flex flex-col gap-2">
+                <a
+                  href={generateWhatsAppReceiptLink(confirmationRecord)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full"
+                >
+                  <Button className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white font-bold gap-2">
+                    <MessageSquare className="h-4 w-4" />
+                    Finaliser la demande sur WhatsApp
+                  </Button>
+                </a>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
+
       <FaqSection items={CONTACT_FAQ} title={<>Avant de nous écrire</>} />
     </>
-  );
-}
-
-function Field({ label, placeholder }: { label: string; placeholder: string }) {
-  return (
-    <div>
-      <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
-        {label}
-      </label>
-      <input
-        type="text"
-        placeholder={placeholder}
-        className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition focus:border-[color:var(--sun-deep)] focus:ring-2 focus:ring-[color:var(--sun)]/40"
-      />
-    </div>
   );
 }
