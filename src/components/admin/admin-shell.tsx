@@ -268,7 +268,7 @@ export function AdminShell({ children, onDataChange }: AdminShellProps) {
                       onChange={(e) => setFormData({ ...formData, paymentMethod: e.target.value as any })}
                       className="w-full rounded-lg bg-slate-900 border border-slate-700 px-3 py-2 text-sm text-white focus:outline-none focus:border-[#CDFE00]"
                     >
-                      <option value="Moov Money">Moov Money (+228 98 93 02 11)</option>
+                      <option value="TMoney">TMoney Togocel (+228 93 51 00 74)</option>
                       <option value="En personne">En personne / Espèces</option>
                     </select>
                   </div>

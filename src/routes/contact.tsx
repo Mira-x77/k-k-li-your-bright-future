@@ -11,7 +11,7 @@ import {
   WhatsAppIcon,
   type FaqItem,
 } from "@/components/marketing";
-import { savePublicRegistration, generateWhatsAppReceiptLink, type ProgramSignIn } from "@/lib/admin-store";
+import { savePublicRegistration, generateWhatsAppReceiptLink, OFFICIAL_EMAIL, type ProgramSignIn } from "@/lib/admin-store";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
@@ -22,12 +22,12 @@ export const Route = createFileRoute("/contact")({
       {
         name: "description",
         content:
-          "Contactez Stage Kékéli à Lomé, Togo — inscription en mathématiques et en physique pour votre enfant en Première C & D et Terminale C & D. Téléphone : +228 98 93 02 11.",
+          "Contactez Stage Kékéli à Lomé, Togo — inscription en mathématiques et en physique pour votre enfant en Première C & D et Terminale C & D. Téléphone / WhatsApp : +228 93 51 00 74.",
       },
       { property: "og:title", content: "Contact — Stage Kékéli" },
       {
         property: "og:description",
-        content: "Appelez-nous au +228 98 93 02 11 ou écrivez-nous : Stage Kékéli, Lomé, Togo.",
+        content: "Appelez-nous au +228 93 51 00 74 ou écrivez-nous à stagekekeli@gmail.com : Stage Kékéli, Lomé, Togo.",
       },
     ],
   }),
@@ -40,12 +40,12 @@ const CONTACT_FAQ: FaqItem[] = [
     a: "Uniquement les classes de Première et de Terminale des séries C & D. Précisez la classe de votre enfant dans le formulaire pour que nous puissions vous répondre précisément.",
   },
   {
-    q: "Que faut-il préparer pour le premier échange ?",
-    a: "La classe de votre enfant et les chapitres de mathématiques ou de physique qui posent difficulté, avec si possible ses derniers bulletins. Cela nous permet d'en parler concrètement dès le premier échange.",
+    q: "Quels sont les horaires des séances ?",
+    a: "Les répétitions et cours d'approfondissement se déroulent exclusivement le samedi (8h00 - 17h00).",
   },
   {
     q: "Prenez-vous des inscriptions en cours d'année ?",
-    a: "Il est possible de nous rejoindre en cours d'année scolaire. Appelez-nous au +228 98 93 02 11 pour que nous voyions ensemble ce qui peut être organisé.",
+    a: "Il est possible de nous rejoindre en cours d'année scolaire. Appelez-nous au +228 93 51 00 74 pour que nous voyions ensemble ce qui peut être organisé.",
   },
 ];
 
@@ -88,7 +88,7 @@ function ContactPage() {
 
   return (
     <>
-      <section className="hero-clean-bg border-b border-border/50">
+      <section className="bg-[#F6F5F0] dark:bg-card border-b border-border/50">
         <div className="mx-auto max-w-7xl px-6 py-16 text-center md:py-20">
           <Reveal>
             <div className="text-xs font-bold uppercase tracking-[0.24em] text-[color:var(--sun-deep)]">
@@ -98,14 +98,14 @@ function ContactPage() {
               Une question ? Parlons du parcours de votre enfant
             </h1>
             <p className="mx-auto mt-5 max-w-2xl text-muted-foreground">
-              Appelez-nous ou écrivez-nous. Toute demande d'information ou de suivi pour votre enfant saisie ci-dessous est transmise à l'équipe Stage Kékéli.
+              Appelez-nous au +228 93 51 00 74 ou écrivez-nous à stagekekeli@gmail.com. Les séances ont lieu exclusivement le samedi.
             </p>
           </Reveal>
           <Reveal delay={80}>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <a
                 href="#formulaire"
-                className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3.5 text-sm font-bold text-primary-foreground transition hover:opacity-90"
+                className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3.5 text-sm font-bold text-primary-foreground transition hover:opacity-90 shadow-md"
               >
                 Aller au formulaire <ArrowRight className="h-4 w-4" />
               </a>
@@ -133,7 +133,7 @@ function ContactPage() {
 
       <section
         id="formulaire"
-        className="mx-auto grid max-w-7xl gap-12 px-6 py-20 lg:grid-cols-[1fr_1.1fr]"
+        className="mx-auto grid max-w-7xl gap-12 px-6 py-20 lg:grid-cols-[1fr_1.1fr] bg-[#FAF9F5] dark:bg-background"
       >
         <Reveal anim="left">
           <div>
@@ -141,33 +141,33 @@ function ContactPage() {
               Joignez-nous directement
             </h2>
             <p className="mt-3 text-sm text-muted-foreground">
-              Par téléphone, par courriel ou via le formulaire ci-contre pour toute question relative au suivi scolaire.
+              Par téléphone, par courriel ou via le formulaire ci-contre pour toute question relative au suivi scolaire du samedi.
             </p>
             <ul className="mt-8 space-y-4 text-sm">
               {[
                 {
                   icon: WhatsAppIcon,
-                  t: "WhatsApp",
-                  d: WHATSAPP_LABEL,
+                  t: "WhatsApp & Téléphone",
+                  d: PHONE_DISPLAY,
                   href: WHATSAPP_HREF,
                   external: true,
                 },
                 {
                   icon: Phone,
                   t: PHONE_DISPLAY,
-                  d: "Appelez-nous pour l'inscription et l'organisation du suivi de votre enfant.",
+                  d: "Appelez-nous pour l'inscription aux séances du samedi.",
                   href: PHONE_HREF,
                 },
                 {
                   icon: Mail,
-                  t: "contact@stagekekeli.tg",
-                  d: "Écrivez-nous : classe, matières et disponibilités.",
-                  href: "mailto:contact@stagekekeli.tg",
+                  t: OFFICIAL_EMAIL,
+                  d: "Écrivez-nous : classe, matières et besoins de votre enfant.",
+                  href: `mailto:${OFFICIAL_EMAIL}`,
                 },
                 {
                   icon: MapPin,
                   t: "Lomé, Togo",
-                  d: "Créneaux et modalités communiqués sur demande.",
+                  d: "Séances exclusivement le samedi (8h00 - 17h00).",
                 },
               ].map(({ icon: Icon, t, d, href }, i) => (
                 <Reveal key={t} anim="up" delay={i * 80}>
@@ -175,7 +175,7 @@ function ContactPage() {
                     {href ? (
                       <a
                         href={href}
-                        className="flex gap-4 rounded-2xl border border-border bg-card p-5 transition hover:border-[color:var(--sun-deep)]/40"
+                        className="flex gap-4 rounded-2xl border border-border bg-[#F3F2EC] dark:bg-card p-5 transition hover:border-[color:var(--sun-deep)]/40"
                       >
                         <Icon className="mt-0.5 h-5 w-5 flex-none text-[color:var(--sun-deep)]" />
                         <span>
@@ -184,7 +184,7 @@ function ContactPage() {
                         </span>
                       </a>
                     ) : (
-                      <div className="flex gap-4 rounded-2xl border border-border bg-card p-5">
+                      <div className="flex gap-4 rounded-2xl border border-border bg-[#F3F2EC] dark:bg-card p-5">
                         <Icon className="mt-0.5 h-5 w-5 flex-none text-[color:var(--sun-deep)]" />
                         <div>
                           <div className="font-bold">{t}</div>
@@ -201,7 +201,7 @@ function ContactPage() {
 
         <Reveal anim="right">
           <form
-            className="rounded-3xl border border-border bg-card p-7 shadow-[var(--shadow-soft)] md:p-8 space-y-4"
+            className="rounded-3xl border border-border bg-[#F3F2EC] dark:bg-card p-7 shadow-[var(--shadow-soft)] md:p-8 space-y-4"
             onSubmit={handleSubmit}
           >
             <h2 className="text-xl font-black tracking-tight">Formulaire de Contact Parent</h2>
@@ -219,7 +219,7 @@ function ContactPage() {
                   placeholder="Ex: Mme Amouzou"
                   value={parentName}
                   onChange={(e) => setParentName(e.target.value)}
-                  className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition focus:border-[color:var(--sun-deep)] focus:ring-2"
+                  className="mt-2 w-full rounded-xl border border-border bg-card px-4 py-3 text-sm outline-none transition focus:border-[color:var(--sun-deep)] focus:ring-2"
                 />
               </div>
               <div>
@@ -229,10 +229,10 @@ function ContactPage() {
                 <input
                   type="text"
                   required
-                  placeholder="+228 90 12 34 56"
+                  placeholder="+228 93 51 00 74"
                   value={parentPhone}
                   onChange={(e) => setParentPhone(e.target.value)}
-                  className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition focus:border-[color:var(--sun-deep)] focus:ring-2"
+                  className="mt-2 w-full rounded-xl border border-border bg-card px-4 py-3 text-sm outline-none transition focus:border-[color:var(--sun-deep)] focus:ring-2"
                 />
               </div>
             </div>
@@ -247,7 +247,7 @@ function ContactPage() {
                   placeholder="Ex: Koffi Amouzou"
                   value={studentName}
                   onChange={(e) => setStudentName(e.target.value)}
-                  className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition focus:border-[color:var(--sun-deep)] focus:ring-2"
+                  className="mt-2 w-full rounded-xl border border-border bg-card px-4 py-3 text-sm outline-none transition focus:border-[color:var(--sun-deep)] focus:ring-2"
                 />
               </div>
               <div>
@@ -257,7 +257,7 @@ function ContactPage() {
                 <select
                   value={series}
                   onChange={(e) => setSeries(e.target.value as any)}
-                  className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition focus:border-[color:var(--sun-deep)]"
+                  className="mt-2 w-full rounded-xl border border-border bg-card px-4 py-3 text-sm outline-none transition focus:border-[color:var(--sun-deep)]"
                 >
                   <option value="Première C">Première C</option>
                   <option value="Première D">Première D</option>
@@ -297,19 +297,19 @@ function ContactPage() {
             </div>
             <div>
               <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
-                Message / Précisions
+                Message / Précisions (Séances du samedi)
               </label>
               <textarea
                 rows={3}
-                placeholder="Disponibilités de votre enfant, objectifs, difficultés rencontrées…"
+                placeholder="Objectifs, difficultés en maths ou en physique…"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition focus:border-[color:var(--sun-deep)] focus:ring-2"
+                className="mt-2 w-full rounded-xl border border-border bg-card px-4 py-3 text-sm outline-none transition focus:border-[color:var(--sun-deep)] focus:ring-2"
               />
             </div>
             <button
               type="submit"
-              className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary px-6 py-3.5 text-sm font-bold text-primary-foreground transition hover:opacity-90 cursor-pointer"
+              className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary px-6 py-3.5 text-sm font-bold text-primary-foreground transition hover:opacity-90 cursor-pointer shadow-md"
             >
               Envoyer ma demande <ArrowRight className="h-4 w-4" />
             </button>

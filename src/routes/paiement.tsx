@@ -3,7 +3,7 @@ import { ArrowRight, Lock, Receipt, ShieldCheck, Smartphone, CheckCircle, Printe
 import { useState } from "react";
 import { Reveal } from "@/components/reveal";
 import { CallbackCta, FaqSection, SectionHeading, type FaqItem } from "@/components/marketing";
-import { savePublicRegistration, generateWhatsAppReceiptLink, type ProgramSignIn } from "@/lib/admin-store";
+import { savePublicRegistration, generateWhatsAppReceiptLink, OFFICIAL_PHONE, OFFICIAL_EMAIL, type ProgramSignIn } from "@/lib/admin-store";
 import { ProfilePhotoCapture } from "@/components/profile-photo-capture";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -15,12 +15,12 @@ export const Route = createFileRoute("/paiement")({
       {
         name: "description",
         content:
-          "Inscrivez votre enfant et payez ses frais Stage Kékéli par Moov Money ou en personne : 2 500 FCFA par mois et par matière ou 22 500 FCFA par an, plus 1 500 FCFA d'inscription. TAF 10% intégrée au récapitulatif.",
+          "Inscrivez votre enfant et payez ses frais Stage Kékéli par TMoney (Togocel) ou en personne : 2 500 FCFA par mois et par matière ou 22 500 FCFA par an, plus 1 500 FCFA d'inscription. TAF 10% intégrée au récapitulatif.",
       },
       { property: "og:title", content: "Paiement & Inscription — Stage Kékéli" },
       {
         property: "og:description",
-        content: "Formulaire d'inscription parent direct Moov Money et en personne.",
+        content: "Formulaire d'inscription parent direct TMoney Togocel (+228 93 51 00 74) et en personne.",
       },
     ],
   }),
@@ -34,15 +34,15 @@ const PAYMENT_FAQ: FaqItem[] = [
   },
   {
     q: "Pourquoi la TAF de 10% s'ajoute-t-elle ?",
-    a: "La Taxe sur les Activités Financières est prélevée par les opérateurs Mobile Money au Togo sur les transactions. Nous l'affichons systématiquement avant validation pour qu'il n'y ait aucune surprise.",
+    a: "La Taxe sur les Activités Financières est prélevée par l'opérateur TMoney (Togocel / Togocom) au Togo sur les transactions Mobile Money. Nous l'affichons systématiquement avant validation pour qu'il n'y ait aucune surprise.",
   },
   {
     q: "Quels opérateurs acceptez-vous ?",
-    a: "Moov Money (+228 98 93 02 11) et le paiement en personne / espèces à Lomé.",
+    a: "TMoney Togocel (+228 93 51 00 74) et le paiement en personne / espèces à Lomé.",
   },
   {
-    q: "Pourquoi la photo de l'enfant est-elle obligatoire ?",
-    a: "La photo de votre enfant est enregistrée pour établir sa carte d'élève officielle Stage Kékéli et garantir son accès aux cours et séances du samedi.",
+    q: "Quels sont les jours de cours ?",
+    a: "Les cours et séances intensives de répétition se déroulent uniquement le samedi (8h00 - 17h00).",
   },
 ];
 
@@ -54,7 +54,7 @@ const REGISTRATION_FEE = 1500;
 const fmt = (n: number) => n.toLocaleString("fr-FR");
 
 function PaymentPage() {
-  const [operator, setOperator] = useState<"Moov Money" | "En personne">("Moov Money");
+  const [operator, setOperator] = useState<"TMoney" | "En personne">("TMoney");
   const [subjectsChoice, setSubjectsChoice] = useState<"math" | "physics" | "both">("both");
   const [series, setSeries] = useState<ProgramSignIn["series"]>("Terminale C");
   const [plan, setPlan] = useState<"mensuel" | "annuel">("mensuel");
@@ -65,7 +65,6 @@ function PaymentPage() {
   const [parentName, setParentName] = useState("");
   const [parentPhone, setParentPhone] = useState("");
   const [photoUrl, setPhotoUrl] = useState("");
-  const [photoMissingError, setPhotoMissingError] = useState(false);
 
   // Confirmation Modal State
   const [receiptRecord, setReceiptRecord] = useState<ProgramSignIn | null>(null);
@@ -75,11 +74,12 @@ function PaymentPage() {
   const tuition = unitPrice * numSubjects;
   const registration = withRegistration ? REGISTRATION_FEE : 0;
   const subtotal = tuition + registration;
-  const taf = operator === "Moov Money" ? Math.round(subtotal * 0.1) : 0;
+  const taf = operator === "TMoney" ? Math.round(subtotal * 0.1) : 0;
   const total = subtotal + taf;
 
   const handleRegisterAndPay = (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!studentName.trim() || !parentPhone.trim()) {
       alert("Veuillez renseigner le nom de votre enfant et votre numéro de téléphone (parent).");
       return;
@@ -101,7 +101,7 @@ function PaymentPage() {
       paymentPlan: plan,
       paymentMethod: operator,
       saturdaySessionIncluded: true,
-      photoUrl: photoUrl,
+      photoUrl: photoUrl || undefined,
     });
 
     setReceiptRecord(record);
@@ -109,23 +109,23 @@ function PaymentPage() {
 
   return (
     <>
-      <section className="hero-clean-bg border-b border-border/50">
+      <section className="bg-[#F6F5F0] dark:bg-card border-b border-border/50">
         <div className="mx-auto max-w-7xl px-6 py-16 text-center md:py-20">
           <Reveal>
             <div className="text-xs font-bold uppercase tracking-[0.24em] text-[color:var(--sun-deep)]">
-              Espace Parent — Inscription & Paiement
+              Espace Parent — Inscription & Paiement TMoney
             </div>
             <h1 className="mx-auto mt-4 max-w-3xl text-4xl font-black leading-[1.05] tracking-tight sm:text-5xl md:text-6xl">
               Inscrivez votre enfant & réglez ses frais
             </h1>
             <p className="mx-auto mt-5 max-w-2xl text-muted-foreground">
-              Par Moov Money ou en personne. Prenez la photo d'identité de votre enfant en direct pour sa carte d'élève et recevez votre reçu numérique officiel.
+              Par TMoney Togocel (+228 93 51 00 74) ou en personne à Lomé. Les séances ont lieu uniquement le samedi.
             </p>
           </Reveal>
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-6 py-20">
+      <section className="mx-auto max-w-7xl px-6 py-20 bg-[#FAF9F5] dark:bg-background">
         <div className="grid gap-12 lg:grid-cols-2 lg:items-start">
           {/* Left Column Info */}
           <Reveal anim="left">
@@ -134,13 +134,13 @@ function PaymentPage() {
                 Une démarche simple pour les parents
               </h2>
               <p className="mt-5 leading-relaxed text-muted-foreground">
-                Dès la validation du formulaire ci-contre avec la photo de votre enfant, l'inscription est immédiatement enregistrée dans le système Stage Kékéli à Lomé et un reçu numérique parent est délivré.
+                Dès la validation du formulaire ci-contre, l'inscription pour les séances du samedi est immédiatement enregistrée dans le système Stage Kékéli à Lomé et un reçu numérique parent est délivré.
               </p>
 
               <Reveal anim="up">
-                <div className="mt-8 rounded-3xl border border-border bg-card p-7 md:p-8">
+                <div className="mt-8 rounded-3xl border border-border bg-[#F3F2EC] dark:bg-card p-7 md:p-8 shadow-sm">
                   <div className="text-sm font-bold uppercase tracking-[0.18em] text-[color:var(--sun-deep)]">
-                    Tarifs officiels du suivi scolaire
+                    Tarifs officiels du suivi (Samedi uniquement)
                   </div>
                   <div className="mt-6 grid gap-6 sm:grid-cols-2">
                     {[
@@ -175,9 +175,9 @@ function PaymentPage() {
               <ul className="mt-8 space-y-3">
                 {[
                   {
-                    icon: Camera,
-                    t: "Photo de votre enfant requise",
-                    d: "Capture photo en direct ou import pour la carte d'élève officielle Stage Kékéli.",
+                    icon: Smartphone,
+                    t: "Règlement TMoney Togocel",
+                    d: `Transfert direct au numéro officiel TMoney : ${OFFICIAL_PHONE}`,
                   },
                   {
                     icon: Lock,
@@ -191,7 +191,7 @@ function PaymentPage() {
                   },
                 ].map(({ icon: Icon, t, d }, i) => (
                   <Reveal key={t} anim="up" delay={i * 90}>
-                    <li className="flex gap-4 rounded-2xl border border-border bg-card p-5">
+                    <li className="flex gap-4 rounded-2xl border border-border bg-[#F3F2EC] dark:bg-card p-5">
                       <Icon className="mt-0.5 h-5 w-5 flex-none text-[color:var(--sun-deep)]" />
                       <div>
                         <div className="text-sm font-bold">{t}</div>
@@ -206,16 +206,16 @@ function PaymentPage() {
 
           {/* Right Column Parent Registration & Payment Form */}
           <Reveal anim="right">
-            <form onSubmit={handleRegisterAndPay} className="rounded-3xl border border-border bg-card p-7 shadow-[var(--shadow-warm)] md:p-8 space-y-6">
+            <form onSubmit={handleRegisterAndPay} className="rounded-3xl border border-border bg-[#F3F2EC] dark:bg-card p-7 shadow-[var(--shadow-warm)] md:p-8 space-y-6">
               <div className="flex items-center justify-between">
                 <div className="text-xs font-bold uppercase tracking-widest text-[color:var(--sun-deep)]">
-                  Formulaire d'Inscription Parent
+                  Formulaire d'Inscription Parent (Samedi uniquement)
                 </div>
                 <Smartphone className="h-5 w-5 text-[color:var(--sun-deep)]" />
               </div>
 
               {/* Photo Capture Step (Optionnel) */}
-              <div className="rounded-2xl border border-border bg-background p-4">
+              <div className="rounded-2xl border border-border bg-[#FAF9F5] dark:bg-background p-4">
                 <ProfilePhotoCapture
                   value={photoUrl}
                   onChange={(photo) => setPhotoUrl(photo)}
@@ -223,7 +223,7 @@ function PaymentPage() {
               </div>
 
               {/* Parent & Student Info */}
-              <div className="space-y-4 rounded-2xl border border-border bg-background p-4">
+              <div className="space-y-4 rounded-2xl border border-border bg-[#FAF9F5] dark:bg-background p-4">
                 <div className="text-xs font-bold uppercase tracking-wider text-foreground">
                   Informations de l'élève & de vous-même (parent)
                 </div>
@@ -296,7 +296,7 @@ function PaymentPage() {
               {/* Subjects Selection */}
               <div>
                 <div className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2">
-                  Matières à suivre pour votre enfant
+                  Matières à suivre (Séances du Samedi)
                 </div>
                 <div className="grid grid-cols-3 gap-2">
                   <button
@@ -347,7 +347,7 @@ function PaymentPage() {
               </div>
 
               {/* Cost Calculation Summary */}
-              <div className="space-y-2 rounded-2xl bg-background p-4 text-sm border border-border">
+              <div className="space-y-2 rounded-2xl bg-[#FAF9F5] dark:bg-background p-4 text-sm border border-border">
                 <Row
                   label={
                     plan === "mensuel"
@@ -359,7 +359,7 @@ function PaymentPage() {
                 {withRegistration && (
                   <Row label="Frais d'inscription uniques" value={`${fmt(REGISTRATION_FEE)} FCFA`} />
                 )}
-                {operator === "Moov Money" && <Row label="TAF (10% Mobile Money)" value={`${fmt(taf)} FCFA`} />}
+                {operator === "TMoney" && <Row label="TAF (10% TMoney Mobile Money)" value={`${fmt(taf)} FCFA`} />}
                 <div className="border-t border-border pt-1" />
                 <Row label="Total Général à Régler" value={`${fmt(total)} FCFA`} bold />
               </div>
@@ -372,14 +372,14 @@ function PaymentPage() {
                 <div className="grid grid-cols-2 gap-3">
                   <button
                     type="button"
-                    onClick={() => setOperator("Moov Money")}
+                    onClick={() => setOperator("TMoney")}
                     className={`rounded-xl px-4 py-3 text-sm font-bold transition ${
-                      operator === "Moov Money"
+                      operator === "TMoney"
                         ? "bg-[color:var(--sun)] text-[color:var(--ink)] ring-2 ring-[color:var(--sun-deep)]"
                         : "bg-background border border-border hover:bg-muted"
                     }`}
                   >
-                    Moov Money
+                    TMoney (Togocel)
                   </button>
                   <button
                     type="button"
@@ -433,7 +433,7 @@ function PaymentPage() {
                 )}
                 <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Numéro de Référence Officiel</p>
                 <p className="text-2xl font-black text-foreground mt-0.5 tracking-tight font-mono">{receiptRecord.id}</p>
-                <p className="text-xs font-semibold text-emerald-600 mt-1">Enregistré dans le système Stage Kékéli</p>
+                <p className="text-xs font-semibold text-emerald-600 mt-1">Enregistré dans le système Stage Kékéli (Samedi)</p>
               </div>
 
               <div className="space-y-2 rounded-xl bg-muted/40 p-4 border border-border text-xs">
@@ -463,16 +463,16 @@ function PaymentPage() {
                 </div>
               </div>
 
-              {receiptRecord.paymentMethod === "Moov Money" ? (
+              {receiptRecord.paymentMethod === "TMoney" || receiptRecord.paymentMethod === "Moov Money" ? (
                 <div className="p-4 rounded-xl bg-blue-500/10 border border-blue-500/20 text-xs space-y-2">
                   <p className="font-bold text-blue-600 flex items-center gap-1.5">
-                    <Smartphone className="h-4 w-4" /> Instructions Moov Money Togo :
+                    <Smartphone className="h-4 w-4" /> Instructions TMoney (Togocel / Togocom) :
                   </p>
                   <p className="text-muted-foreground leading-relaxed">
-                    Effectuez le transfert du montant de <strong>{fmt(receiptRecord.totalAmountDue)} FCFA</strong> vers le numéro officiel Stage Kékéli :
+                    Effectuez le transfert TMoney du montant de <strong>{fmt(receiptRecord.totalAmountDue)} FCFA</strong> vers le numéro officiel Stage Kékéli :
                   </p>
                   <p className="text-base font-black text-foreground font-mono bg-background p-2 rounded text-center border border-border">
-                    +228 98 93 02 11
+                    {OFFICIAL_PHONE}
                   </p>
                 </div>
               ) : (
@@ -512,8 +512,8 @@ function PaymentPage() {
 
       <FaqSection items={PAYMENT_FAQ} title={<>Questions sur l'inscription & le paiement</>} />
       <CallbackCta
-        title={<>Un doute sur le règlement ? Écrivez-nous.</>}
-        intro="Écrivez-nous à contact@stagekekeli.tg pour toute question sur le règlement ou l'inscription de votre enfant."
+        title={<>Un doute sur le règlement TMoney ? Écrivez-nous.</>}
+        intro={`Écrivez-nous à ${OFFICIAL_EMAIL} ou sur WhatsApp au ${OFFICIAL_PHONE} pour toute question sur le règlement TMoney.`}
       />
     </>
   );

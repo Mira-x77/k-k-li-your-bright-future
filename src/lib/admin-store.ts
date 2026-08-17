@@ -6,7 +6,7 @@ export interface ProgramSignIn {
   series: "Première C" | "Première D" | "Terminale C" | "Terminale D";
   subjects: ("Mathématiques" | "Physique-Chimie")[];
   paymentPlan: "mensuel" | "annuel";
-  paymentMethod: "Moov Money" | "En personne" | "Virement";
+  paymentMethod: "TMoney" | "Moov Money" | "En personne" | "Virement";
   registrationFeePaid: boolean;
   tuitionFeePaid: number; // in FCFA
   totalAmountDue: number; // in FCFA
@@ -23,7 +23,7 @@ export interface DashboardMetrics {
   confirmedSignIns: number;
   pendingSignIns: number;
   totalRevenue: number;
-  moovMoneyRevenue: number;
+  tmoneyRevenue: number;
   cashRevenue: number;
   saturdayCount: number;
   seriesBreakdown: Record<string, number>;
@@ -32,6 +32,9 @@ export interface DashboardMetrics {
 
 const STORAGE_KEY = "stage_kekeli_real_sign_ins";
 const UNREAD_KEY = "stage_kekeli_unread_count";
+
+export const OFFICIAL_PHONE = "+228 93 51 00 74";
+export const OFFICIAL_EMAIL = "stagekekeli@gmail.com";
 
 // Real-time broadcast channel across browser tabs
 let broadcastChannel: BroadcastChannel | null = null;
@@ -61,7 +64,7 @@ export function savePublicRegistration(entry: {
   series: ProgramSignIn["series"];
   subjects: ("Mathématiques" | "Physique-Chimie")[];
   paymentPlan: "mensuel" | "annuel";
-  paymentMethod: "Moov Money" | "En personne" | "Virement";
+  paymentMethod: "TMoney" | "Moov Money" | "En personne" | "Virement";
   saturdaySessionIncluded?: boolean;
   photoUrl?: string;
 }): ProgramSignIn {
@@ -73,7 +76,8 @@ export function savePublicRegistration(entry: {
   const tuition = unitPrice * entry.subjects.length;
   const registrationFee = 1500;
   const subtotal = tuition + registrationFee;
-  const taf = entry.paymentMethod === "Moov Money" ? Math.round(subtotal * 0.1) : 0;
+  const isMobileMoney = entry.paymentMethod === "TMoney" || entry.paymentMethod === "Moov Money";
+  const taf = isMobileMoney ? Math.round(subtotal * 0.1) : 0;
   const totalDue = subtotal + taf;
 
   const newRecord: ProgramSignIn = {
@@ -86,10 +90,10 @@ export function savePublicRegistration(entry: {
     paymentPlan: entry.paymentPlan,
     paymentMethod: entry.paymentMethod,
     registrationFeePaid: true,
-    tuitionFeePaid: entry.paymentMethod === "Moov Money" ? totalDue : registrationFee,
+    tuitionFeePaid: isMobileMoney ? totalDue : registrationFee,
     totalAmountDue: totalDue,
-    status: entry.paymentMethod === "Moov Money" ? "Confirmé" : "En attente",
-    saturdaySessionIncluded: entry.saturdaySessionIncluded ?? true,
+    status: isMobileMoney ? "Confirmé" : "En attente",
+    saturdaySessionIncluded: true, // Toujours le samedi
     photoUrl: entry.photoUrl,
     createdAt: new Date().toISOString(),
     readByAdmin: false,
@@ -178,13 +182,13 @@ export function getDashboardMetrics(): DashboardMetrics {
     confirmedSignIns: signIns.filter((s) => s.status === "Confirmé").length,
     pendingSignIns: signIns.filter((s) => s.status !== "Confirmé").length,
     totalRevenue: signIns.reduce((acc, s) => acc + s.tuitionFeePaid, 0),
-    moovMoneyRevenue: signIns
-      .filter((s) => s.paymentMethod === "Moov Money")
+    tmoneyRevenue: signIns
+      .filter((s) => s.paymentMethod === "TMoney" || s.paymentMethod === "Moov Money")
       .reduce((acc, s) => acc + s.tuitionFeePaid, 0),
     cashRevenue: signIns
       .filter((s) => s.paymentMethod === "En personne")
       .reduce((acc, s) => acc + s.tuitionFeePaid, 0),
-    saturdayCount: signIns.filter((s) => s.saturdaySessionIncluded).length,
+    saturdayCount: signIns.length, // Samedi uniquement
     seriesBreakdown: {
       "Première C": signIns.filter((s) => s.series === "Première C").length,
       "Première D": signIns.filter((s) => s.series === "Première D").length,
@@ -206,8 +210,8 @@ export function generateWhatsAppReceiptLink(record: ProgramSignIn): string {
       `Référence : *${record.id}*\n` +
       `Élève : *${record.studentName}* (${record.series})\n` +
       `Matière(s) : ${record.subjects.join(" & ")}\n` +
-      `Formule : ${record.paymentPlan === "annuel" ? "Annuel" : "Mensuel"}\n` +
-      `Mode de règlement : ${record.paymentMethod}\n` +
+      `Formule : ${record.paymentPlan === "annuel" ? "Annuel" : "Mensuel"} (Séances du Samedi)\n` +
+      `Mode de règlement : ${record.paymentMethod} (T-Money Togocel : ${OFFICIAL_PHONE})\n` +
       `Montant Réglé : *${record.tuitionFeePaid.toLocaleString("fr-FR")} FCFA*\n` +
       `Statut : ${record.status === "Confirmé" ? "✅ Confirmé" : "⏳ En attente de règlement"}\n\n` +
       `Merci d'avoir choisi Stage Kékéli, la lumière qui guide vers la réussite !`
@@ -227,7 +231,7 @@ export function exportToCSV(data: ProgramSignIn[] = getSignIns()) {
     "Montant Réglé (FCFA)",
     "Montant Dû (FCFA)",
     "Statut",
-    "Cours Samedi",
+    "Horaires",
     "Nom Parent",
     "Téléphone Parent",
     "Date d'inscription",
@@ -244,7 +248,7 @@ export function exportToCSV(data: ProgramSignIn[] = getSignIns()) {
     item.tuitionFeePaid,
     item.totalAmountDue,
     item.status,
-    item.saturdaySessionIncluded ? "Oui" : "Non",
+    "Samedi uniquement",
     `"${item.parentName}"`,
     `"${item.parentPhone}"`,
     new Date(item.createdAt).toLocaleDateString("fr-FR"),

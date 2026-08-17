@@ -1,6 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, BookOpen, ChevronRight, Menu, X, ShieldCheck, UserCheck } from "lucide-react";
-import { useState } from "react";
+import { ArrowRight, ShieldCheck } from "lucide-react";
 
 const NAV_LINKS = [
   { to: "/", label: "Accueil" },
@@ -15,7 +14,7 @@ const NAV_LINKS = [
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-30 border-b border-border/60 bg-background/90 backdrop-blur-md">
+    <header className="sticky top-0 z-30 border-b border-border/50 bg-[#FAF9F6]/90 dark:bg-background/90 backdrop-blur-md">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
         <Link to="/" className="flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[color:var(--sun)] font-black text-[color:var(--ink)] shadow-md">
@@ -24,7 +23,7 @@ export function SiteHeader() {
           <div className="flex flex-col">
             <span className="text-xl font-black tracking-tight">Stage Kékéli</span>
             <span className="text-[11px] font-semibold text-muted-foreground">
-              Maths & Physique · Première & Terminale C & D
+              Maths & Physique · Première & Terminale C & D (Samedi uniquement)
             </span>
           </div>
         </Link>
@@ -63,7 +62,7 @@ export function SiteHeader() {
 
 function MobileNav() {
   return (
-    <div className="lg:hidden border-t border-border/40 bg-background/95">
+    <div className="lg:hidden border-t border-border/40 bg-[#FAF9F6]/95 dark:bg-background/95">
       <div className="mx-auto flex max-w-7xl gap-1.5 overflow-x-auto px-4 pb-3 pt-2 text-sm">
         {NAV_LINKS.map((l) => (
           <Link
@@ -84,7 +83,7 @@ function MobileNav() {
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-border bg-card">
+    <footer className="border-t border-border bg-[#F5F4F0] dark:bg-card">
       <div className="mx-auto max-w-7xl px-6 py-16">
         <div className="grid gap-10 md:grid-cols-4">
           <div className="md:col-span-2">
@@ -95,13 +94,13 @@ export function SiteFooter() {
               <span className="text-xl font-black tracking-tight">Stage Kékéli</span>
             </div>
             <p className="mt-4 max-w-sm text-sm text-muted-foreground">
-              Le programme de répétitions d'excellence en Mathématiques et Physique-Chimie pour les élèves des séries scientifiques Première C, Première D, Terminale C et Terminale D à Lomé, Togo.
+              Le programme de répétitions d'excellence en Mathématiques et Physique-Chimie exclusivement les samedis pour les élèves des séries Première C, Première D, Terminale C et Terminale D à Lomé, Togo.
             </p>
 
             <div className="mt-6 flex flex-wrap items-center gap-3">
               <Link
                 to="/paiement"
-                className="inline-flex items-center gap-2 rounded-full bg-[color:var(--sun)] px-4 py-2 text-xs font-bold text-[color:var(--ink)] hover:opacity-90 transition"
+                className="inline-flex items-center gap-2 rounded-full bg-[color:var(--sun)] px-4 py-2 text-xs font-bold text-[color:var(--ink)] hover:opacity-90 transition shadow-sm"
               >
                 Inscrire un Élève <ArrowRight className="h-3.5 w-3.5" />
               </Link>
@@ -135,9 +134,10 @@ export function SiteFooter() {
               Direct & Urgence
             </div>
             <div className="mt-4 space-y-2 text-sm text-muted-foreground">
-              <div>Téléphone : +228 98 93 02 11</div>
-              <div>Moov Money : +228 98 93 02 11</div>
-              <div>Horaires : Lun - Sam / 8h - 18h</div>
+              <div>Téléphone / WhatsApp : +228 93 51 00 74</div>
+              <div>TMoney (Togocel) : +228 93 51 00 74</div>
+              <div>Email : stagekekeli@gmail.com</div>
+              <div>Horaires : <strong>Samedi uniquement (8h00 - 17h00)</strong></div>
               <div className="pt-2 text-xs font-bold text-[color:var(--sun-deep)]">Lomé, Togo</div>
             </div>
           </div>

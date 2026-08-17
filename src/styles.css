@@ -63,20 +63,20 @@
   --sun: oklch(0.85 0.17 88);            /* jaune Kékéli */
   --sun-deep: oklch(0.74 0.19 70);       /* ambre chaud */
   --ink: oklch(0.18 0.02 60);            /* encre nuit chaude */
-  --cream: oklch(0.985 0.02 88);         /* crème lumineux */
+  --cream: oklch(0.96 0.025 85);         /* crème chaleureux et adouci */
   --sage: oklch(0.62 0.1 155);           /* accent recherche */
 
   --background: var(--cream);
   --foreground: var(--ink);
-  --card: oklch(1 0 0);
+  --card: oklch(0.975 0.015 85);
   --card-foreground: var(--ink);
-  --popover: oklch(1 0 0);
+  --popover: oklch(0.975 0.015 85);
   --popover-foreground: var(--ink);
   --primary: var(--ink);
   --primary-foreground: var(--cream);
   --secondary: var(--sun);
   --secondary-foreground: var(--ink);
-  --muted: oklch(0.95 0.02 85);
+  --muted: oklch(0.93 0.02 85);
   --muted-foreground: oklch(0.45 0.03 65);
   --accent: var(--sun);
   --accent-foreground: var(--ink);

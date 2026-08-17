@@ -1,15 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
-import { BarChart3, PieChart, Wallet, ShieldCheck, Globe, Activity, Smartphone, CheckCircle2 } from "lucide-react";
+import { Wallet, Smartphone, Landmark, CalendarCheck, BookOpen, ShieldCheck, TrendingUp, BarChart3, Globe } from "lucide-react";
 import { AdminShell } from "@/components/admin/admin-shell";
-import { getDashboardMetrics, type DashboardMetrics } from "@/lib/admin-store";
+import { getDashboardMetrics, getSignIns, type DashboardMetrics } from "@/lib/admin-store";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const Route = createFileRoute("/admin/statistiques")({
   head: () => ({
     meta: [
-      { title: "Statistiques & Analytics — Admin Stage Kékéli" },
-      { name: "description", content: "Analytiques financières, statistiques de fréquentation et performance des cours." },
+      { title: "Statistiques & Financials — Admin Stage Kékéli" },
+      { name: "description", content: "Chiffre d'affaires, répartition TMoney vs Espèces et métriques des cours Stage Kékéli." },
     ],
   }),
   component: AdminStatistiquesPage,
@@ -32,19 +32,19 @@ function AdminStatistiquesPage() {
 
   return (
     <AdminShell onDataChange={loadData}>
-      <div className="space-y-8">
-        {/* Header */}
+      <div className="space-y-6">
+        {/* Page Header */}
         <div className="border-b border-slate-800 pb-6">
           <h1 className="text-2xl font-bold text-white tracking-tight sm:text-3xl">
-            Statistiques & Analytiques du Site
+            Statistiques & Métriques Financières
           </h1>
           <p className="text-sm text-slate-400 mt-1">
-            Indicateurs financiers, répartition des recettes Moov Money / Espèces et demandes pédagogiques.
+            Indicateurs de performance, répartition TMoney (Togocel) et suivi des inscriptions du samedi.
           </p>
         </div>
 
-        {/* Financial Overview Cards */}
-        <div className="grid gap-6 md:grid-cols-3">
+        {/* Financial KPI Cards */}
+        <div className="grid gap-4 sm:grid-cols-3">
           <Card className="bg-slate-900 border-slate-800 text-white">
             <CardHeader className="pb-2">
               <CardTitle className="text-xs font-medium text-slate-400 flex items-center justify-between">
@@ -63,14 +63,14 @@ function AdminStatistiquesPage() {
           <Card className="bg-slate-900 border-slate-800 text-white">
             <CardHeader className="pb-2">
               <CardTitle className="text-xs font-medium text-slate-400 flex items-center justify-between">
-                <span>Moov Money (+228 98 93 02 11)</span>
+                <span>TMoney Togocel (+228 93 51 00 74)</span>
                 <Smartphone className="h-4 w-4 text-blue-400" />
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-extrabold text-blue-400">{fmt(metrics.moovMoneyRevenue)} FCFA</div>
+              <div className="text-3xl font-extrabold text-blue-400">{fmt(metrics.tmoneyRevenue)} FCFA</div>
               <p className="text-xs text-slate-400 mt-2">
-                {Math.round((metrics.moovMoneyRevenue / (metrics.totalRevenue || 1)) * 100)}% du total des encaissements
+                {Math.round((metrics.tmoneyRevenue / (metrics.totalRevenue || 1)) * 100)}% du total des encaissements
               </p>
             </CardContent>
           </Card>
@@ -78,14 +78,14 @@ function AdminStatistiquesPage() {
           <Card className="bg-slate-900 border-slate-800 text-white">
             <CardHeader className="pb-2">
               <CardTitle className="text-xs font-medium text-slate-400 flex items-center justify-between">
-                <span>Paiement en Personne / Espèces</span>
-                <CheckCircle2 className="h-4 w-4 text-amber-400" />
+                <span>Règlement en Espèces (Lomé)</span>
+                <Landmark className="h-4 w-4 text-amber-400" />
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-extrabold text-amber-400">{fmt(metrics.cashRevenue)} FCFA</div>
               <p className="text-xs text-slate-400 mt-2">
-                {Math.round((metrics.cashRevenue / (metrics.totalRevenue || 1)) * 100)}% du total des encaissements
+                Paiement direct en personne
               </p>
             </CardContent>
           </Card>
@@ -93,45 +93,32 @@ function AdminStatistiquesPage() {
 
         {/* Operational Analytics */}
         <div className="grid gap-6 md:grid-cols-2">
-          {/* Program Features Impact */}
           <Card className="bg-slate-900 border-slate-800 text-white">
             <CardHeader>
-              <CardTitle className="text-base font-semibold text-white flex items-center gap-2">
-                <Activity className="h-4 w-4 text-amber-400" />
-                Performance des Options de Stage
+              <CardTitle className="text-sm font-bold flex items-center gap-2">
+                <CalendarCheck className="h-4 w-4 text-blue-400" />
+                Séances du Samedi (Horaires Officiels)
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4 text-xs">
-              <div className="flex items-center justify-between p-3 rounded-xl bg-slate-950 border border-slate-800">
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between p-4 rounded-xl bg-slate-950 border border-slate-800">
                 <div>
-                  <p className="font-semibold text-white">Séances Révision du Samedi</p>
-                  <p className="text-[11px] text-slate-400">Accompagnement intensif de fin de semaine</p>
+                  <p className="text-2xl font-bold text-white">{metrics.saturdayCount} élèves</p>
+                  <p className="text-xs text-slate-400">Inscrits aux séances du samedi (8h00 - 17h00)</p>
                 </div>
-                <span className="font-bold text-amber-400 text-sm">{metrics.saturdayCount} élèves inscrits</span>
-              </div>
-
-              <div className="flex items-center justify-between p-3 rounded-xl bg-slate-950 border border-slate-800">
-                <div>
-                  <p className="font-semibold text-white">Accès Plateforme GoStudy</p>
-                  <p className="text-[11px] text-slate-400">Application compagnon offerte (100% des inscrits)</p>
+                <div className="h-10 w-10 rounded-full bg-blue-500/10 text-blue-400 flex items-center justify-center font-bold text-sm">
+                  100%
                 </div>
-                <span className="font-bold text-emerald-400 text-sm">{metrics.totalSignIns} accès activés</span>
               </div>
-
-              <div className="flex items-center justify-between p-3 rounded-xl bg-slate-950 border border-slate-800">
-                <div>
-                  <p className="font-semibold text-white">Droits aux Examens d'Entraînement</p>
-                  <p className="text-[11px] text-slate-400">Devoirs et examens blancs inclus</p>
-                </div>
-                <span className="font-bold text-blue-400 text-sm">Inclus</span>
-              </div>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Toutes les répétitions et cours d'approfondissement en mathématiques et physique-chimie se déroulent exclusivement le samedi à Lomé.
+              </p>
             </CardContent>
           </Card>
 
-          {/* Site Activity Info */}
           <Card className="bg-slate-900 border-slate-800 text-white">
             <CardHeader>
-              <CardTitle className="text-base font-semibold text-white flex items-center gap-2">
+              <CardTitle className="text-sm font-bold flex items-center gap-2">
                 <Globe className="h-4 w-4 text-amber-400" />
                 Informations du Site Vitrine
               </CardTitle>
@@ -147,12 +134,16 @@ function AdminStatistiquesPage() {
                   <span className="text-amber-400">Première C, Première D, Terminale C, Terminale D</span>
                 </div>
                 <div className="flex justify-between font-semibold text-slate-300">
-                  <span>Contact Téléphonique Officiel</span>
-                  <span className="text-amber-400">+228 98 93 02 11</span>
+                  <span>Téléphone / TMoney</span>
+                  <span className="text-amber-400">+228 93 51 00 74</span>
                 </div>
                 <div className="flex justify-between font-semibold text-slate-300">
-                  <span>Ville d'Implantation</span>
-                  <span className="text-amber-400">Lomé, Togo</span>
+                  <span>Email Officiel</span>
+                  <span className="text-amber-400">stagekekeli@gmail.com</span>
+                </div>
+                <div className="flex justify-between font-semibold text-slate-300">
+                  <span>Horaires</span>
+                  <span className="text-amber-400">Samedi uniquement (8h00 - 17h00)</span>
                 </div>
               </div>
 
