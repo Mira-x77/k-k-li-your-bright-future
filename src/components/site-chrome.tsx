@@ -18,20 +18,16 @@ const NAV_LINKS = [
 
 export function Logo({ className = "" }: { className?: string }) {
   return (
-    <Link to="/" className={`inline-flex shrink-0 ${className}`} aria-label="Stage Kékéli — Accueil">
+    <Link to="/" className={`inline-flex items-center shrink-0 ${className}`} aria-label="Stage Kékéli — Accueil">
       <img
         src={logoLight}
         alt="Stage Kékéli"
-        width={320}
-        height={96}
-        className="h-10 w-auto max-w-[min(240px,50vw)] object-contain object-left dark:hidden md:h-12"
+        className="h-10 md:h-12 w-auto object-contain dark:hidden"
       />
       <img
         src={logoDark}
         alt="Stage Kékéli"
-        width={320}
-        height={96}
-        className="h-10 w-auto max-w-[min(240px,50vw)] object-contain object-left hidden dark:block md:h-12"
+        className="h-10 md:h-12 w-auto object-contain hidden dark:block"
       />
     </Link>
   );
@@ -40,7 +36,7 @@ export function Logo({ className = "" }: { className?: string }) {
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-xl border-b border-border/40">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-6 py-3.5 lg:grid lg:grid-cols-[auto_1fr_auto]">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-6 py-3 lg:grid lg:grid-cols-[auto_1fr_auto]">
         <div className="flex items-center gap-3">
           <Logo />
           <Link
