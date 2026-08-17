@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Mail, MapPin, Phone, CheckCircle, ShieldCheck, MessageSquare, LayoutDashboard } from "lucide-react";
+import { ArrowRight, Mail, MapPin, Phone, CheckCircle, ShieldCheck, MessageSquare } from "lucide-react";
 import { useState } from "react";
 import { Reveal } from "@/components/reveal";
 import {
@@ -98,7 +98,7 @@ function ContactPage() {
               Une question ? Parlons du parcours de votre enfant
             </h1>
             <p className="mx-auto mt-5 max-w-2xl text-muted-foreground">
-              Appelez-nous ou écrivez-nous. Toute demande d'information ou de suivi pour votre enfant saisie ci-dessous est directement transmise à l'administration Stage Kékéli.
+              Appelez-nous ou écrivez-nous. Toute demande d'information ou de suivi pour votre enfant saisie ci-dessous est transmise à l'équipe Stage Kékéli.
             </p>
           </Reveal>
           <Reveal delay={80}>
@@ -126,13 +126,6 @@ function ContactPage() {
                 <Phone className="h-4 w-4" />
                 {PHONE_DISPLAY}
               </a>
-              <Link
-                to="/admin"
-                className="inline-flex items-center gap-2 rounded-full border border-amber-500/40 bg-amber-500/10 px-6 py-3.5 text-sm font-bold text-amber-600 hover:bg-amber-500/20 transition"
-              >
-                <LayoutDashboard className="h-4 w-4" />
-                Accès Admin (/admin)
-              </Link>
             </div>
           </Reveal>
         </div>
@@ -148,7 +141,7 @@ function ContactPage() {
               Joignez-nous directement
             </h2>
             <p className="mt-3 text-sm text-muted-foreground">
-              Par téléphone, par courriel ou via le formulaire ci-contre. Toutes les demandes s'enregistrent en direct dans le tableau de bord administration.
+              Par téléphone, par courriel ou via le formulaire ci-contre pour toute question relative au suivi scolaire.
             </p>
             <ul className="mt-8 space-y-4 text-sm">
               {[
@@ -203,23 +196,6 @@ function ContactPage() {
                 </Reveal>
               ))}
             </ul>
-
-            {/* Direct Admin Banner */}
-            <div className="mt-8 rounded-2xl bg-amber-500/10 border border-amber-500/30 p-5 text-sm">
-              <div className="flex items-center gap-2 font-bold text-amber-600">
-                <LayoutDashboard className="h-4 w-4" />
-                Accès Administration Stage Kékéli
-              </div>
-              <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
-                Vous êtes administrateur ou associé fondateur ? Retrouvez toutes les demandes d'information et les inscriptions enregistrées sur le tableau de bord.
-              </p>
-              <Link
-                to="/admin"
-                className="mt-3 inline-flex items-center gap-1.5 text-xs font-bold text-amber-600 hover:underline"
-              >
-                Ouvrir le Tableau de Bord Admin →
-              </Link>
-            </div>
           </div>
         </Reveal>
 
@@ -335,7 +311,7 @@ function ContactPage() {
               type="submit"
               className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary px-6 py-3.5 text-sm font-bold text-primary-foreground transition hover:opacity-90 cursor-pointer"
             >
-              Envoyer ma demande & Transmettre à l'Admin <ArrowRight className="h-4 w-4" />
+              Envoyer ma demande <ArrowRight className="h-4 w-4" />
             </button>
           </form>
         </Reveal>
