@@ -22,7 +22,7 @@ export const Route = createFileRoute("/contact")({
       {
         name: "description",
         content:
-          "Contactez Stage Kékéli à Lomé, Togo — inscription en mathématiques et en physique pour les élèves de Première C & D et Terminale C & D. Téléphone : +228 98 93 02 11.",
+          "Contactez Stage Kékéli à Lomé, Togo — inscription en mathématiques et en physique pour votre enfant en Première C & D et Terminale C & D. Téléphone : +228 98 93 02 11.",
       },
       { property: "og:title", content: "Contact — Stage Kékéli" },
       {
@@ -63,7 +63,7 @@ function ContactPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!parentPhone.trim() || !studentName.trim()) {
-      alert("Veuillez renseigner le nom de l'élève et le numéro de téléphone.");
+      alert("Veuillez renseigner le nom de votre enfant et votre numéro de téléphone (parent).");
       return;
     }
 
@@ -92,13 +92,13 @@ function ContactPage() {
         <div className="mx-auto max-w-7xl px-6 py-16 text-center md:py-20">
           <Reveal>
             <div className="text-xs font-bold uppercase tracking-[0.24em] text-[color:var(--sun-deep)]">
-              Nous contacter
+              Espace Parent — Nous contacter
             </div>
             <h1 className="mx-auto mt-4 max-w-3xl text-4xl font-black leading-[1.05] tracking-tight sm:text-5xl md:text-6xl">
               Une question ? Parlons du parcours de votre enfant
             </h1>
             <p className="mx-auto mt-5 max-w-2xl text-muted-foreground">
-              Appelez-nous ou écrivez-nous. Toute demande d'information ou d'inscription saisie ci-dessous est directement transmise à l'administration Stage Kékéli.
+              Appelez-nous ou écrivez-nous. Toute demande d'information ou de suivi pour votre enfant saisie ci-dessous est directement transmise à l'administration Stage Kékéli.
             </p>
           </Reveal>
           <Reveal delay={80}>
@@ -148,7 +148,7 @@ function ContactPage() {
               Joignez-nous directement
             </h2>
             <p className="mt-3 text-sm text-muted-foreground">
-              Par téléphone, par courriel ou via le formulaire ci-contre. Toutes les saisies s'enregistrent en direct dans le tableau de bord administration.
+              Par téléphone, par courriel ou via le formulaire ci-contre. Toutes les demandes s'enregistrent en direct dans le tableau de bord administration.
             </p>
             <ul className="mt-8 space-y-4 text-sm">
               {[
@@ -162,7 +162,7 @@ function ContactPage() {
                 {
                   icon: Phone,
                   t: PHONE_DISPLAY,
-                  d: "Appelez-nous pour l'inscription et l'organisation du suivi.",
+                  d: "Appelez-nous pour l'inscription et l'organisation du suivi de votre enfant.",
                   href: PHONE_HREF,
                 },
                 {
@@ -228,17 +228,18 @@ function ContactPage() {
             className="rounded-3xl border border-border bg-card p-7 shadow-[var(--shadow-soft)] md:p-8 space-y-4"
             onSubmit={handleSubmit}
           >
-            <h2 className="text-xl font-black tracking-tight">Formulaire de Contact & Inscription</h2>
+            <h2 className="text-xl font-black tracking-tight">Formulaire de Contact Parent</h2>
             <p className="text-sm text-muted-foreground">
-              Renseignez les coordonnées pour enregistrer votre demande dans la base de données Stage Kékéli.
+              Renseignez la classe et les besoins de votre enfant pour transmettre votre demande à l'équipe Stage Kékéli.
             </p>
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
                 <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
-                  Nom du parent
+                  Votre Nom (Parent / Tuteur) *
                 </label>
                 <input
                   type="text"
+                  required
                   placeholder="Ex: Mme Amouzou"
                   value={parentName}
                   onChange={(e) => setParentName(e.target.value)}
@@ -247,7 +248,7 @@ function ContactPage() {
               </div>
               <div>
                 <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
-                  Téléphone (+228) *
+                  Votre Téléphone / WhatsApp (+228) *
                 </label>
                 <input
                   type="text"
@@ -262,7 +263,7 @@ function ContactPage() {
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
                 <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
-                  Prénom & Nom de l'élève *
+                  Nom & Prénom de votre Enfant (élève) *
                 </label>
                 <input
                   type="text"
@@ -275,7 +276,7 @@ function ContactPage() {
               </div>
               <div>
                 <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
-                  Classe / Série
+                  Classe de votre enfant
                 </label>
                 <select
                   value={series}
@@ -291,7 +292,7 @@ function ContactPage() {
             </div>
             <div>
               <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
-                Matières souhaitées
+                Matières souhaitées pour votre enfant
               </label>
               <div className="mt-2 flex flex-wrap gap-2">
                 <button
@@ -324,7 +325,7 @@ function ContactPage() {
               </label>
               <textarea
                 rows={3}
-                placeholder="Disponibilités, objectifs, difficultés rencontrées…"
+                placeholder="Disponibilités de votre enfant, objectifs, difficultés rencontrées…"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm outline-none transition focus:border-[color:var(--sun-deep)] focus:ring-2"
@@ -352,7 +353,7 @@ function ContactPage() {
             </DialogHeader>
             <div className="space-y-4 pt-2 text-sm text-center">
               <p className="text-xs text-muted-foreground">
-                Votre demande a été enregistrée avec succès dans le système d'administration sous la référence :
+                Votre demande d'inscription pour votre enfant a été enregistrée avec succès sous la référence :
               </p>
               <p className="text-2xl font-black font-mono text-foreground">{confirmationRecord.id}</p>
               <p className="text-xs text-slate-500">

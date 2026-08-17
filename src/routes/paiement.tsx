@@ -15,12 +15,12 @@ export const Route = createFileRoute("/paiement")({
       {
         name: "description",
         content:
-          "Inscrivez-vous et payez vos frais Stage Kékéli par Moov Money ou en personne : 2 500 FCFA par mois et par matière ou 22 500 FCFA par an, plus 1 500 FCFA d'inscription. TAF 10% intégrée au récapitulatif.",
+          "Inscrivez votre enfant et payez ses frais Stage Kékéli par Moov Money ou en personne : 2 500 FCFA par mois et par matière ou 22 500 FCFA par an, plus 1 500 FCFA d'inscription. TAF 10% intégrée au récapitulatif.",
       },
       { property: "og:title", content: "Paiement & Inscription — Stage Kékéli" },
       {
         property: "og:description",
-        content: "Simulateur et formulaire d'inscription direct Moov Money et en personne.",
+        content: "Formulaire d'inscription parent direct Moov Money et en personne.",
       },
     ],
   }),
@@ -29,7 +29,7 @@ export const Route = createFileRoute("/paiement")({
 
 const PAYMENT_FAQ: FaqItem[] = [
   {
-    q: "Que faut-il régler pour démarrer ?",
+    q: "Que faut-il régler pour démarrer le suivi de mon enfant ?",
     a: "Le tarif de 2 500 FCFA par mois et par matière — ou 22 500 FCFA par an et par matière — auquel s'ajoutent 1 500 FCFA d'inscription, une seule fois quel que soit le nombre de matières. Le simulateur additionne le tout avant paiement.",
   },
   {
@@ -41,8 +41,8 @@ const PAYMENT_FAQ: FaqItem[] = [
     a: "Moov Money (+228 98 93 02 11) et le paiement en personne / espèces à Lomé.",
   },
   {
-    q: "Pourquoi la photo est-elle obligatoire ?",
-    a: "La photo de l'élève est enregistrée pour délivrer sa carte d'élève Stage Kékéli et garantir son accès aux cours et séances du samedi.",
+    q: "Pourquoi la photo de l'enfant est-elle obligatoire ?",
+    a: "La photo de votre enfant est enregistrée pour établir sa carte d'élève officielle Stage Kékéli et garantir son accès aux cours et séances du samedi.",
   },
 ];
 
@@ -82,13 +82,13 @@ function PaymentPage() {
     e.preventDefault();
     if (!photoUrl) {
       setPhotoMissingError(true);
-      alert("📷 Photo obligatoire : Veuillez prendre une photo de l'élève (WebCam) ou importer un fichier photo avant de valider.");
+      alert("📷 Photo obligatoire : Veuillez prendre une photo de votre enfant (WebCam) ou importer un fichier photo avant de valider.");
       return;
     }
     setPhotoMissingError(false);
 
     if (!studentName.trim() || !parentPhone.trim()) {
-      alert("Veuillez renseigner le nom de l'élève et le numéro de téléphone du parent.");
+      alert("Veuillez renseigner le nom de votre enfant et votre numéro de téléphone (parent).");
       return;
     }
 
@@ -120,13 +120,13 @@ function PaymentPage() {
         <div className="mx-auto max-w-7xl px-6 py-16 text-center md:py-20">
           <Reveal>
             <div className="text-xs font-bold uppercase tracking-[0.24em] text-[color:var(--sun-deep)]">
-              Paiement & Inscription en Ligne
+              Espace Parent — Inscription & Paiement
             </div>
             <h1 className="mx-auto mt-4 max-w-3xl text-4xl font-black leading-[1.05] tracking-tight sm:text-5xl md:text-6xl">
-              Réglez vos frais & validez l'inscription
+              Inscrivez votre enfant & réglez ses frais
             </h1>
             <p className="mx-auto mt-5 max-w-2xl text-muted-foreground">
-              Par Moov Money ou en personne. Prenez la photo de profil de l'élève en direct pour valider sa carte d'élève et recevoir votre reçu numérique officiel.
+              Par Moov Money ou en personne. Prenez la photo d'identité de votre enfant en direct pour sa carte d'élève et recevez votre reçu numérique officiel.
             </p>
           </Reveal>
         </div>
@@ -138,16 +138,16 @@ function PaymentPage() {
           <Reveal anim="left">
             <div>
               <h2 className="text-3xl font-black tracking-tight sm:text-4xl">
-                Une transaction claire et enregistrée
+                Une démarche simple pour les parents
               </h2>
               <p className="mt-5 leading-relaxed text-muted-foreground">
-                Dès la validation du formulaire ci-contre avec la photo de l'élève, l'inscription est immédiatement enregistrée dans le système Stage Kékéli à Lomé et un reçu numérique est délivré.
+                Dès la validation du formulaire ci-contre avec la photo de votre enfant, l'inscription est immédiatement enregistrée dans le système Stage Kékéli à Lomé et un reçu numérique parent est délivré.
               </p>
 
               <Reveal anim="up">
                 <div className="mt-8 rounded-3xl border border-border bg-card p-7 md:p-8">
                   <div className="text-sm font-bold uppercase tracking-[0.18em] text-[color:var(--sun-deep)]">
-                    Les tarifs officiels Stage Kékéli
+                    Tarifs officiels du suivi scolaire
                   </div>
                   <div className="mt-6 grid gap-6 sm:grid-cols-2">
                     {[
@@ -172,9 +172,9 @@ function PaymentPage() {
                   </div>
                   <p className="mt-7 border-t border-border pt-6 text-base leading-relaxed">
                     <strong className="font-black">
-                      Inscription : {fmt(REGISTRATION_FEE)} FCFA
+                      Frais d'inscription : {fmt(REGISTRATION_FEE)} FCFA
                     </strong>{" "}
-                    — frais uniques, quel que soit le nombre de matières suivies.
+                    — frais uniques, quel que soit le nombre de matières suivies par votre enfant.
                   </p>
                 </div>
               </Reveal>
@@ -183,18 +183,18 @@ function PaymentPage() {
                 {[
                   {
                     icon: Camera,
-                    t: "Photo d'identité requise",
-                    d: "Capture photo en direct ou import pour la carte d'élève Stage Kékéli.",
+                    t: "Photo de votre enfant requise",
+                    d: "Capture photo en direct ou import pour la carte d'élève officielle Stage Kékéli.",
                   },
                   {
                     icon: Lock,
-                    t: "Validation immédiate",
-                    d: "Enregistrement en direct de l'inscription pour les séries C & D.",
+                    t: "Validation immédiate pour le parent",
+                    d: "Enregistrement en direct de l'élève pour les séries Première et Terminale C & D.",
                   },
                   {
                     icon: Receipt,
-                    t: "Reçu Numérique instantané",
-                    d: "Généré immédiatement après validation avec transfert WhatsApp / SMS.",
+                    t: "Reçu Parent instantané",
+                    d: "Reçu numérique délivré avec possibilité d'envoi immédiat par WhatsApp.",
                   },
                 ].map(({ icon: Icon, t, d }, i) => (
                   <Reveal key={t} anim="up" delay={i * 90}>
@@ -211,12 +211,12 @@ function PaymentPage() {
             </div>
           </Reveal>
 
-          {/* Right Column Registration & Payment Form */}
+          {/* Right Column Parent Registration & Payment Form */}
           <Reveal anim="right">
             <form onSubmit={handleRegisterAndPay} className="rounded-3xl border border-border bg-card p-7 shadow-[var(--shadow-warm)] md:p-8 space-y-6">
               <div className="flex items-center justify-between">
                 <div className="text-xs font-bold uppercase tracking-widest text-[color:var(--sun-deep)]">
-                  Formulaire d'Inscription & Paiement
+                  Formulaire d'Inscription Parent
                 </div>
                 <Smartphone className="h-5 w-5 text-[color:var(--sun-deep)]" />
               </div>
@@ -233,14 +233,14 @@ function PaymentPage() {
                 />
               </div>
 
-              {/* Student & Parent Info */}
+              {/* Parent & Student Info */}
               <div className="space-y-4 rounded-2xl border border-border bg-background p-4">
                 <div className="text-xs font-bold uppercase tracking-wider text-foreground">
-                  Informations de l'élève & du parent
+                  Informations de l'élève & de vous-même (parent)
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-muted-foreground mb-1">
-                    Nom et Prénom de l'Élève *
+                    Nom et Prénom de votre Enfant (élève) *
                   </label>
                   <input
                     type="text"
@@ -254,10 +254,11 @@ function PaymentPage() {
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="block text-xs font-semibold text-muted-foreground mb-1">
-                      Nom du Parent
+                      Votre Nom (Parent / Tuteur) *
                     </label>
                     <input
                       type="text"
+                      required
                       placeholder="Ex: Mme Amouzou"
                       value={parentName}
                       onChange={(e) => setParentName(e.target.value)}
@@ -266,7 +267,7 @@ function PaymentPage() {
                   </div>
                   <div>
                     <label className="block text-xs font-semibold text-muted-foreground mb-1">
-                      Téléphone Parent (+228) *
+                      Votre Téléphone / WhatsApp (+228) *
                     </label>
                     <input
                       type="text"
@@ -283,7 +284,7 @@ function PaymentPage() {
               {/* Class Series Choice */}
               <div>
                 <div className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2">
-                  Classe / Série
+                  Classe de votre enfant
                 </div>
                 <div className="grid grid-cols-2 gap-2">
                   {(["Première C", "Première D", "Terminale C", "Terminale D"] as const).map((s) => (
@@ -306,7 +307,7 @@ function PaymentPage() {
               {/* Subjects Selection */}
               <div>
                 <div className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2">
-                  Matières Souhaitées
+                  Matières à suivre pour votre enfant
                 </div>
                 <div className="grid grid-cols-3 gap-2">
                   <button
@@ -377,7 +378,7 @@ function PaymentPage() {
               {/* Payment Operator Selection */}
               <div>
                 <div className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2">
-                  Moyen de Règlement
+                  Votre Moyen de Règlement
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <button
@@ -409,7 +410,7 @@ function PaymentPage() {
                 type="submit"
                 className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary px-5 py-3.5 text-base font-extrabold text-primary-foreground shadow-lg transition hover:opacity-90 cursor-pointer"
               >
-                Valider & Recevoir le Reçu ({fmt(total)} FCFA)
+                Inscrire mon enfant ({fmt(total)} FCFA)
                 <ArrowRight className="h-5 w-5" />
               </button>
             </form>
@@ -424,7 +425,7 @@ function PaymentPage() {
             <DialogHeader>
               <DialogTitle className="text-xl font-black text-center text-[color:var(--sun-deep)] flex items-center justify-center gap-2">
                 <CheckCircle className="h-6 w-6 text-emerald-500" />
-                Inscription Validée !
+                Inscription d'élève Validée !
               </DialogTitle>
             </DialogHeader>
 
@@ -450,6 +451,10 @@ function PaymentPage() {
                 <div className="flex justify-between py-1 border-b border-border">
                   <span className="text-muted-foreground">Nom de l'Élève :</span>
                   <span className="font-bold">{receiptRecord.studentName}</span>
+                </div>
+                <div className="flex justify-between py-1 border-b border-border">
+                  <span className="text-muted-foreground">Nom du Parent :</span>
+                  <span className="font-bold">{receiptRecord.parentName}</span>
                 </div>
                 <div className="flex justify-between py-1 border-b border-border">
                   <span className="text-muted-foreground">Classe / Série :</span>
@@ -499,7 +504,7 @@ function PaymentPage() {
                 >
                   <Button className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white font-bold gap-2">
                     <MessageSquare className="h-4 w-4" />
-                    Envoyer le Reçu par WhatsApp au Parent
+                    Recevoir le Reçu par WhatsApp sur mon téléphone
                   </Button>
                 </a>
                 <Button
@@ -519,7 +524,7 @@ function PaymentPage() {
       <FaqSection items={PAYMENT_FAQ} title={<>Questions sur l'inscription & le paiement</>} />
       <CallbackCta
         title={<>Un doute sur le règlement ? Écrivez-nous.</>}
-        intro="Écrivez-nous à contact@stagekekeli.tg pour toute question sur le règlement ou l'inscription."
+        intro="Écrivez-nous à contact@stagekekeli.tg pour toute question sur le règlement ou l'inscription de votre enfant."
       />
     </>
   );
