@@ -1,14 +1,15 @@
 import React, { useState, useRef } from "react";
-import { Camera, RefreshCw, Upload, Check, User } from "lucide-react";
+import { Camera, RefreshCw, Upload, Check, User, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface ProfilePhotoCaptureProps {
   value?: string;
   onChange: (photoDataUri: string) => void;
+  required?: boolean;
   className?: string;
 }
 
-export function ProfilePhotoCapture({ value, onChange, className = "" }: ProfilePhotoCaptureProps) {
+export function ProfilePhotoCapture({ value, onChange, required = true, className = "" }: ProfilePhotoCaptureProps) {
   const [isStreaming, setIsStreaming] = useState(false);
   const [photo, setPhoto] = useState<string | null>(value || null);
   const [cameraError, setCameraError] = useState<string | null>(null);
@@ -30,7 +31,7 @@ export function ProfilePhotoCapture({ value, onChange, className = "" }: Profile
       }
     } catch (err) {
       console.error("Camera access error:", err);
-      setCameraError("Impossible d'accéder à la caméra. Utilisez l'option d'import de fichier.");
+      setCameraError("Accès caméra refusé ou non disponible. Veuillez importer un fichier photo ci-dessous.");
     }
   };
 
@@ -53,7 +54,6 @@ export function ProfilePhotoCapture({ value, onChange, className = "" }: Profile
     canvas.height = size;
     const ctx = canvas.getContext("2d");
     if (ctx) {
-      // Draw centered square crop from video
       const startX = (video.videoWidth - size) / 2;
       const startY = (video.videoHeight - size) / 2;
       ctx.drawImage(video, startX, startY, size, size, 0, 0, size, size);
@@ -89,20 +89,33 @@ export function ProfilePhotoCapture({ value, onChange, className = "" }: Profile
 
   return (
     <div className={`space-y-3 ${className}`}>
-      <label className="block text-xs font-bold uppercase tracking-wider text-muted-foreground">
-        Photo de profil de l'élève (Optionnel)
-      </label>
+      <div className="flex items-center justify-between">
+        <label className="block text-xs font-black uppercase tracking-wider text-[color:var(--sun-deep)] flex items-center gap-1.5">
+          <Camera className="h-4 w-4" />
+          Photo de l'Élève {required && <span className="text-rose-500 font-extrabold">* (Obligatoire)</span>}
+        </label>
+        {photo ? (
+          <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+            <Check className="h-3 w-3" /> Photo enregistrée
+          </span>
+        ) : (
+          <span className="text-[11px] font-semibold text-rose-500 animate-pulse">
+            Photo requise pour la carte SK
+          </span>
+        )}
+      </div>
 
-      <div className="flex flex-col items-center justify-center gap-3">
+      <div className="flex flex-col items-center justify-center gap-3 p-4 rounded-2xl bg-muted/30 border-2 border-dashed border-[color:var(--sun-deep)]/40">
         {/* Photo Display / Camera Stream Box */}
-        <div className="relative h-32 w-32 rounded-full overflow-hidden border-2 border-dashed border-slate-700 bg-slate-900 flex items-center justify-center shadow-md">
+        <div className="relative h-36 w-36 rounded-full overflow-hidden border-4 border-background bg-slate-900 flex items-center justify-center shadow-lg ring-2 ring-[color:var(--sun-deep)]/30">
           {photo ? (
-            <img src={photo} alt="Aperçu photo élève" className="h-full w-full object-cover" />
+            <img src={photo} alt="Photo élève" className="h-full w-full object-cover" />
           ) : isStreaming ? (
             <video ref={videoRef} playsInline muted className="h-full w-full object-cover transform -scale-x-100" />
           ) : (
             <div className="flex flex-col items-center justify-center text-slate-500">
-              <User className="h-12 w-12" />
+              <User className="h-14 w-14 text-slate-400" />
+              <span className="text-[10px] text-slate-400 mt-1 font-semibold">Aucune photo</span>
             </div>
           )}
         </div>
@@ -112,32 +125,31 @@ export function ProfilePhotoCapture({ value, onChange, className = "" }: Profile
 
         {/* Camera Error Alert */}
         {cameraError && (
-          <p className="text-[11px] text-amber-400 text-center max-w-xs">{cameraError}</p>
+          <p className="text-xs text-amber-600 text-center max-w-xs font-semibold bg-amber-50 p-2 rounded-lg border border-amber-200">{cameraError}</p>
         )}
 
         {/* Control Buttons */}
-        <div className="flex flex-wrap items-center justify-center gap-2">
+        <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
           {!photo && !isStreaming && (
             <>
               <Button
                 type="button"
                 onClick={startCamera}
                 size="sm"
-                variant="outline"
-                className="text-xs gap-1.5 border-slate-700 bg-slate-800 text-slate-200 hover:bg-slate-700 hover:text-white"
+                className="bg-[color:var(--sun-deep)] text-white font-bold text-xs gap-1.5 shadow-md hover:opacity-90"
               >
-                <Camera className="h-3.5 w-3.5 text-amber-400" />
-                Prendre une photo (WebCam)
+                <Camera className="h-4 w-4" />
+                Prendre Photo en Direct (WebCam)
               </Button>
               <Button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
                 size="sm"
-                variant="ghost"
-                className="text-xs gap-1.5 text-slate-400 hover:text-white"
+                variant="outline"
+                className="text-xs gap-1.5 font-bold"
               >
                 <Upload className="h-3.5 w-3.5" />
-                Importer fichier
+                Importer Fichier Photo
               </Button>
             </>
           )}
@@ -148,17 +160,17 @@ export function ProfilePhotoCapture({ value, onChange, className = "" }: Profile
                 type="button"
                 onClick={capturePhoto}
                 size="sm"
-                className="bg-amber-400 text-slate-950 font-bold hover:bg-amber-300 text-xs gap-1.5"
+                className="bg-emerald-600 text-white font-bold hover:bg-emerald-500 text-xs gap-1.5 shadow-md"
               >
-                <Check className="h-3.5 w-3.5" />
-                Capturer
+                <Check className="h-4 w-4" />
+                Prendre la Photo
               </Button>
               <Button
                 type="button"
                 onClick={stopCamera}
                 size="sm"
                 variant="ghost"
-                className="text-xs text-slate-400 hover:text-white"
+                className="text-xs text-muted-foreground"
               >
                 Annuler
               </Button>
@@ -171,10 +183,10 @@ export function ProfilePhotoCapture({ value, onChange, className = "" }: Profile
               onClick={resetPhoto}
               size="sm"
               variant="outline"
-              className="text-xs gap-1.5 border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white"
+              className="text-xs gap-1.5 font-bold"
             >
-              <RefreshCw className="h-3.5 w-3.5" />
-              Changer de photo
+              <RefreshCw className="h-3.5 w-3.5 text-[color:var(--sun-deep)]" />
+              Reprendre / Changer de photo
             </Button>
           )}
 

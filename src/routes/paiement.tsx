@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Lock, Receipt, ShieldCheck, Smartphone, CheckCircle, Printer, MessageSquare, Phone, User } from "lucide-react";
+import { ArrowRight, Lock, Receipt, ShieldCheck, Smartphone, CheckCircle, Printer, MessageSquare, Phone, User, Camera } from "lucide-react";
 import { useState } from "react";
 import { Reveal } from "@/components/reveal";
 import { CallbackCta, FaqSection, SectionHeading, type FaqItem } from "@/components/marketing";
@@ -41,8 +41,8 @@ const PAYMENT_FAQ: FaqItem[] = [
     a: "Moov Money (+228 98 93 02 11) et le paiement en personne / espèces à Lomé.",
   },
   {
-    q: "Comment obtenir un justificatif ?",
-    a: "Dès validation de votre inscription ci-dessus, un reçu numérique officiel avec numéro de référence est immédiatement généré et téléchargeable, avec envoi par WhatsApp ou SMS.",
+    q: "Pourquoi la photo est-elle obligatoire ?",
+    a: "La photo de l'élève est enregistrée pour délivrer sa carte d'élève Stage Kékéli et garantir son accès aux cours et séances du samedi.",
   },
 ];
 
@@ -65,6 +65,7 @@ function PaymentPage() {
   const [parentName, setParentName] = useState("");
   const [parentPhone, setParentPhone] = useState("");
   const [photoUrl, setPhotoUrl] = useState("");
+  const [photoMissingError, setPhotoMissingError] = useState(false);
 
   // Confirmation Modal State
   const [receiptRecord, setReceiptRecord] = useState<ProgramSignIn | null>(null);
@@ -79,6 +80,13 @@ function PaymentPage() {
 
   const handleRegisterAndPay = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!photoUrl) {
+      setPhotoMissingError(true);
+      alert("📷 Photo obligatoire : Veuillez prendre une photo de l'élève (WebCam) ou importer un fichier photo avant de valider.");
+      return;
+    }
+    setPhotoMissingError(false);
+
     if (!studentName.trim() || !parentPhone.trim()) {
       alert("Veuillez renseigner le nom de l'élève et le numéro de téléphone du parent.");
       return;
@@ -100,7 +108,7 @@ function PaymentPage() {
       paymentPlan: plan,
       paymentMethod: operator,
       saturdaySessionIncluded: true,
-      photoUrl: photoUrl || undefined,
+      photoUrl: photoUrl,
     });
 
     setReceiptRecord(record);
@@ -118,7 +126,7 @@ function PaymentPage() {
               Réglez vos frais & validez l'inscription
             </h1>
             <p className="mx-auto mt-5 max-w-2xl text-muted-foreground">
-              Par Moov Money ou en personne. Prenez la photo de profil de l'élève en direct et générez votre reçu numérique officiel.
+              Par Moov Money ou en personne. Prenez la photo de profil de l'élève en direct pour valider sa carte d'élève et recevoir votre reçu numérique officiel.
             </p>
           </Reveal>
         </div>
@@ -133,7 +141,7 @@ function PaymentPage() {
                 Une transaction claire et enregistrée
               </h2>
               <p className="mt-5 leading-relaxed text-muted-foreground">
-                Dès la validation du formulaire ci-contre, l'inscription est immédiatement enregistrée dans le système Stage Kékéli à Lomé et un reçu numérique est délivré.
+                Dès la validation du formulaire ci-contre avec la photo de l'élève, l'inscription est immédiatement enregistrée dans le système Stage Kékéli à Lomé et un reçu numérique est délivré.
               </p>
 
               <Reveal anim="up">
@@ -174,6 +182,11 @@ function PaymentPage() {
               <ul className="mt-8 space-y-3">
                 {[
                   {
+                    icon: Camera,
+                    t: "Photo d'identité requise",
+                    d: "Capture photo en direct ou import pour la carte d'élève Stage Kékéli.",
+                  },
+                  {
                     icon: Lock,
                     t: "Validation immédiate",
                     d: "Enregistrement en direct de l'inscription pour les séries C & D.",
@@ -182,11 +195,6 @@ function PaymentPage() {
                     icon: Receipt,
                     t: "Reçu Numérique instantané",
                     d: "Généré immédiatement après validation avec transfert WhatsApp / SMS.",
-                  },
-                  {
-                    icon: ShieldCheck,
-                    t: "Transparence TAF",
-                    d: "Taxe de 10% Moov Money calculée et affichée avant validation.",
                   },
                 ].map(({ icon: Icon, t, d }, i) => (
                   <Reveal key={t} anim="up" delay={i * 90}>
@@ -213,9 +221,16 @@ function PaymentPage() {
                 <Smartphone className="h-5 w-5 text-[color:var(--sun-deep)]" />
               </div>
 
-              {/* Photo Capture Step */}
-              <div className="rounded-2xl border border-border bg-background p-4">
-                <ProfilePhotoCapture value={photoUrl} onChange={(photo) => setPhotoUrl(photo)} />
+              {/* Photo Capture Step (Obligatoire) */}
+              <div className={`rounded-2xl border bg-background p-4 ${photoMissingError ? "border-rose-500 ring-2 ring-rose-500/20" : "border-border"}`}>
+                <ProfilePhotoCapture
+                  value={photoUrl}
+                  onChange={(photo) => {
+                    setPhotoUrl(photo);
+                    if (photo) setPhotoMissingError(false);
+                  }}
+                  required
+                />
               </div>
 
               {/* Student & Parent Info */}
@@ -419,11 +434,11 @@ function PaymentPage() {
                   <img
                     src={receiptRecord.photoUrl}
                     alt={receiptRecord.studentName}
-                    className="h-16 w-16 rounded-full object-cover border-2 border-[color:var(--sun-deep)] mb-2 shadow-md"
+                    className="h-20 w-20 rounded-full object-cover border-2 border-[color:var(--sun-deep)] mb-2 shadow-md"
                   />
                 ) : (
-                  <div className="h-16 w-16 rounded-full bg-slate-800 text-slate-300 flex items-center justify-center mb-2">
-                    <User className="h-8 w-8" />
+                  <div className="h-20 w-20 rounded-full bg-slate-800 text-slate-300 flex items-center justify-center mb-2">
+                    <User className="h-10 w-10" />
                   </div>
                 )}
                 <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Numéro de Référence Officiel</p>
