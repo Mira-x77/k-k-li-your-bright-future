@@ -19,13 +19,15 @@ const NAV_LINKS = [
 export function Logo({ className = "" }: { className?: string }) {
   return (
     <Link to="/" className={`inline-flex items-center shrink-0 ${className}`} aria-label="Stage Kékéli — Accueil">
+      {/* Light mode: logoDark contains high-contrast dark text and gold flame */}
       <img
-        src={logoLight}
+        src={logoDark}
         alt="Stage Kékéli"
         className="h-10 md:h-12 w-auto object-contain dark:hidden"
       />
+      {/* Dark mode: logoLight contains light text and gold flame */}
       <img
-        src={logoDark}
+        src={logoLight}
         alt="Stage Kékéli"
         className="h-10 md:h-12 w-auto object-contain hidden dark:block"
       />
