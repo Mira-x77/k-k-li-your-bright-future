@@ -80,13 +80,6 @@ function PaymentPage() {
 
   const handleRegisterAndPay = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!photoUrl) {
-      setPhotoMissingError(true);
-      alert("📷 Photo obligatoire : Veuillez prendre une photo de votre enfant (WebCam) ou importer un fichier photo avant de valider.");
-      return;
-    }
-    setPhotoMissingError(false);
-
     if (!studentName.trim() || !parentPhone.trim()) {
       alert("Veuillez renseigner le nom de votre enfant et votre numéro de téléphone (parent).");
       return;
@@ -221,15 +214,11 @@ function PaymentPage() {
                 <Smartphone className="h-5 w-5 text-[color:var(--sun-deep)]" />
               </div>
 
-              {/* Photo Capture Step (Obligatoire) */}
-              <div className={`rounded-2xl border bg-background p-4 ${photoMissingError ? "border-rose-500 ring-2 ring-rose-500/20" : "border-border"}`}>
+              {/* Photo Capture Step (Optionnel) */}
+              <div className="rounded-2xl border border-border bg-background p-4">
                 <ProfilePhotoCapture
                   value={photoUrl}
-                  onChange={(photo) => {
-                    setPhotoUrl(photo);
-                    if (photo) setPhotoMissingError(false);
-                  }}
-                  required
+                  onChange={(photo) => setPhotoUrl(photo)}
                 />
               </div>
 
