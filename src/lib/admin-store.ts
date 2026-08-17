@@ -13,6 +13,8 @@ export interface ProgramSignIn {
   status: "Confirmé" | "En attente" | "Relancé";
   saturdaySessionIncluded: boolean;
   createdAt: string; // ISO string
+  readByAdmin?: boolean;
+  notes?: string;
 }
 
 export interface DashboardMetrics {
@@ -27,120 +29,82 @@ export interface DashboardMetrics {
   subjectBreakdown: { mathOnly: number; physicsOnly: number; both: number };
 }
 
-// Initial realistic dataset for Stage Kékéli ("Données SK")
-const INITIAL_SIGN_INS: ProgramSignIn[] = [
-  {
-    id: "SK-2026-001",
-    studentName: "Kofi Amouzou",
-    parentName: "Mme Amouzou Akossiwa",
-    parentPhone: "+228 90 12 34 56",
-    series: "Terminale C",
-    subjects: ["Mathématiques", "Physique-Chimie"],
-    paymentPlan: "annuel",
-    paymentMethod: "Moov Money",
-    registrationFeePaid: true,
-    tuitionFeePaid: 46500, // 22500*2 + 1500
-    totalAmountDue: 46500,
-    status: "Confirmé",
-    saturdaySessionIncluded: true,
-    createdAt: "2026-08-14T09:30:00Z",
-  },
-  {
-    id: "SK-2026-002",
-    studentName: "Abla Mensah",
-    parentName: "M. Mensah Lawson",
-    parentPhone: "+228 91 87 65 43",
-    series: "Terminale D",
-    subjects: ["Mathématiques"],
-    paymentPlan: "mensuel",
-    paymentMethod: "Moov Money",
-    registrationFeePaid: true,
-    tuitionFeePaid: 4000, // 2500 + 1500
-    totalAmountDue: 4000,
-    status: "Confirmé",
-    saturdaySessionIncluded: false,
-    createdAt: "2026-08-14T14:15:00Z",
-  },
-  {
-    id: "SK-2026-003",
-    studentName: "Enyonam Kpodar",
-    parentName: "Mme Kpodar Elvire",
-    parentPhone: "+228 98 44 22 11",
-    series: "Première C",
-    subjects: ["Mathématiques", "Physique-Chimie"],
-    paymentPlan: "mensuel",
-    paymentMethod: "En personne",
-    registrationFeePaid: true,
-    tuitionFeePaid: 1500,
-    totalAmountDue: 6500, // 5000 + 1500
-    status: "En attente",
-    saturdaySessionIncluded: true,
-    createdAt: "2026-08-15T11:00:00Z",
-  },
-  {
-    id: "SK-2026-004",
-    studentName: "Yawovi Agbeko",
-    parentName: "M. Agbeko Kodjo",
-    parentPhone: "+228 93 11 55 99",
-    series: "Terminale D",
-    subjects: ["Physique-Chimie"],
-    paymentPlan: "annuel",
-    paymentMethod: "Moov Money",
-    registrationFeePaid: true,
-    tuitionFeePaid: 24000, // 22500 + 1500
-    totalAmountDue: 24000,
-    status: "Confirmé",
-    saturdaySessionIncluded: true,
-    createdAt: "2026-08-15T16:45:00Z",
-  },
-  {
-    id: "SK-2026-005",
-    studentName: "Sena Dovon",
-    parentName: "Mme Dovon Pascaline",
-    parentPhone: "+228 99 33 77 11",
-    series: "Première D",
-    subjects: ["Mathématiques", "Physique-Chimie"],
-    paymentPlan: "mensuel",
-    paymentMethod: "En personne",
-    registrationFeePaid: false,
-    tuitionFeePaid: 0,
-    totalAmountDue: 6500,
-    status: "Relancé",
-    saturdaySessionIncluded: false,
-    createdAt: "2026-08-16T10:20:00Z",
-  },
-  {
-    id: "SK-2026-006",
-    studentName: "Fafa Lawson",
-    parentName: "M. Lawson Ayité",
-    parentPhone: "+228 90 99 88 77",
-    series: "Terminale C",
-    subjects: ["Mathématiques", "Physique-Chimie"],
-    paymentPlan: "annuel",
-    paymentMethod: "Moov Money",
-    registrationFeePaid: true,
-    tuitionFeePaid: 46500,
-    totalAmountDue: 46500,
-    status: "Confirmé",
-    saturdaySessionIncluded: true,
-    createdAt: "2026-08-16T15:05:00Z",
-  },
-];
+const STORAGE_KEY = "stage_kekeli_real_sign_ins";
+const UNREAD_KEY = "stage_kekeli_unread_count";
 
-const STORAGE_KEY = "stage_kekeli_sign_ins";
+// Real-time broadcast channel across browser tabs
+let broadcastChannel: BroadcastChannel | null = null;
+if (typeof window !== "undefined" && "BroadcastChannel" in window) {
+  try {
+    broadcastChannel = new BroadcastChannel("stage_kekeli_live_events");
+  } catch {
+    broadcastChannel = null;
+  }
+}
 
 export function getSignIns(): ProgramSignIn[] {
-  if (typeof window === "undefined") return INITIAL_SIGN_INS;
+  if (typeof window === "undefined") return [];
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
-    if (!saved) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(INITIAL_SIGN_INS));
-      return INITIAL_SIGN_INS;
-    }
+    if (!saved) return [];
     return JSON.parse(saved);
   } catch {
-    return INITIAL_SIGN_INS;
+    return [];
   }
+}
+
+export function savePublicRegistration(entry: {
+  studentName: string;
+  parentName: string;
+  parentPhone: string;
+  series: ProgramSignIn["series"];
+  subjects: ("Mathématiques" | "Physique-Chimie")[];
+  paymentPlan: "mensuel" | "annuel";
+  paymentMethod: "Moov Money" | "En personne" | "Virement";
+  saturdaySessionIncluded?: boolean;
+}): ProgramSignIn {
+  const current = getSignIns();
+  const dateStr = new Date().toISOString().slice(2, 7).replace("-", "");
+  const newId = `SK-${dateStr}-${String(current.length + 1).padStart(3, "0")}`;
+
+  const unitPrice = entry.paymentPlan === "mensuel" ? 2500 : 22500;
+  const tuition = unitPrice * entry.subjects.length;
+  const registrationFee = 1500;
+  const subtotal = tuition + registrationFee;
+  const taf = entry.paymentMethod === "Moov Money" ? Math.round(subtotal * 0.1) : 0;
+  const totalDue = subtotal + taf;
+
+  const newRecord: ProgramSignIn = {
+    id: newId,
+    studentName: entry.studentName,
+    parentName: entry.parentName || "Parent",
+    parentPhone: entry.parentPhone,
+    series: entry.series,
+    subjects: entry.subjects,
+    paymentPlan: entry.paymentPlan,
+    paymentMethod: entry.paymentMethod,
+    registrationFeePaid: true,
+    tuitionFeePaid: entry.paymentMethod === "Moov Money" ? totalDue : registrationFee,
+    totalAmountDue: totalDue,
+    status: entry.paymentMethod === "Moov Money" ? "Confirmé" : "En attente",
+    saturdaySessionIncluded: entry.saturdaySessionIncluded ?? true,
+    createdAt: new Date().toISOString(),
+    readByAdmin: false,
+  };
+
+  const updated = [newRecord, ...current];
+  if (typeof window !== "undefined") {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+    incrementUnreadCount();
+
+    // Broadcast event for open Admin tabs
+    if (broadcastChannel) {
+      broadcastChannel.postMessage({ type: "NEW_REGISTRATION", data: newRecord });
+    }
+    window.dispatchEvent(new CustomEvent("sk_new_registration", { detail: newRecord }));
+  }
+
+  return newRecord;
 }
 
 export function updateSignInStatus(id: string, newStatus: ProgramSignIn["status"]): ProgramSignIn[] {
@@ -157,29 +121,56 @@ export function updateSignInStatus(id: string, newStatus: ProgramSignIn["status"
   );
   if (typeof window !== "undefined") {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+    window.dispatchEvent(new CustomEvent("sk_data_updated"));
   }
   return updated;
 }
 
 export function addSignIn(newEntry: Omit<ProgramSignIn, "id" | "createdAt">): ProgramSignIn {
   const current = getSignIns();
-  const newId = `SK-2026-${String(current.length + 1).padStart(3, "0")}`;
+  const newId = `SK-ADMIN-${String(current.length + 1).padStart(3, "0")}`;
   const record: ProgramSignIn = {
     ...newEntry,
     id: newId,
     createdAt: new Date().toISOString(),
+    readByAdmin: true,
   };
   const updated = [record, ...current];
   if (typeof window !== "undefined") {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+    window.dispatchEvent(new CustomEvent("sk_data_updated"));
   }
   return record;
 }
 
+export function getUnreadCount(): number {
+  if (typeof window === "undefined") return 0;
+  try {
+    return parseInt(localStorage.getItem(UNREAD_KEY) || "0", 10);
+  } catch {
+    return 0;
+  }
+}
+
+export function incrementUnreadCount() {
+  if (typeof window === "undefined") return;
+  const current = getUnreadCount();
+  localStorage.setItem(UNREAD_KEY, String(current + 1));
+}
+
+export function markAllAsRead() {
+  if (typeof window === "undefined") return;
+  localStorage.setItem(UNREAD_KEY, "0");
+  const current = getSignIns();
+  const updated = current.map((item) => ({ ...item, readByAdmin: true }));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+  window.dispatchEvent(new CustomEvent("sk_data_updated"));
+}
+
 export function getDashboardMetrics(): DashboardMetrics {
   const signIns = getSignIns();
-  
-  const metrics: DashboardMetrics = {
+
+  return {
     totalSignIns: signIns.length,
     confirmedSignIns: signIns.filter((s) => s.status === "Confirmé").length,
     pendingSignIns: signIns.filter((s) => s.status !== "Confirmé").length,
@@ -203,8 +194,22 @@ export function getDashboardMetrics(): DashboardMetrics {
       both: signIns.filter((s) => s.subjects.length === 2).length,
     },
   };
+}
 
-  return metrics;
+export function generateWhatsAppReceiptLink(record: ProgramSignIn): string {
+  const cleanPhone = record.parentPhone.replace(/[^0-9]/g, "");
+  const text = encodeURIComponent(
+    `*STAGE KÉKÉLI — REÇU D'INSCRIPTION*\n\n` +
+      `Référence : *${record.id}*\n` +
+      `Élève : *${record.studentName}* (${record.series})\n` +
+      `Matière(s) : ${record.subjects.join(" & ")}\n` +
+      `Formule : ${record.paymentPlan === "annuel" ? "Annuel" : "Mensuel"}\n` +
+      `Mode de règlement : ${record.paymentMethod}\n` +
+      `Montant Réglé : *${record.tuitionFeePaid.toLocaleString("fr-FR")} FCFA*\n` +
+      `Statut : ${record.status === "Confirmé" ? "✅ Confirmé" : "⏳ En attente de règlement"}\n\n` +
+      `Merci d'avoir choisi Stage Kékéli, la lumière qui guide vers la réussite !`
+  );
+  return `https://wa.me/${cleanPhone}?text=${text}`;
 }
 
 export function exportToCSV(data: ProgramSignIn[] = getSignIns()) {

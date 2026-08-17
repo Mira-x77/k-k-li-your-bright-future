@@ -1,8 +1,9 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { LayoutDashboard, Users, BarChart3, Download, ShieldCheck, ArrowLeft, Plus } from "lucide-react";
-import { useState } from "react";
+import { LayoutDashboard, Users, BarChart3, Download, ArrowLeft, Plus, Bell } from "lucide-react";
+import { useState, useEffect } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { exportToCSV, getSignIns, addSignIn, type ProgramSignIn } from "@/lib/admin-store";
+import { exportToCSV, getSignIns, addSignIn, getUnreadCount, markAllAsRead, type ProgramSignIn } from "@/lib/admin-store";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 interface AdminShellProps {
@@ -14,6 +15,7 @@ export function AdminShell({ children, onDataChange }: AdminShellProps) {
   const routerState = useRouterState();
   const currentPath = routerState.location.pathname;
 
+  const [unreadCount, setUnreadCount] = useState(0);
   const [openNewModal, setOpenNewModal] = useState(false);
   const [formData, setFormData] = useState({
     studentName: "",
@@ -25,6 +27,79 @@ export function AdminShell({ children, onDataChange }: AdminShellProps) {
     paymentMethod: "Moov Money" as "Moov Money" | "En personne",
     saturdaySessionIncluded: true,
   });
+
+  const refreshUnread = () => {
+    setUnreadCount(getUnreadCount());
+  };
+
+  useEffect(() => {
+    refreshUnread();
+
+    // Web Audio Chime generator for real-time notifications
+    const playAudioChime = () => {
+      try {
+        const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
+        if (!AudioContext) return;
+        const ctx = new AudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
+        osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.15); // A5
+        gain.gain.setValueAtTime(0.15, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.3);
+      } catch {
+        // Audio playback error fallback
+      }
+    };
+
+    const handleNewRegistration = (e: any) => {
+      const record = e.detail || e.data?.data;
+      if (record) {
+        playAudioChime();
+        toast.success(`🔔 Nouvelle inscription : ${record.studentName} (${record.series})`, {
+          description: `Matières : ${record.subjects.join(" & ")} — ${record.tuitionFeePaid.toLocaleString("fr-FR")} FCFA`,
+          duration: 6000,
+        });
+        refreshUnread();
+        if (onDataChange) onDataChange();
+      }
+    };
+
+    // BroadcastChannel Listener for live cross-tab notifications
+    let bc: BroadcastChannel | null = null;
+    if (typeof window !== "undefined" && "BroadcastChannel" in window) {
+      try {
+        bc = new BroadcastChannel("stage_kekeli_live_events");
+        bc.onmessage = (event) => {
+          if (event.data?.type === "NEW_REGISTRATION") {
+            handleNewRegistration(event);
+          }
+        };
+      } catch {}
+    }
+
+    window.addEventListener("sk_new_registration", handleNewRegistration);
+    window.addEventListener("sk_data_updated", () => {
+      refreshUnread();
+      if (onDataChange) onDataChange();
+    });
+
+    return () => {
+      window.removeEventListener("sk_new_registration", handleNewRegistration);
+      if (bc) bc.close();
+    };
+  }, [onDataChange]);
+
+  const handleMarkRead = () => {
+    markAllAsRead();
+    setUnreadCount(0);
+    if (onDataChange) onDataChange();
+  };
 
   const handleCreate = (e: React.FormEvent) => {
     e.preventDefault();
@@ -93,13 +168,30 @@ export function AdminShell({ children, onDataChange }: AdminShellProps) {
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
+            {/* Unread Notifications Badge */}
+            {unreadCount > 0 ? (
+              <button
+                onClick={handleMarkRead}
+                title="Cliquer pour tout marquer comme lu"
+                className="relative flex items-center gap-1.5 rounded-lg bg-amber-500/10 border border-amber-500/30 px-3 py-1.5 text-xs font-bold text-amber-400 hover:bg-amber-500/20 transition"
+              >
+                <Bell className="h-3.5 w-3.5 animate-bounce" />
+                <span>{unreadCount} nouvelle{unreadCount > 1 ? "s" : ""}</span>
+              </button>
+            ) : (
+              <span className="flex items-center gap-1.5 text-xs text-slate-400 px-2 py-1">
+                <Bell className="h-3.5 w-3.5 text-slate-500" />
+                <span>À jour</span>
+              </span>
+            )}
+
             {/* New Registration Modal */}
             <Dialog open={openNewModal} onOpenChange={setOpenNewModal}>
               <DialogTrigger asChild>
                 <Button size="sm" className="bg-amber-400 text-slate-950 font-bold hover:bg-amber-300 text-xs gap-1.5">
                   <Plus className="h-4 w-4" />
-                  <span className="hidden sm:inline">Nouvelle Inscription</span>
+                  <span className="hidden sm:inline">Inscription Manuelle</span>
                 </Button>
               </DialogTrigger>
               <DialogContent className="bg-slate-900 border-slate-800 text-white max-w-md">

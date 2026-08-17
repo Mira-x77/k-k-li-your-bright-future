@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
-import { Search, Filter, Phone, CheckCircle, Clock, AlertCircle, Eye, Download, Calendar } from "lucide-react";
+import { Search, Filter, Phone, CheckCircle, Clock, AlertCircle, Eye, Download, MessageSquare, Sparkles } from "lucide-react";
 import { AdminShell } from "@/components/admin/admin-shell";
-import { getSignIns, updateSignInStatus, exportToCSV, type ProgramSignIn } from "@/lib/admin-store";
+import { getSignIns, updateSignInStatus, exportToCSV, generateWhatsAppReceiptLink, type ProgramSignIn } from "@/lib/admin-store";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -74,7 +74,8 @@ function AdminInscriptionsPage() {
             <Button
               onClick={() => exportToCSV(filteredData)}
               size="sm"
-              className="bg-amber-400 text-slate-950 font-bold hover:bg-amber-300 text-xs gap-1.5"
+              disabled={filteredData.length === 0}
+              className="bg-amber-400 text-slate-950 font-bold hover:bg-amber-300 text-xs gap-1.5 disabled:opacity-50"
             >
               <Download className="h-4 w-4" />
               Exporter Sélection CSV
@@ -145,8 +146,14 @@ function AdminInscriptionsPage() {
                 <tbody className="divide-y divide-slate-800">
                   {filteredData.length === 0 ? (
                     <tr>
-                      <td colSpan={7} className="py-8 text-center text-slate-500 text-sm">
-                        Aucune inscription ne correspond aux critères recherchés.
+                      <td colSpan={7} className="py-12 text-center text-slate-400 text-xs">
+                        <div className="max-w-xs mx-auto space-y-2">
+                          <Sparkles className="h-6 w-6 text-amber-400 mx-auto" />
+                          <p className="font-semibold text-white">Aucune inscription enregistrée</p>
+                          <p className="text-[11px] text-slate-500">
+                            Les fiches d'élèves apparaîtront automatiquement dès qu'une inscription sera soumise sur le site public.
+                          </p>
+                        </div>
                       </td>
                     </tr>
                   ) : (
@@ -292,14 +299,14 @@ function AdminInscriptionsPage() {
 
                 <div className="pt-3 flex gap-2">
                   <a
-                    href={`https://wa.me/${selectedStudent.parentPhone.replace(/[^0-9]/g, "")}`}
+                    href={generateWhatsAppReceiptLink(selectedStudent)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-full"
                   >
-                    <Button className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs gap-2">
-                      <Phone className="h-3.5 w-3.5" />
-                      Contacter via WhatsApp
+                    <Button className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white font-bold text-xs gap-2">
+                      <MessageSquare className="h-4 w-4" />
+                      Envoyer le Reçu par WhatsApp au Parent
                     </Button>
                   </a>
                 </div>
