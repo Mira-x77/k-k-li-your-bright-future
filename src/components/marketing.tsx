@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, Check, ChevronDown, MessageSquare, Phone } from "lucide-react";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { Reveal } from "@/components/reveal";
 import {
   Accordion,
@@ -19,12 +19,129 @@ export function WhatsAppIcon({ className = "h-4 w-4" }: { className?: string }) 
   return <MessageSquare className={className} />;
 }
 
+/* ---------- Déroulement d'une séance ---------- */
+
+export type ProcessStep = {
+  title: string;
+  points: string[];
+};
+
+export const SESSION_STEPS: ProcessStep[] = [
+  {
+    title: "Cadrage de la séance",
+    points: [
+      "Accueil et rappel des objectifs du jour en mathématiques ou en physique",
+      "Point rapide sur le cours vu en classe et le travail réalisé",
+      "Identification des blocages (formules non comprises, méthode de résolution)",
+    ],
+  },
+  {
+    title: "Reprise des points de cours",
+    points: [
+      "Réexplication ciblée des notions théoriques non maîtrisées",
+      "Exemples simples pour fixer les réflexes de calcul et de raisonnement",
+      "Questions ouvertes pour situer ce qui est compris",
+    ],
+  },
+  {
+    title: "Exercices guidés",
+    points: [
+      "Résolution pas à pas au tableau avec participation active",
+      "Méthodologie de rédaction attendue aux examens",
+      "Correction des erreurs de raisonnement au fil de la séance",
+    ],
+  },
+  {
+    title: "Travail en autonomie",
+    points: [
+      "Exercices d'application faits seul, répétiteur disponible",
+      "Devoir à la maison ciblé sur les points fragiles",
+      "Point de fin de séance sur ce qui reste à travailler",
+    ],
+  },
+];
+
+export function SessionFlow({
+  steps = SESSION_STEPS,
+  eyebrow = "Notre approche",
+  title = <>Comment se déroule une séance du samedi</>,
+  intro = "Une séance structurée en quatre temps chaque samedi, du cadrage des objectifs au travail en autonomie.",
+}: {
+  steps?: ProcessStep[];
+  eyebrow?: string;
+  title?: ReactNode;
+  intro?: string;
+}) {
+  const [activeStep, setActiveStep] = useState(0);
+  const step = steps[activeStep];
+
+  return (
+    <section className="border-y border-border bg-card/50">
+      <div className="mx-auto max-w-7xl px-6 py-20">
+        <SectionHeading eyebrow={eyebrow} title={title} intro={intro} />
+
+        <div className="mt-12 grid gap-8 lg:grid-cols-[320px_1fr]">
+          <Reveal anim="left">
+            <div className="flex gap-2 overflow-x-auto pb-2 lg:flex-col lg:overflow-visible lg:pb-0">
+              {steps.map((s, i) => {
+                const isActive = i === activeStep;
+                return (
+                  <button
+                    key={s.title}
+                    type="button"
+                    onClick={() => setActiveStep(i)}
+                    aria-current={isActive}
+                    className={`flex shrink-0 items-center gap-3 rounded-2xl px-4 py-3 text-left transition lg:w-full ${
+                      isActive
+                        ? "bg-[color:var(--sun)]/25 ring-1 ring-[color:var(--sun-deep)]/40"
+                        : "bg-background ring-1 ring-border hover:bg-muted"
+                    }`}
+                  >
+                    <span
+                      className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
+                        isActive
+                          ? "bg-[color:var(--sun-deep)] text-white"
+                          : "bg-muted text-muted-foreground"
+                      }`}
+                    >
+                      {i + 1}
+                    </span>
+                    <span className="whitespace-nowrap text-sm font-semibold lg:whitespace-normal">
+                      {s.title}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </Reveal>
+
+          <Reveal anim="right" key={step.title}>
+            <div className="rounded-3xl border border-border bg-background p-7 md:p-9">
+              <h3 className="text-2xl font-bold tracking-tight">{step.title}</h3>
+              <ol className="mt-6 space-y-4">
+                {step.points.map((p, i) => (
+                  <li key={p} className="flex gap-3">
+                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[color:var(--sun)]/30 text-[11px] font-bold text-[color:var(--sun-deep)]">
+                      {i + 1}
+                    </span>
+                    <span className="text-sm leading-relaxed text-foreground/85">{p}</span>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </Reveal>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export interface FaqItem {
   q: string;
   a: string;
 }
 
-export function FaqSection({ items, title }: { items: FaqItem[]; title?: React.ReactNode }) {
+export function FaqSection({ items, title }: { items: FaqItem[]; title?: ReactNode }) {
   return (
     <section className="mx-auto max-w-4xl px-6 py-20">
       <Reveal textCenter>
@@ -62,8 +179,8 @@ export function CallbackCta({
   title,
   intro,
 }: {
-  title?: React.ReactNode;
-  intro?: React.ReactNode;
+  title?: ReactNode;
+  intro?: ReactNode;
 }) {
   return (
     <section className="border-t border-border bg-gradient-to-b from-card to-background">
@@ -106,7 +223,7 @@ export function SectionHeading({
   intro,
 }: {
   eyebrow?: string;
-  title: React.ReactNode;
+  title: ReactNode;
   intro?: string;
 }) {
   return (
