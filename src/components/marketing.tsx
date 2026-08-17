@@ -73,7 +73,7 @@ export function SessionFlow({
   intro?: string;
 }) {
   const [activeStep, setActiveStep] = useState(0);
-  const step = steps[activeStep];
+  const step = steps[activeStep] || steps[0];
 
   return (
     <section className="border-y border-border bg-card/50">
@@ -141,7 +141,34 @@ export interface FaqItem {
   a: string;
 }
 
-export function FaqSection({ items, title }: { items: FaqItem[]; title?: ReactNode }) {
+export const GENERAL_FAQ: FaqItem[] = [
+  {
+    q: "Mon enfant n'est pas motivé — est-ce que ça vaut quand même le coup ?",
+    a: "La première séance sert à comprendre d'où vient le blocage, puis le travail repart des chapitres non acquis plutôt que du programme en cours.",
+  },
+  {
+    q: "Qui sont les répétiteurs ?",
+    a: "Des répétiteurs de mathématiques et de physique, qui interviennent auprès des élèves de Première et de Terminale, séries C & D. La page « Nos répétiteurs » présente l'équipe.",
+  },
+  {
+    q: "Comment échanger avec le répétiteur de mon enfant ?",
+    a: `Appelez-nous au ${PHONE_DISPLAY} : nous faisons le point avec vous sur les chapitres travaillés et sur ce qui reste difficile.`,
+  },
+  {
+    q: "Quels sont les jours et horaires des cours ?",
+    a: "Les cours de répétition se déroulent exclusivement le samedi de 8h00 à 17h00.",
+  },
+];
+
+export function FaqSection({
+  items = GENERAL_FAQ,
+  title,
+}: {
+  items?: FaqItem[];
+  title?: ReactNode;
+}) {
+  const faqList = items && items.length > 0 ? items : GENERAL_FAQ;
+
   return (
     <section className="mx-auto max-w-4xl px-6 py-20">
       <Reveal textCenter>
@@ -155,7 +182,7 @@ export function FaqSection({ items, title }: { items: FaqItem[]; title?: ReactNo
 
       <div className="mt-10">
         <Accordion type="single" collapsible className="w-full space-y-3">
-          {items.map((item, idx) => (
+          {faqList.map((item, idx) => (
             <AccordionItem
               key={idx}
               value={`item-${idx}`}
