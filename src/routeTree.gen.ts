@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TarifsRouteImport } from './routes/tarifs'
 import { Route as SamediRouteImport } from './routes/samedi'
 import { Route as RepetiteursRouteImport } from './routes/repetiteurs'
+import { Route as PolitiqueDeConfidentialiteRouteImport } from './routes/politique-de-confidentialite'
 import { Route as PaiementRouteImport } from './routes/paiement'
 import { Route as OffreRouteImport } from './routes/offre'
 import { Route as ContactRouteImport } from './routes/contact'
@@ -36,6 +37,12 @@ const RepetiteursRoute = RepetiteursRouteImport.update({
   path: '/repetiteurs',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PolitiqueDeConfidentialiteRoute =
+  PolitiqueDeConfidentialiteRouteImport.update({
+    id: '/politique-de-confidentialite',
+    path: '/politique-de-confidentialite',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const PaiementRoute = PaiementRouteImport.update({
   id: '/paiement',
   path: '/paiement',
@@ -83,6 +90,7 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/offre': typeof OffreRoute
   '/paiement': typeof PaiementRoute
+  '/politique-de-confidentialite': typeof PolitiqueDeConfidentialiteRoute
   '/repetiteurs': typeof RepetiteursRoute
   '/samedi': typeof SamediRoute
   '/tarifs': typeof TarifsRoute
@@ -96,6 +104,7 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/offre': typeof OffreRoute
   '/paiement': typeof PaiementRoute
+  '/politique-de-confidentialite': typeof PolitiqueDeConfidentialiteRoute
   '/repetiteurs': typeof RepetiteursRoute
   '/samedi': typeof SamediRoute
   '/tarifs': typeof TarifsRoute
@@ -110,6 +119,7 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/offre': typeof OffreRoute
   '/paiement': typeof PaiementRoute
+  '/politique-de-confidentialite': typeof PolitiqueDeConfidentialiteRoute
   '/repetiteurs': typeof RepetiteursRoute
   '/samedi': typeof SamediRoute
   '/tarifs': typeof TarifsRoute
@@ -125,6 +135,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/offre'
     | '/paiement'
+    | '/politique-de-confidentialite'
     | '/repetiteurs'
     | '/samedi'
     | '/tarifs'
@@ -138,6 +149,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/offre'
     | '/paiement'
+    | '/politique-de-confidentialite'
     | '/repetiteurs'
     | '/samedi'
     | '/tarifs'
@@ -151,6 +163,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/offre'
     | '/paiement'
+    | '/politique-de-confidentialite'
     | '/repetiteurs'
     | '/samedi'
     | '/tarifs'
@@ -165,6 +178,7 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   OffreRoute: typeof OffreRoute
   PaiementRoute: typeof PaiementRoute
+  PolitiqueDeConfidentialiteRoute: typeof PolitiqueDeConfidentialiteRoute
   RepetiteursRoute: typeof RepetiteursRoute
   SamediRoute: typeof SamediRoute
   TarifsRoute: typeof TarifsRoute
@@ -194,6 +208,13 @@ declare module '@tanstack/react-router' {
       path: '/repetiteurs'
       fullPath: '/repetiteurs'
       preLoaderRoute: typeof RepetiteursRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/politique-de-confidentialite': {
+      id: '/politique-de-confidentialite'
+      path: '/politique-de-confidentialite'
+      fullPath: '/politique-de-confidentialite'
+      preLoaderRoute: typeof PolitiqueDeConfidentialiteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/paiement': {
@@ -261,6 +282,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   OffreRoute: OffreRoute,
   PaiementRoute: PaiementRoute,
+  PolitiqueDeConfidentialiteRoute: PolitiqueDeConfidentialiteRoute,
   RepetiteursRoute: RepetiteursRoute,
   SamediRoute: SamediRoute,
   TarifsRoute: TarifsRoute,

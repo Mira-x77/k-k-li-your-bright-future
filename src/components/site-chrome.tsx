@@ -170,13 +170,39 @@ export function SiteFooter() {
           <div>
             © {new Date().getFullYear()} Stage Kékéli · Lomé, Togo · Tous droits réservés.
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 flex-wrap">
             <Link to="/paiement" className="hover:underline font-semibold text-foreground">Formulaire Inscription Parent</Link>
+            <span>·</span>
+            <Link to="/politique-de-confidentialite" className="hover:underline font-semibold text-muted-foreground">Politique de Confidentialité</Link>
             <span>·</span>
             <Link to="/admin" className="hover:underline font-semibold text-amber-600">Portail Admin</Link>
           </div>
         </div>
       </div>
     </footer>
+  );
+}
+
+export function PageHero({
+  eyebrow,
+  title,
+  intro,
+}: {
+  eyebrow: string;
+  title: React.ReactNode;
+  intro?: string;
+}) {
+  return (
+    <section className="relative overflow-hidden border-b border-border bg-[#F6F5F0] dark:bg-card">
+      <div className="relative mx-auto max-w-5xl px-6 py-16 text-center md:py-20">
+        <div className="text-xs font-semibold uppercase tracking-[0.24em] text-[color:var(--sun-deep)]">
+          {eyebrow}
+        </div>
+        <h1 className="mt-4 text-4xl font-black leading-[1.05] tracking-tight sm:text-5xl md:text-6xl">{title}</h1>
+        {intro && (
+          <p className="mx-auto mt-5 max-w-2xl text-muted-foreground">{intro}</p>
+        )}
+      </div>
+    </section>
   );
 }
