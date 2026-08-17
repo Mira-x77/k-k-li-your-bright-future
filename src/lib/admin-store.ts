@@ -33,7 +33,8 @@ export interface DashboardMetrics {
 const STORAGE_KEY = "stage_kekeli_real_sign_ins";
 const UNREAD_KEY = "stage_kekeli_unread_count";
 
-export const OFFICIAL_PHONE = "+228 93 51 00 74";
+export const OFFICIAL_PHONE = "+228 98 93 02 11";
+export const TMONEY_TOGOCEL_PHONE = "+228 93 51 00 74";
 export const OFFICIAL_EMAIL = "stagekekeli@gmail.com";
 
 // Real-time broadcast channel across browser tabs

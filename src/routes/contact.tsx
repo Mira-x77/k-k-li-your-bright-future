@@ -22,12 +22,12 @@ export const Route = createFileRoute("/contact")({
       {
         name: "description",
         content:
-          "Contactez Stage Kékéli à Lomé, Togo — inscription en mathématiques et en physique pour votre enfant en Première C & D et Terminale C & D. Téléphone / WhatsApp : +228 93 51 00 74.",
+          `Contactez Stage Kékéli à Lomé, Togo — inscription en mathématiques et en physique pour votre enfant en Première C & D et Terminale C & D. Téléphone / WhatsApp : ${PHONE_DISPLAY}.`,
       },
       { property: "og:title", content: "Contact — Stage Kékéli" },
       {
         property: "og:description",
-        content: "Appelez-nous au +228 93 51 00 74 ou écrivez-nous à stagekekeli@gmail.com : Stage Kékéli, Lomé, Togo.",
+        content: `Appelez-nous au ${PHONE_DISPLAY} ou écrivez-nous à stagekekeli@gmail.com : Stage Kékéli, Lomé, Togo.`,
       },
     ],
   }),
@@ -45,7 +45,7 @@ const CONTACT_FAQ: FaqItem[] = [
   },
   {
     q: "Prenez-vous des inscriptions en cours d'année ?",
-    a: "Il est possible de nous rejoindre en cours d'année scolaire. Appelez-nous au +228 93 51 00 74 pour que nous voyions ensemble ce qui peut être organisé.",
+    a: `Il est possible de nous rejoindre en cours d'année scolaire. Appelez-nous au ${PHONE_DISPLAY} pour que nous voyions ensemble ce qui peut être organisé.`,
   },
 ];
 
@@ -98,7 +98,7 @@ function ContactPage() {
               Une question ? Parlons du parcours de votre enfant
             </h1>
             <p className="mx-auto mt-5 max-w-2xl text-muted-foreground">
-              Appelez-nous au +228 93 51 00 74 ou écrivez-nous à stagekekeli@gmail.com. Les séances ont lieu exclusivement le samedi.
+              Appelez-nous au {PHONE_DISPLAY} ou écrivez-nous à stagekekeli@gmail.com. Les séances ont lieu exclusivement le samedi.
             </p>
           </Reveal>
           <Reveal delay={80}>
@@ -117,7 +117,7 @@ function ContactPage() {
                 className="inline-flex items-center gap-2 rounded-full border border-[#25D366]/30 bg-[#25D366]/10 px-6 py-3.5 text-sm font-bold text-[#128C7E] transition hover:bg-[#25D366]/20"
               >
                 <WhatsAppIcon className="h-4 w-4" />
-                WhatsApp
+                WhatsApp ({PHONE_DISPLAY})
               </a>
               <a
                 href={PHONE_HREF}
@@ -229,7 +229,7 @@ function ContactPage() {
                 <input
                   type="text"
                   required
-                  placeholder="+228 93 51 00 74"
+                  placeholder="+228 98 93 02 11"
                   value={parentPhone}
                   onChange={(e) => setParentPhone(e.target.value)}
                   className="mt-2 w-full rounded-xl border border-border bg-card px-4 py-3 text-sm outline-none transition focus:border-[color:var(--sun-deep)] focus:ring-2"

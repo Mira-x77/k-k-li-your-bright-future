@@ -3,7 +3,7 @@ import { ArrowRight, Lock, Receipt, ShieldCheck, Smartphone, CheckCircle, Printe
 import { useState } from "react";
 import { Reveal } from "@/components/reveal";
 import { CallbackCta, FaqSection, SectionHeading, type FaqItem } from "@/components/marketing";
-import { savePublicRegistration, generateWhatsAppReceiptLink, OFFICIAL_PHONE, OFFICIAL_EMAIL, type ProgramSignIn } from "@/lib/admin-store";
+import { savePublicRegistration, generateWhatsAppReceiptLink, OFFICIAL_PHONE, TMONEY_TOGOCEL_PHONE, OFFICIAL_EMAIL, type ProgramSignIn } from "@/lib/admin-store";
 import { ProfilePhotoCapture } from "@/components/profile-photo-capture";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -472,7 +472,7 @@ function PaymentPage() {
                     Effectuez le transfert TMoney du montant de <strong>{fmt(receiptRecord.totalAmountDue)} FCFA</strong> vers le numéro officiel Stage Kékéli :
                   </p>
                   <p className="text-base font-black text-foreground font-mono bg-background p-2 rounded text-center border border-border">
-                    {OFFICIAL_PHONE}
+                    {TMONEY_TOGOCEL_PHONE}
                   </p>
                 </div>
               ) : (
