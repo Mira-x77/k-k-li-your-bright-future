@@ -12,6 +12,7 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SiteHeader, SiteFooter } from "@/components/site-chrome";
+import { PrivacyConsentBanner } from "@/components/privacy-consent-banner";
 
 function NotFoundComponent() {
   return (
@@ -140,6 +141,7 @@ function RootComponent() {
           <Outlet />
         </main>
         <SiteFooter />
+        <PrivacyConsentBanner />
       </div>
     </QueryClientProvider>
   );
