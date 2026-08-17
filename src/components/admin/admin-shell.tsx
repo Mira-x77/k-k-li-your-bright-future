@@ -159,9 +159,7 @@ export function AdminShell({ children, onDataChange }: AdminShellProps) {
             </Link>
             <span className="hidden text-slate-700 sm:inline">|</span>
             <div className="flex items-center gap-2">
-              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#CDFE00] font-black text-slate-950 text-xs shadow-sm">
-                SK
-              </div>
+              <img src="/logo-dark.png" alt="Stage Kékéli Logo" className="h-8 w-auto object-contain" />
               <span className="font-bold text-white text-base tracking-tight">
                 Stage Kékéli <span className="text-[#CDFE00] text-[11px] font-bold px-2 py-0.5 rounded bg-[#CDFE00]/10 ml-1 border border-[#CDFE00]/20">Admin</span>
               </span>

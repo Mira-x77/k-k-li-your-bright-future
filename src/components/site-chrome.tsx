@@ -17,8 +17,10 @@ export function SiteHeader() {
     <header className="sticky top-0 z-30 border-b border-border/50 bg-[#FAF9F6]/90 dark:bg-background/90 backdrop-blur-md">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
         <Link to="/" className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[color:var(--sun)] font-black text-[color:var(--ink)] shadow-md">
-            SK
+          {/* Official Stage Kékéli Logo Images */}
+          <div className="flex items-center gap-2">
+            <img src="/logo-light.png" alt="Stage Kékéli Logo" className="h-10 w-auto object-contain dark:hidden" />
+            <img src="/logo-dark.png" alt="Stage Kékéli Logo" className="h-10 w-auto object-contain hidden dark:block" />
           </div>
           <div className="flex flex-col">
             <span className="text-xl font-black tracking-tight">Stage Kékéli</span>
@@ -88,9 +90,8 @@ export function SiteFooter() {
         <div className="grid gap-10 md:grid-cols-4">
           <div className="md:col-span-2">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[color:var(--sun)] font-black text-[color:var(--ink)]">
-                SK
-              </div>
+              <img src="/logo-light.png" alt="Stage Kékéli Logo" className="h-10 w-auto object-contain dark:hidden" />
+              <img src="/logo-dark.png" alt="Stage Kékéli Logo" className="h-10 w-auto object-contain hidden dark:block" />
               <span className="text-xl font-black tracking-tight">Stage Kékéli</span>
             </div>
             <p className="mt-4 max-w-sm text-sm text-muted-foreground">
