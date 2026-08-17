@@ -221,8 +221,8 @@ function OffrePage() {
               ))}
             </ul>
             <Link
-              to="/contact"
-              className="mt-8 inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-bold text-primary-foreground transition hover:opacity-90"
+              to="/paiement"
+              className="mt-8 inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-bold text-primary-foreground transition hover:opacity-90 shadow-md"
             >
               S'inscrire en {program.level} <ArrowRight className="h-4 w-4" />
             </Link>

@@ -1,66 +1,45 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, Home, Phone, ShieldCheck } from "lucide-react";
-
-import logoLight from "@/assets/logo-light.png";
-import { PHONE_DISPLAY, PHONE_HREF, WHATSAPP_HREF, WHATSAPP_LABEL, WhatsAppIcon } from "@/components/marketing";
+import { ArrowRight, BookOpen, ChevronRight, Menu, X, ShieldCheck, UserCheck } from "lucide-react";
+import { useState } from "react";
 
 const NAV_LINKS = [
-  { label: "Accueil", to: "/" },
-  { label: "Notre offre", to: "/offre" },
-  { label: "Répétiteurs", to: "/repetiteurs" },
-  { label: "Cours du samedi", to: "/samedi" },
-  { label: "Tarifs", to: "/tarifs" },
-  { label: "Paiement", to: "/paiement" },
-  { label: "À propos", to: "/a-propos" },
-  { label: "Contact", to: "/contact" },
+  { to: "/", label: "Accueil" },
+  { to: "/offre", label: "Notre Offre" },
+  { to: "/samedi", label: "Séances du Samedi" },
+  { to: "/repetiteurs", label: "Nos Répétiteurs" },
+  { to: "/tarifs", label: "Tarifs" },
+  { to: "/a-propos", label: "À propos" },
+  { to: "/paiement", label: "Paiement & Inscription" },
+  { to: "/contact", label: "Contact" },
 ] as const;
-
-export function Logo({ className = "" }: { className?: string }) {
-  return (
-    <Link to="/" className={`inline-flex shrink-0 ${className}`} aria-label="Stage Kékéli — Accueil">
-      <img
-        src={logoLight}
-        alt="Stage Kékéli"
-        width={320}
-        height={96}
-        className="h-20 w-auto max-w-[min(360px,68vw)] object-contain object-left md:h-28"
-      />
-    </Link>
-  );
-}
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-40 bg-background/70 backdrop-blur-lg">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-6 py-3 lg:grid lg:grid-cols-[1fr_auto_1fr]">
-        <div className="flex items-center gap-3">
-          <Logo />
-          <Link
-            to="/"
-            activeOptions={{ exact: true }}
-            activeProps={{ className: "nav-pill-active text-foreground" }}
-            inactiveProps={{ className: "text-foreground/80 hover:text-foreground" }}
-            className="nav-pill relative inline-flex items-center gap-2 rounded-full bg-card/40 px-4 py-2 text-sm font-semibold ring-1 ring-border/50 backdrop-blur-xl transition-colors duration-300"
-          >
-            <Home className="h-4 w-4" />
-            Accueil
-          </Link>
-        </div>
-        <nav className="hidden justify-center lg:flex">
-          <div className="flex items-center gap-1 rounded-full bg-card/40 p-1.5 ring-1 ring-border/40 backdrop-blur-xl">
-            {NAV_LINKS.slice(1).map((l) => (
-              <Link
-                key={l.to}
-                to={l.to}
-                activeOptions={{ exact: true }}
-                activeProps={{ className: "nav-pill-active text-foreground" }}
-                inactiveProps={{ className: "text-muted-foreground hover:text-foreground" }}
-                className="nav-pill relative whitespace-nowrap rounded-full px-3 py-2 text-sm font-medium transition-colors duration-300"
-              >
-                {l.label}
-              </Link>
-            ))}
+    <header className="sticky top-0 z-30 border-b border-border/60 bg-background/90 backdrop-blur-md">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+        <Link to="/" className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[color:var(--sun)] font-black text-[color:var(--ink)] shadow-md">
+            SK
           </div>
+          <div className="flex flex-col">
+            <span className="text-xl font-black tracking-tight">Stage Kékéli</span>
+            <span className="text-[11px] font-semibold text-muted-foreground">
+              Maths & Physique · Première & Terminale C & D
+            </span>
+          </div>
+        </Link>
+        <nav className="hidden lg:flex lg:items-center lg:gap-7 text-sm font-medium">
+          {NAV_LINKS.slice(0, 6).map((l) => (
+            <Link
+              key={l.to}
+              to={l.to}
+              activeOptions={{ exact: true }}
+              activeProps={{ className: "nav-pill-active font-bold text-foreground" }}
+              inactiveProps={{ className: "text-muted-foreground hover:text-foreground" }}
+            >
+              {l.label}
+            </Link>
+          ))}
         </nav>
         <div className="flex items-center justify-end gap-3">
           <Link
@@ -70,8 +49,8 @@ export function SiteHeader() {
             Contact
           </Link>
           <Link
-            to="/tarifs"
-            className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground transition hover:opacity-90"
+            to="/paiement"
+            className="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-bold text-primary-foreground transition hover:opacity-90 shadow-md"
           >
             S'inscrire <ArrowRight className="h-4 w-4" />
           </Link>
@@ -84,16 +63,16 @@ export function SiteHeader() {
 
 function MobileNav() {
   return (
-    <div className="lg:hidden">
-      <div className="mx-auto flex max-w-7xl gap-1.5 overflow-x-auto px-4 pb-3 pt-1 text-sm">
+    <div className="lg:hidden border-t border-border/40 bg-background/95">
+      <div className="mx-auto flex max-w-7xl gap-1.5 overflow-x-auto px-4 pb-3 pt-2 text-sm">
         {NAV_LINKS.map((l) => (
           <Link
             key={l.to}
             to={l.to}
             activeOptions={{ exact: true }}
-            activeProps={{ className: "nav-pill-active text-foreground font-semibold" }}
-            inactiveProps={{ className: "text-foreground/65" }}
-            className="nav-pill relative shrink-0 whitespace-nowrap rounded-full px-3.5 py-2 transition-colors duration-300"
+            activeProps={{ className: "nav-pill-active text-foreground font-bold bg-muted" }}
+            inactiveProps={{ className: "text-foreground/75" }}
+            className="shrink-0 rounded-full px-3 py-1.5 text-xs font-semibold"
           >
             {l.label}
           </Link>
@@ -105,70 +84,76 @@ function MobileNav() {
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-border bg-background">
-      <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 px-6 py-10 md:flex-row">
-        <Logo />
-        <p className="text-xs text-muted-foreground">
-          © {new Date().getFullYear()} Stage Kékéli · Lomé, Togo · Tous droits réservés
-        </p>
-        <div className="flex flex-wrap items-center gap-6 text-xs text-muted-foreground">
-          <a
-            href={PHONE_HREF}
-            className="inline-flex items-center gap-1.5 font-semibold text-foreground/80 hover:text-foreground"
-          >
-            <Phone className="h-3.5 w-3.5" />
-            {PHONE_DISPLAY}
-          </a>
-          <a
-            href={WHATSAPP_HREF}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={WHATSAPP_LABEL}
-            title={WHATSAPP_LABEL}
-            className="inline-flex items-center gap-1.5 font-semibold text-[#25D366] hover:text-[#128C7E] transition-colors"
-          >
-            <WhatsAppIcon className="h-4 w-4" />
-            WhatsApp
-          </a>
-          <Link to="/" className="hover:text-foreground">Accueil</Link>
-          <Link to="/offre" className="hover:text-foreground">Offre</Link>
-          <Link to="/tarifs" className="hover:text-foreground">Tarifs</Link>
-          <Link to="/paiement" className="hover:text-foreground">Paiement</Link>
-          <Link to="/contact" className="hover:text-foreground">Contact</Link>
-          <Link
-            to="/admin"
-            className="inline-flex items-center gap-1 font-bold text-amber-500 hover:text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 rounded-md transition"
-          >
-            <ShieldCheck className="h-3.5 w-3.5" />
-            Espace Admin
-          </Link>
+    <footer className="border-t border-border bg-card">
+      <div className="mx-auto max-w-7xl px-6 py-16">
+        <div className="grid gap-10 md:grid-cols-4">
+          <div className="md:col-span-2">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[color:var(--sun)] font-black text-[color:var(--ink)]">
+                SK
+              </div>
+              <span className="text-xl font-black tracking-tight">Stage Kékéli</span>
+            </div>
+            <p className="mt-4 max-w-sm text-sm text-muted-foreground">
+              Le programme de répétitions d'excellence en Mathématiques et Physique-Chimie pour les élèves des séries scientifiques Première C, Première D, Terminale C et Terminale D à Lomé, Togo.
+            </p>
+
+            <div className="mt-6 flex flex-wrap items-center gap-3">
+              <Link
+                to="/paiement"
+                className="inline-flex items-center gap-2 rounded-full bg-[color:var(--sun)] px-4 py-2 text-xs font-bold text-[color:var(--ink)] hover:opacity-90 transition"
+              >
+                Inscrire un Élève <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+              <Link
+                to="/admin"
+                className="inline-flex items-center gap-1.5 rounded-full border border-amber-500/40 bg-amber-500/10 px-4 py-2 text-xs font-bold text-amber-600 hover:bg-amber-500/20 transition"
+              >
+                <ShieldCheck className="h-3.5 w-3.5" />
+                Espace Admin (/admin)
+              </Link>
+            </div>
+          </div>
+
+          <div>
+            <div className="text-xs font-bold uppercase tracking-widest text-foreground">
+              Navigation
+            </div>
+            <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
+              {NAV_LINKS.map((l) => (
+                <li key={l.to}>
+                  <Link to={l.to} className="transition hover:text-foreground">
+                    {l.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <div className="text-xs font-bold uppercase tracking-widest text-foreground">
+              Direct & Urgence
+            </div>
+            <div className="mt-4 space-y-2 text-sm text-muted-foreground">
+              <div>Téléphone : +228 98 93 02 11</div>
+              <div>Moov Money : +228 98 93 02 11</div>
+              <div>Horaires : Lun - Sam / 8h - 18h</div>
+              <div className="pt-2 text-xs font-bold text-[color:var(--sun-deep)]">Lomé, Togo</div>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-12 border-t border-border pt-8 text-center text-xs text-muted-foreground flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div>
+            © {new Date().getFullYear()} Stage Kékéli — Tous droits réservés.
+          </div>
+          <div className="flex items-center gap-4">
+            <Link to="/paiement" className="hover:underline font-semibold text-foreground">Formulaire Inscription Parent</Link>
+            <span>·</span>
+            <Link to="/admin" className="hover:underline font-semibold text-amber-600">Portail Admin</Link>
+          </div>
         </div>
       </div>
     </footer>
-  );
-}
-
-export function PageHero({
-  eyebrow,
-  title,
-  intro,
-}: {
-  eyebrow: string;
-  title: React.ReactNode;
-  intro?: string;
-}) {
-  return (
-    <section className="relative overflow-hidden border-b border-border">
-      <div className="absolute inset-0 sun-glow opacity-60" aria-hidden />
-      <div className="relative mx-auto max-w-5xl px-6 py-20 text-center md:py-28">
-        <div className="text-xs font-semibold uppercase tracking-[0.24em] text-[color:var(--sun-deep)]">
-          {eyebrow}
-        </div>
-        <h1 className="mt-5 text-5xl leading-[1.05] md:text-6xl">{title}</h1>
-        {intro && (
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">{intro}</p>
-        )}
-      </div>
-    </section>
   );
 }
