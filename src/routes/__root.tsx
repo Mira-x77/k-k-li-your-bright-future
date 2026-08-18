@@ -45,13 +45,20 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
+      <div className="max-w-md text-center p-6 bg-card border border-border rounded-2xl shadow-xl">
         <h1 className="text-xl font-bold tracking-tight text-foreground">
           Oups ! La page n'a pas pu s'afficher
         </h1>
         <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
           Une petite interruption est survenue. Cliquez sur <strong>Réessayer</strong> ou <strong>Retour à l'accueil</strong> pour continuer.
         </p>
+
+        {error?.message && (
+          <div className="mt-4 p-3 bg-destructive/10 border border-destructive/20 rounded-xl text-xs text-destructive font-mono text-left overflow-auto max-h-28">
+            {error.message}
+          </div>
+        )}
+
         <div className="mt-6 flex flex-wrap justify-center gap-3">
           <button
             onClick={() => {
