@@ -45,18 +45,33 @@ function AdminStatistiquesPage() {
         </div>
 
         {/* Financial KPI Cards */}
-        <div className="grid gap-4 sm:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <Card className="bg-slate-900 border-slate-800 text-white">
             <CardHeader className="pb-2">
               <CardTitle className="text-xs font-medium text-slate-400 flex items-center justify-between">
-                <span>Chiffre d'Affaires Global</span>
+                <span>Revenus Encaissés (Confirmés)</span>
                 <Wallet className="h-4 w-4 text-emerald-400" />
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-extrabold text-emerald-400">{fmt(metrics.totalRevenue)} FCFA</div>
-              <p className="text-xs text-slate-400 mt-2">
-                Frais de scolarité + 1 500 FCFA inscription par élève
+              <div className="text-2xl font-black text-emerald-400">{fmt(metrics.totalRevenue)} FCFA</div>
+              <p className="text-xs text-slate-400 mt-1.5">
+                Inscriptions validées par l'admin ({metrics.confirmedSignIns} élève{metrics.confirmedSignIns > 1 ? "s" : ""})
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-slate-900 border-slate-800 text-white border-amber-500/20">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-xs font-medium text-amber-400 flex items-center justify-between">
+                <span>Règlements en Attente</span>
+                <TrendingUp className="h-4 w-4 text-amber-400" />
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-black text-amber-400">{fmt(metrics.pendingRevenue)} FCFA</div>
+              <p className="text-xs text-slate-400 mt-1.5">
+                Paiements en attente de vérification ({metrics.pendingSignIns} dossier{metrics.pendingSignIns > 1 ? "s" : ""})
               </p>
             </CardContent>
           </Card>
@@ -64,14 +79,14 @@ function AdminStatistiquesPage() {
           <Card className="bg-slate-900 border-slate-800 text-white">
             <CardHeader className="pb-2">
               <CardTitle className="text-xs font-medium text-slate-400 flex items-center justify-between">
-                <span>TMoney Togocel (+228 93 51 00 74)</span>
+                <span>TMoney Togocel (Confirmé)</span>
                 <Smartphone className="h-4 w-4 text-blue-400" />
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-extrabold text-blue-400">{fmt(metrics.tmoneyRevenue)} FCFA</div>
-              <p className="text-xs text-slate-400 mt-2">
-                {Math.round((metrics.tmoneyRevenue / (metrics.totalRevenue || 1)) * 100)}% du total des encaissements
+              <div className="text-2xl font-black text-blue-400">{fmt(metrics.tmoneyRevenue)} FCFA</div>
+              <p className="text-xs text-slate-400 mt-1.5">
+                Transferts validés sur le +228 93 51 00 74
               </p>
             </CardContent>
           </Card>
@@ -79,14 +94,14 @@ function AdminStatistiquesPage() {
           <Card className="bg-slate-900 border-slate-800 text-white">
             <CardHeader className="pb-2">
               <CardTitle className="text-xs font-medium text-slate-400 flex items-center justify-between">
-                <span>Règlement en Espèces (Lomé)</span>
-                <Landmark className="h-4 w-4 text-amber-400" />
+                <span>En personne / Espèces</span>
+                <Landmark className="h-4 w-4 text-purple-400" />
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-extrabold text-amber-400">{fmt(metrics.cashRevenue)} FCFA</div>
-              <p className="text-xs text-slate-400 mt-2">
-                Paiement direct en personne
+              <div className="text-2xl font-black text-purple-400">{fmt(metrics.cashRevenue)} FCFA</div>
+              <p className="text-xs text-slate-400 mt-1.5">
+                Règlements encaissés le samedi à Lomé
               </p>
             </CardContent>
           </Card>

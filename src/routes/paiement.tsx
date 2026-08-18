@@ -54,7 +54,7 @@ const REGISTRATION_FEE = 1500;
 const fmt = (n: number) => n.toLocaleString("fr-FR");
 
 function PaymentPage() {
-  const [operator, setOperator] = useState<"TMoney" | "En personne">("TMoney");
+  const [operator, setOperator] = useState<"TMoney" | "En personne" | null>(null);
   const [subjectsChoice, setSubjectsChoice] = useState<"math" | "physics" | "both">("both");
   const [series, setSeries] = useState<ProgramSignIn["series"]>("Terminale C");
   const [plan, setPlan] = useState<"mensuel" | "annuel">("mensuel");
@@ -79,6 +79,11 @@ function PaymentPage() {
 
   const handleRegisterAndPay = (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!operator) {
+      alert("Veuillez sélectionner obligatoirement un mode de règlement (TMoney Togocel ou En personne) avant de valider l'inscription.");
+      return;
+    }
 
     if (!studentName.trim() || !parentPhone.trim()) {
       alert("Veuillez renseigner le nom de votre enfant et votre numéro de téléphone (parent).");
@@ -366,33 +371,50 @@ function PaymentPage() {
 
               {/* Payment Operator Selection */}
               <div>
-                <div className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2">
-                  Votre Moyen de Règlement
+                <div className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2 flex items-center justify-between">
+                  <span>Votre Moyen de Règlement *</span>
+                  {!operator && (
+                    <span className="text-[11px] font-extrabold text-amber-600 dark:text-amber-400 animate-pulse">
+                      ⚠️ Choisir l'un des 2 modes
+                    </span>
+                  )}
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <button
                     type="button"
                     onClick={() => setOperator("TMoney")}
-                    className={`rounded-xl px-4 py-3 text-sm font-bold transition ${
+                    className={`rounded-xl px-4 py-3 text-sm font-bold transition cursor-pointer flex flex-col items-center justify-center gap-1 ${
                       operator === "TMoney"
-                        ? "bg-[color:var(--sun)] text-[color:var(--ink)] ring-2 ring-[color:var(--sun-deep)]"
-                        : "bg-background border border-border hover:bg-muted"
+                        ? "bg-[color:var(--sun)] text-[color:var(--ink)] ring-2 ring-[color:var(--sun-deep)] shadow-md"
+                        : "bg-background border-2 border-dashed border-amber-300 dark:border-amber-700/50 hover:bg-muted"
                     }`}
                   >
-                    TMoney (Togocel)
+                    <span>📱 TMoney (Togocel)</span>
+                    <span className="text-[10px] opacity-80">+228 93 51 00 74</span>
                   </button>
                   <button
                     type="button"
                     onClick={() => setOperator("En personne")}
-                    className={`rounded-xl px-4 py-3 text-sm font-bold transition ${
+                    className={`rounded-xl px-4 py-3 text-sm font-bold transition cursor-pointer flex flex-col items-center justify-center gap-1 ${
                       operator === "En personne"
-                        ? "bg-[color:var(--sun)] text-[color:var(--ink)] ring-2 ring-[color:var(--sun-deep)]"
-                        : "bg-background border border-border hover:bg-muted"
+                        ? "bg-[color:var(--sun)] text-[color:var(--ink)] ring-2 ring-[color:var(--sun-deep)] shadow-md"
+                        : "bg-background border-2 border-dashed border-amber-300 dark:border-amber-700/50 hover:bg-muted"
                     }`}
                   >
-                    En personne
+                    <span>💵 En personne</span>
+                    <span className="text-[10px] opacity-80">Règlement à Lomé</span>
                   </button>
                 </div>
+                {operator === "TMoney" && (
+                  <p className="mt-2 text-xs font-semibold text-emerald-700 dark:text-emerald-400 bg-emerald-500/10 p-2.5 rounded-lg border border-emerald-500/20">
+                    ℹ️ Transfert TMoney vers le <strong>+228 93 51 00 74</strong>. L'inscription apparaîtra en <strong>"En attente"</strong> jusqu'à validation admin.
+                  </p>
+                )}
+                {operator === "En personne" && (
+                  <p className="mt-2 text-xs font-semibold text-blue-700 dark:text-blue-400 bg-blue-500/10 p-2.5 rounded-lg border border-blue-500/20">
+                    ℹ️ Règlement sur place lors de la 1ère séance du samedi. L'inscription est transmise en <strong>"En attente"</strong>.
+                  </p>
+                )}
               </div>
 
               <button

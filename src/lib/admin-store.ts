@@ -25,6 +25,7 @@ export interface DashboardMetrics {
   confirmedSignIns: number;
   pendingSignIns: number;
   totalRevenue: number;
+  pendingRevenue: number;
   tmoneyRevenue: number;
   cashRevenue: number;
   saturdayCount: number;
@@ -213,10 +214,10 @@ export function savePublicRegistration(entry: {
     subjects: entry.subjects,
     paymentPlan: entry.paymentPlan,
     paymentMethod: entry.paymentMethod,
-    registrationFeePaid: true,
-    tuitionFeePaid: isMobileMoney ? totalDue : registrationFee,
+    registrationFeePaid: false,
+    tuitionFeePaid: 0,
     totalAmountDue: totalDue,
-    status: isMobileMoney ? "Confirmé" : "En attente",
+    status: "En attente",
     saturdaySessionIncluded: true, // Toujours le samedi
     photoUrl: entry.photoUrl,
     createdAt: new Date().toISOString(),
@@ -332,18 +333,21 @@ export function markAllAsRead() {
 
 export function getDashboardMetrics(): DashboardMetrics {
   const signIns = getSignIns();
+  const confirmedList = signIns.filter((s) => s.status === "Confirmé");
+  const pendingList = signIns.filter((s) => s.status !== "Confirmé");
 
   return {
     totalSignIns: signIns.length,
-    confirmedSignIns: signIns.filter((s) => s.status === "Confirmé").length,
-    pendingSignIns: signIns.filter((s) => s.status !== "Confirmé").length,
-    totalRevenue: signIns.reduce((acc, s) => acc + s.tuitionFeePaid, 0),
-    tmoneyRevenue: signIns
+    confirmedSignIns: confirmedList.length,
+    pendingSignIns: pendingList.length,
+    totalRevenue: confirmedList.reduce((acc, s) => acc + (s.tuitionFeePaid || s.totalAmountDue), 0),
+    pendingRevenue: pendingList.reduce((acc, s) => acc + s.totalAmountDue, 0),
+    tmoneyRevenue: confirmedList
       .filter((s) => s.paymentMethod === "TMoney" || s.paymentMethod === "Moov Money")
-      .reduce((acc, s) => acc + s.tuitionFeePaid, 0),
-    cashRevenue: signIns
+      .reduce((acc, s) => acc + (s.tuitionFeePaid || s.totalAmountDue), 0),
+    cashRevenue: confirmedList
       .filter((s) => s.paymentMethod === "En personne")
-      .reduce((acc, s) => acc + s.tuitionFeePaid, 0),
+      .reduce((acc, s) => acc + (s.tuitionFeePaid || s.totalAmountDue), 0),
     saturdayCount: signIns.length, // Samedi uniquement
     seriesBreakdown: {
       "Première C": signIns.filter((s) => s.series === "Première C").length,
