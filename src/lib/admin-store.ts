@@ -39,13 +39,31 @@ export const OFFICIAL_PHONE = "+228 98 93 02 11";
 export const TMONEY_TOGOCEL_PHONE = "+228 93 51 00 74";
 export const OFFICIAL_EMAIL = "stagekekeli@gmail.com";
 
-// Real-time broadcast channel across browser tabs
+// Real-time broadcast channel across browser tabs & Supabase Realtime
 let broadcastChannel: BroadcastChannel | null = null;
-if (typeof window !== "undefined" && "BroadcastChannel" in window) {
+if (typeof window !== "undefined") {
+  if ("BroadcastChannel" in window) {
+    try {
+      broadcastChannel = new BroadcastChannel("stage_kekeli_live_events");
+    } catch {
+      broadcastChannel = null;
+    }
+  }
+
+  // Subscribe to Supabase Postgres Realtime changes
   try {
-    broadcastChannel = new BroadcastChannel("stage_kekeli_live_events");
-  } catch {
-    broadcastChannel = null;
+    supabase
+      .channel("public:sign_ins")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "sign_ins" },
+        () => {
+          syncFromSupabase();
+        }
+      )
+      .subscribe();
+  } catch (err) {
+    console.warn("Supabase Realtime subscription warning:", err);
   }
 }
 
