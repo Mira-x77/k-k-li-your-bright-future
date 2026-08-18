@@ -6,4 +6,12 @@ export const SUPABASE_ANON_KEY =
 export const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_kj-RIIwv8LBGNnJ_mtyG9Q_tR1X6jMb";
 export const SUPABASE_SECRET_KEY = "sb_secret_hyDxup3hkpF0CgdjG1Kt_A_R94VPbgc";
 
-export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const isBrowser = typeof window !== "undefined";
+
+export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+  auth: {
+    persistSession: isBrowser,
+    autoRefreshToken: isBrowser,
+    detectSessionInUrl: isBrowser,
+  },
+});
