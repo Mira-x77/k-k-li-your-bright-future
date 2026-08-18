@@ -201,7 +201,7 @@ function AdminInscriptionsPage() {
                           </div>
                         </td>
                         <td className="py-3.5 px-4">
-                          <div className="font-semibold text-emerald-400 text-sm">{fmt(item.tuitionFeePaid)} FCFA</div>
+                          <div className="font-semibold text-emerald-400 text-sm">{fmt(item.tuitionFeePaid || 0)} FCFA</div>
                           <div className="text-[11px] text-slate-400">
                             {item.paymentMethod} ({item.paymentPlan})
                           </div>
@@ -314,7 +314,7 @@ function AdminInscriptionsPage() {
                   </div>
                   <div className="flex justify-between py-1.5 text-sm font-bold text-white pt-2">
                     <span>Montant Total Réglé :</span>
-                    <span className="text-emerald-400">{fmt(selectedStudent.tuitionFeePaid)} FCFA</span>
+                    <span className="text-emerald-400">{fmt(selectedStudent.tuitionFeePaid || 0)} FCFA</span>
                   </div>
                 </div>
 

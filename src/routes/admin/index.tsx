@@ -125,7 +125,7 @@ function AdminDashboardPage() {
                     {/* Status tag */}
                     <div className="mt-2 flex items-center justify-between pt-1 border-t border-black/10">
                       <span className={`text-[10px] font-bold ${isSelected ? "text-slate-900" : "text-emerald-400"}`}>
-                        {fmt(student.tuitionFeePaid)} FCFA
+                        {fmt(student.tuitionFeePaid || 0)} FCFA
                       </span>
                       <span
                         className={`text-[9px] font-extrabold px-2 py-0.5 rounded-full ${
@@ -311,9 +311,9 @@ function AdminDashboardPage() {
               </div>
 
               <div>
-                <p className="text-3xl font-extrabold tracking-tight">{fmt(metrics.totalRevenue)} FCFA</p>
+                <p className="text-3xl font-extrabold tracking-tight">{fmt(metrics.totalRevenue || 0)} FCFA</p>
                 <p className="text-xs text-white/80 mt-1">
-                  Moov Money : {fmt(metrics.moovMoneyRevenue)} FCFA
+                  TMoney : {fmt(metrics.tmoneyRevenue || 0)} FCFA · Espèces : {fmt(metrics.cashRevenue || 0)} FCFA
                 </p>
               </div>
 

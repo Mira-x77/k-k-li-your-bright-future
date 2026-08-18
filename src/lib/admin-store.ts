@@ -372,7 +372,7 @@ export function generateWhatsAppReceiptLink(record: ProgramSignIn): string {
       `Matière(s) : ${record.subjects.join(" & ")}\n` +
       `Formule : ${record.paymentPlan === "annuel" ? "Annuel" : "Mensuel"} (Séances du Samedi)\n` +
       `Mode de règlement : ${record.paymentMethod} (T-Money Togocel : ${TMONEY_TOGOCEL_PHONE})\n` +
-      `Montant Réglé : *${record.tuitionFeePaid.toLocaleString("fr-FR")} FCFA*\n` +
+      `Montant Réglé : *${(record.tuitionFeePaid || 0).toLocaleString("fr-FR")} FCFA*\n` +
       `Statut : ${record.status === "Confirmé" ? "✅ Confirmé" : "⏳ En attente de règlement"}\n\n` +
       `Merci d'avoir choisi Stage Kékéli, la lumière qui guide vers la réussite !`
   );

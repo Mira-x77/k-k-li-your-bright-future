@@ -54,7 +54,7 @@ function AdminStatistiquesPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-black text-emerald-400">{fmt(metrics.totalRevenue)} FCFA</div>
+              <div className="text-2xl font-black text-emerald-400">{fmt(metrics.totalRevenue || 0)} FCFA</div>
               <p className="text-xs text-slate-400 mt-1.5">
                 Inscriptions validées par l'admin ({metrics.confirmedSignIns} élève{metrics.confirmedSignIns > 1 ? "s" : ""})
               </p>
@@ -69,7 +69,7 @@ function AdminStatistiquesPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-black text-amber-400">{fmt(metrics.pendingRevenue)} FCFA</div>
+              <div className="text-2xl font-black text-amber-400">{fmt(metrics.pendingRevenue || 0)} FCFA</div>
               <p className="text-xs text-slate-400 mt-1.5">
                 Paiements en attente de vérification ({metrics.pendingSignIns} dossier{metrics.pendingSignIns > 1 ? "s" : ""})
               </p>
@@ -84,7 +84,7 @@ function AdminStatistiquesPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-black text-blue-400">{fmt(metrics.tmoneyRevenue)} FCFA</div>
+              <div className="text-2xl font-black text-blue-400">{fmt(metrics.tmoneyRevenue || 0)} FCFA</div>
               <p className="text-xs text-slate-400 mt-1.5">
                 Transferts validés sur le +228 93 51 00 74
               </p>
@@ -99,7 +99,7 @@ function AdminStatistiquesPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-black text-purple-400">{fmt(metrics.cashRevenue)} FCFA</div>
+              <div className="text-2xl font-black text-purple-400">{fmt(metrics.cashRevenue || 0)} FCFA</div>
               <p className="text-xs text-slate-400 mt-1.5">
                 Règlements encaissés le samedi à Lomé
               </p>
