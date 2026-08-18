@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { Wallet, Smartphone, Landmark, CalendarCheck, BookOpen, ShieldCheck, TrendingUp, BarChart3, Globe } from "lucide-react";
 import { AdminShell } from "@/components/admin/admin-shell";
-import { getDashboardMetrics, getSignIns, type DashboardMetrics } from "@/lib/admin-store";
+import { getDashboardMetrics, getSignIns, syncFromSupabase, type DashboardMetrics } from "@/lib/admin-store";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const Route = createFileRoute("/admin/statistiques")({
@@ -24,6 +24,7 @@ function AdminStatistiquesPage() {
 
   useEffect(() => {
     loadData();
+    syncFromSupabase().then(() => loadData());
   }, []);
 
   if (!metrics) return null;

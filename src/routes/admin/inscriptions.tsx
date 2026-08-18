@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { Search, Filter, Phone, CheckCircle, Clock, AlertCircle, Eye, Download, MessageSquare, Sparkles, User } from "lucide-react";
 import { AdminShell } from "@/components/admin/admin-shell";
-import { getSignIns, updateSignInStatus, exportToCSV, generateWhatsAppReceiptLink, type ProgramSignIn } from "@/lib/admin-store";
+import { getSignIns, syncFromSupabase, updateSignInStatus, exportToCSV, generateWhatsAppReceiptLink, type ProgramSignIn } from "@/lib/admin-store";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -32,6 +32,7 @@ function AdminInscriptionsPage() {
 
   useEffect(() => {
     loadData();
+    syncFromSupabase().then(() => loadData());
   }, []);
 
   const handleStatusChange = (id: string, newStatus: ProgramSignIn["status"]) => {

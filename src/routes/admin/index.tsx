@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { Users, Phone, MessageSquare, CheckCircle2, Clock, AlertCircle, Calendar, BookOpen, ShieldCheck, Sparkles, User, ExternalLink, Send, FileText } from "lucide-react";
 import { AdminShell } from "@/components/admin/admin-shell";
-import { getDashboardMetrics, getSignIns, generateWhatsAppReceiptLink, updateSignInStatus, type ProgramSignIn, type DashboardMetrics } from "@/lib/admin-store";
+import { getDashboardMetrics, getSignIns, syncFromSupabase, generateWhatsAppReceiptLink, updateSignInStatus, type ProgramSignIn, type DashboardMetrics } from "@/lib/admin-store";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
@@ -32,6 +32,7 @@ function AdminDashboardPage() {
 
   useEffect(() => {
     loadData();
+    syncFromSupabase().then(() => loadData());
   }, []);
 
   const handleStatusChange = (id: string, newStatus: ProgramSignIn["status"]) => {

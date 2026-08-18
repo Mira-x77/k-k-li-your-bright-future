@@ -1,3 +1,5 @@
+import { supabase } from "./supabase";
+
 export interface ProgramSignIn {
   id: string;
   studentName: string;
@@ -47,14 +49,117 @@ if (typeof window !== "undefined" && "BroadcastChannel" in window) {
   }
 }
 
+// Initial sample data if no data exists anywhere
+const INITIAL_DEMO_DATA: ProgramSignIn[] = [
+  {
+    id: "SK-2608-001",
+    studentName: "Koffi Amouzou",
+    parentName: "Mme Amouzou",
+    parentPhone: "+228 90 12 34 56",
+    series: "Terminale C",
+    subjects: ["Mathématiques", "Physique-Chimie"],
+    paymentPlan: "mensuel",
+    paymentMethod: "TMoney",
+    registrationFeePaid: true,
+    tuitionFeePaid: 7150,
+    totalAmountDue: 7150,
+    status: "Confirmé",
+    saturdaySessionIncluded: true,
+    createdAt: new Date(Date.now() - 3600000 * 24 * 2).toISOString(),
+    readByAdmin: true,
+  },
+  {
+    id: "SK-2608-002",
+    studentName: "Afiwa Mensah",
+    parentName: "M. Mensah",
+    parentPhone: "+228 91 87 65 43",
+    series: "Première D",
+    subjects: ["Mathématiques"],
+    paymentPlan: "mensuel",
+    paymentMethod: "En personne",
+    registrationFeePaid: true,
+    tuitionFeePaid: 1500,
+    totalAmountDue: 4000,
+    status: "En attente",
+    saturdaySessionIncluded: true,
+    createdAt: new Date(Date.now() - 3600000 * 12).toISOString(),
+    readByAdmin: true,
+  },
+];
+
 export function getSignIns(): ProgramSignIn[] {
-  if (typeof window === "undefined") return [];
+  if (typeof window === "undefined") return INITIAL_DEMO_DATA;
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
-    if (!saved) return [];
+    if (!saved) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(INITIAL_DEMO_DATA));
+      return INITIAL_DEMO_DATA;
+    }
     return JSON.parse(saved);
   } catch {
-    return [];
+    return INITIAL_DEMO_DATA;
+  }
+}
+
+// Asynchronously sync data with Supabase table
+export async function syncFromSupabase(): Promise<ProgramSignIn[]> {
+  if (typeof window === "undefined") return getSignIns();
+  try {
+    const { data, error } = await supabase.from("sign_ins").select("*").order("created_at", { ascending: false });
+    if (!error && data && data.length > 0) {
+      const formatted: ProgramSignIn[] = data.map((row) => ({
+        id: row.id,
+        studentName: row.student_name,
+        parentName: row.parent_name,
+        parentPhone: row.parent_phone,
+        series: row.series,
+        subjects: row.subjects || [],
+        paymentPlan: row.payment_plan,
+        paymentMethod: row.payment_method,
+        registrationFeePaid: row.registration_fee_paid,
+        tuitionFeePaid: row.tuition_fee_paid,
+        totalAmountDue: row.total_amount_due,
+        status: row.status,
+        saturdaySessionIncluded: row.saturday_session_included,
+        photoUrl: row.photo_url,
+        createdAt: row.created_at,
+        readByAdmin: row.read_by_admin,
+        notes: row.notes,
+      }));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(formatted));
+      window.dispatchEvent(new CustomEvent("sk_data_updated"));
+      return formatted;
+    }
+  } catch (err) {
+    console.warn("Supabase fetch fallback to local state:", err);
+  }
+  return getSignIns();
+}
+
+async function persistToSupabase(record: ProgramSignIn) {
+  try {
+    const payload = {
+      id: record.id,
+      student_name: record.studentName,
+      parent_name: record.parentName,
+      parent_phone: record.parentPhone,
+      series: record.series,
+      subjects: record.subjects,
+      payment_plan: record.paymentPlan,
+      payment_method: record.paymentMethod,
+      registration_fee_paid: record.registrationFeePaid,
+      tuition_fee_paid: record.tuitionFeePaid,
+      total_amount_due: record.totalAmountDue,
+      status: record.status,
+      saturday_session_included: record.saturdaySessionIncluded,
+      photo_url: record.photoUrl,
+      created_at: record.createdAt,
+      read_by_admin: record.readByAdmin,
+      notes: record.notes,
+    };
+    await supabase.from("sign_ins").upsert(payload);
+  } catch (err) {
+    console.warn("Supabase upsert error:", err);
   }
 }
 
@@ -112,25 +217,37 @@ export function savePublicRegistration(entry: {
     window.dispatchEvent(new CustomEvent("sk_new_registration", { detail: newRecord }));
   }
 
+  // Sync to Supabase in background
+  persistToSupabase(newRecord);
+
   return newRecord;
 }
 
 export function updateSignInStatus(id: string, newStatus: ProgramSignIn["status"]): ProgramSignIn[] {
   const current = getSignIns();
-  const updated = current.map((item) =>
-    item.id === id
-      ? {
-          ...item,
-          status: newStatus,
-          tuitionFeePaid: newStatus === "Confirmé" ? item.totalAmountDue : item.tuitionFeePaid,
-          registrationFeePaid: newStatus === "Confirmé" ? true : item.registrationFeePaid,
-        }
-      : item
-  );
+  let updatedRecord: ProgramSignIn | null = null;
+  const updated = current.map((item) => {
+    if (item.id === id) {
+      updatedRecord = {
+        ...item,
+        status: newStatus,
+        tuitionFeePaid: newStatus === "Confirmé" ? item.totalAmountDue : item.tuitionFeePaid,
+        registrationFeePaid: newStatus === "Confirmé" ? true : item.registrationFeePaid,
+      };
+      return updatedRecord;
+    }
+    return item;
+  });
+
   if (typeof window !== "undefined") {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
     window.dispatchEvent(new CustomEvent("sk_data_updated"));
   }
+
+  if (updatedRecord) {
+    persistToSupabase(updatedRecord);
+  }
+
   return updated;
 }
 
@@ -148,7 +265,27 @@ export function addSignIn(newEntry: Omit<ProgramSignIn, "id" | "createdAt">): Pr
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
     window.dispatchEvent(new CustomEvent("sk_data_updated"));
   }
+
+  persistToSupabase(record);
+
   return record;
+}
+
+export function deleteSignIn(id: string): ProgramSignIn[] {
+  const current = getSignIns();
+  const updated = current.filter((item) => item.id !== id);
+  if (typeof window !== "undefined") {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+    window.dispatchEvent(new CustomEvent("sk_data_updated"));
+  }
+
+  try {
+    supabase.from("sign_ins").delete().eq("id", id).then();
+  } catch (err) {
+    console.warn("Supabase delete error:", err);
+  }
+
+  return updated;
 }
 
 export function getUnreadCount(): number {
@@ -212,7 +349,7 @@ export function generateWhatsAppReceiptLink(record: ProgramSignIn): string {
       `Élève : *${record.studentName}* (${record.series})\n` +
       `Matière(s) : ${record.subjects.join(" & ")}\n` +
       `Formule : ${record.paymentPlan === "annuel" ? "Annuel" : "Mensuel"} (Séances du Samedi)\n` +
-      `Mode de règlement : ${record.paymentMethod} (T-Money Togocel : ${OFFICIAL_PHONE})\n` +
+      `Mode de règlement : ${record.paymentMethod} (T-Money Togocel : ${TMONEY_TOGOCEL_PHONE})\n` +
       `Montant Réglé : *${record.tuitionFeePaid.toLocaleString("fr-FR")} FCFA*\n` +
       `Statut : ${record.status === "Confirmé" ? "✅ Confirmé" : "⏳ En attente de règlement"}\n\n` +
       `Merci d'avoir choisi Stage Kékéli, la lumière qui guide vers la réussite !`
@@ -252,7 +389,7 @@ export function exportToCSV(data: ProgramSignIn[] = getSignIns()) {
     "Samedi uniquement",
     `"${item.parentName}"`,
     `"${item.parentPhone}"`,
-    new Date(item.createdAt).toLocaleDateString("fr-FR"),
+    item.createdAt,
   ]);
 
   const csvContent =
@@ -262,7 +399,10 @@ export function exportToCSV(data: ProgramSignIn[] = getSignIns()) {
   const encodedUri = encodeURI(csvContent);
   const link = document.createElement("a");
   link.setAttribute("href", encodedUri);
-  link.setAttribute("download", `donnees_sk_inscriptions_${new Date().toISOString().slice(0, 10)}.csv`);
+  link.setAttribute(
+    "download",
+    `Inscriptions_Stage_Kekeli_${new Date().toISOString().slice(0, 10)}.csv`
+  );
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
