@@ -68,7 +68,7 @@ function AdminDashboardPage() {
         </div>
       ) : (
         /* Adapted Modern 3-Pane Dashboard UI */
-        <div className="grid gap-6 lg:grid-cols-[320px_1fr_280px] items-start">
+        <div className="grid gap-4 md:gap-6 grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[300px_1fr_260px] items-start">
           {/* LEFT PANE: Worklist Rail (Dark Theme) */}
           <div className="rounded-3xl bg-[#14171D] border border-slate-800/80 p-4 space-y-4 shadow-lg">
             <div className="flex items-center justify-between px-2 pt-1">
@@ -81,7 +81,7 @@ function AdminDashboardPage() {
             </div>
 
             {/* Student Worklist Items */}
-            <div className="space-y-2.5 max-h-[680px] overflow-y-auto pr-1">
+            <div className="space-y-2.5 max-h-[260px] md:max-h-[680px] overflow-y-auto pr-1">
               {signIns.map((student) => {
                 const isSelected = selectedStudent?.id === student.id;
                 return (
@@ -151,7 +151,7 @@ function AdminDashboardPage() {
           {selectedStudent && (
             <div className="space-y-6">
               {/* Student Hero Header Card */}
-              <div className="rounded-3xl bg-slate-900 border border-slate-800/90 p-6 shadow-xl text-white">
+              <div className="rounded-3xl bg-slate-900 border border-slate-800/90 p-4 sm:p-6 shadow-xl text-white">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 justify-between">
                   <div className="flex items-center gap-5">
                     {/* Student Large Photo Avatar */}
@@ -224,7 +224,7 @@ function AdminDashboardPage() {
               </div>
 
               {/* Detail Tabs & Information Cards */}
-              <div className="rounded-3xl bg-slate-900 border border-slate-800/90 p-6 space-y-6 text-white shadow-lg">
+              <div className="rounded-3xl bg-slate-900 border border-slate-800/90 p-4 sm:p-6 space-y-4 sm:space-y-6 text-white shadow-lg">
                 <div className="flex items-center justify-between border-b border-slate-800 pb-3">
                   <h3 className="text-sm font-bold uppercase tracking-wider text-slate-300">
                     Détails du Programme & Inscription
@@ -271,7 +271,7 @@ function AdminDashboardPage() {
           )}
 
           {/* RIGHT PANE: Task Checklist & Summary Widgets */}
-          <div className="space-y-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4 md:gap-6 md:col-span-2 lg:col-span-1">
             {/* Lime Vibrant Task/Checklist Widget */}
             <div className="rounded-3xl bg-[#CDFE00] text-slate-950 p-6 space-y-4 shadow-xl">
               <div className="flex items-center justify-between border-b border-slate-950/10 pb-3">
