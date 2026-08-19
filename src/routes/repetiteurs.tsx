@@ -4,6 +4,7 @@ import { useCallback, useState } from "react";
 import tutor1 from "@/assets/tutor-1.jpg";
 import tutor2 from "@/assets/tutor-2.jpg";
 import tutor3 from "@/assets/tutor-3.jpg";
+import kolouDavid from "@/assets/kolou-david.jpg";
 import { Reveal } from "@/components/reveal";
 import {
   TutorArcCarousel,
@@ -32,11 +33,11 @@ export const Route = createFileRoute("/repetiteurs")({
 
 const tutors: TutorCarouselItem[] = [
   {
-    img: tutor1,
-    name: "Mme Adjo K.",
+    img: kolouDavid,
+    name: "M. KOLOU David",
     role: "Mathématiques",
-    bio: "Reprend le cours puis les exercices d'application avec les élèves de Première C & D.",
-    tags: ["Mathématiques", "Première C & D"],
+    bio: "Titulaire d'un BAC série C, en formation de Mathématiques à l'Université. Encadre les élèves de Première & Terminale C & D avec rigueur et passion.",
+    tags: ["Mathématiques", "Première & Terminale C & D"],
   },
   {
     img: tutor2,
