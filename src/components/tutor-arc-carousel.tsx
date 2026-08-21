@@ -55,7 +55,15 @@ function facingAngle(spin: number, index: number, theta: number) {
 }
 
 export function TutorArcCarousel({ tutors, onActiveChange }: TutorArcCarouselProps) {
-  const count = tutors.length;
+  // Duplicate small array (e.g. 2 tutors -> 4 items) for smooth 3D arc presentation
+  const displayTutors =
+    tutors.length > 0 && tutors.length < 4
+      ? tutors.length === 2
+        ? [...tutors, ...tutors]
+        : [...tutors, ...tutors, ...tutors]
+      : tutors;
+
+  const count = displayTutors.length;
   const theta = 360 / count;
   const { cardW, cardH, radius, containerH } = useDimensions();
 
@@ -96,7 +104,8 @@ export function TutorArcCarousel({ tutors, onActiveChange }: TutorArcCarouselPro
   }, [paused]);
 
   useEffect(() => {
-    const active = wrapIndex(Math.round(spin / theta), count);
+    const rawActive = wrapIndex(Math.round(spin / theta), count);
+    const active = rawActive % tutors.length;
     if (active === lastActiveRef.current) return;
     lastActiveRef.current = active;
     onActiveChange?.(tutors[active], active);
@@ -126,7 +135,7 @@ export function TutorArcCarousel({ tutors, onActiveChange }: TutorArcCarouselPro
             willChange: "transform",
           }}
         >
-          {tutors.map((tutor, i) => {
+          {displayTutors.map((tutor, i) => {
             const dist = facingAngle(spin, i, theta);
             if (dist > VISIBLE_ARC) return null;
 

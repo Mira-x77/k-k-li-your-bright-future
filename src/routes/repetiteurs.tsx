@@ -1,9 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, BookOpen, ChevronLeft, ChevronRight, GraduationCap, HeartHandshake } from "lucide-react";
 import { useCallback, useState } from "react";
-import tutor1 from "@/assets/tutor-1.jpg";
-import tutor2 from "@/assets/tutor-2.jpg";
-import tutor3 from "@/assets/tutor-3.jpg";
 import kolouDavid from "@/assets/kolou-david.jpg";
 import kofi from "@/assets/kofi.jpg";
 import { Reveal } from "@/components/reveal";
@@ -46,34 +43,6 @@ const tutors: TutorCarouselItem[] = [
     role: "Physique-Chimie",
     bio: "Titulaire d'un BAC série D, en formation de Physique et d'Informatique à l'Université. Accompagne les élèves avec méthode et clarté.",
     tags: ["Physique-Chimie", "Première & Terminale C & D"],
-  },
-  {
-    img: tutor3,
-    name: "M. Kodjo A.",
-    role: "Physique",
-    bio: "Exercices ciblés et rigueur bienveillante sur le programme de l'année.",
-    tags: ["Physique", "Terminale C & D"],
-  },
-  {
-    img: tutor2,
-    name: "M. Sena T.",
-    role: "Physique",
-    bio: "Travaille les notions du cours et la méthode de résolution des exercices.",
-    tags: ["Physique", "Première C & D"],
-  },
-  {
-    img: tutor1,
-    name: "Mme Afi L.",
-    role: "Mathématiques",
-    bio: "Met l'accent sur la compréhension du cours et la rédaction des raisonnements.",
-    tags: ["Mathématiques", "Première & Terminale"],
-  },
-  {
-    img: tutor3,
-    name: "M. Koffi D.",
-    role: "Physique",
-    bio: "Reprend les notions du programme et les applique sur des exercices guidés.",
-    tags: ["Physique", "Première & Terminale"],
   },
 ];
 
