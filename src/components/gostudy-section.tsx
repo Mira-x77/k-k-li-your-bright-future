@@ -1,4 +1,4 @@
-import { ExternalLink, Sparkles, Calculator, Target, BookOpen, Smartphone, CheckCircle2 } from "lucide-react";
+import { ExternalLink, Sparkles, Calculator, Target, BookOpen, Smartphone, CheckCircle2, Download } from "lucide-react";
 import gostudyLogo from "@/assets/gostudy-logo.jpg";
 import gostudyBanner from "@/assets/gostudy-banner.jpg";
 import { Reveal } from "@/components/reveal";
@@ -106,18 +106,27 @@ export function GoStudyPartnerSection() {
             <Reveal anim="up" delay={450}>
               <div className="pt-2 flex flex-wrap items-center gap-3">
                 <a
+                  href="/gostudy-app.apk"
+                  download="GoStudy-App.apk"
+                  className="inline-flex items-center gap-2 rounded-full bg-blue-600 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-blue-500/20 transition hover:bg-blue-700 hover:scale-[1.02]"
+                >
+                  <Download className="h-4 w-4" />
+                  <span>Télécharger l'APK (Android)</span>
+                </a>
+
+                <a
                   href="https://goostudy.vercel.app"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-full bg-blue-600 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-blue-500/20 transition hover:bg-blue-700 hover:scale-[1.02]"
+                  className="inline-flex items-center gap-2 rounded-full border border-blue-500/40 bg-blue-500/10 px-5 py-3 text-sm font-bold text-blue-500 transition hover:bg-blue-500/20"
                 >
-                  <span>Accéder à Go Study (Web)</span>
+                  <span>Version Web</span>
                   <ExternalLink className="h-4 w-4" />
                 </a>
 
                 <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-medium px-3 py-2 rounded-full bg-muted/60 border border-border">
                   <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                  <span>100% Gratuit · Sans engagement</span>
+                  <span>100% Gratuit · APK Direct</span>
                 </div>
               </div>
             </Reveal>
@@ -154,15 +163,22 @@ export function GoStudyPartnerSection() {
                 {/* Feature Highlights Footer inside card */}
                 <div className="mt-5 space-y-3">
                   <div className="flex items-center justify-between p-3 rounded-xl bg-background/90 border border-border text-xs">
-                    <span className="text-muted-foreground">Moyenne visée au BAC</span>
-                    <span className="font-extrabold text-blue-500 text-sm">15.5 / 20 (Mention Bien)</span>
+                    <span className="text-muted-foreground">Téléchargement Direct</span>
+                    <a
+                      href="/gostudy-app.apk"
+                      download="GoStudy-App.apk"
+                      className="font-bold text-blue-500 hover:underline flex items-center gap-1.5"
+                    >
+                      <Download className="h-3.5 w-3.5" />
+                      <span>Fichier APK Android</span>
+                    </a>
                   </div>
                   <div className="flex items-center justify-between p-3 rounded-xl bg-background/90 border border-border text-xs">
                     <span className="text-muted-foreground">Compatibilité séries</span>
                     <span className="font-bold text-foreground">Première & Terminale C & D</span>
                   </div>
                   <div className="flex items-center justify-between p-3 rounded-xl bg-background/90 border border-border text-xs">
-                    <span className="text-muted-foreground">Lien officiel</span>
+                    <span className="text-muted-foreground">Lien officiel web</span>
                     <a
                       href="https://goostudy.vercel.app"
                       target="_blank"
