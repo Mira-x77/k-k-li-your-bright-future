@@ -14,10 +14,6 @@ export function GoStudyPartnerSection() {
         {/* Section Heading */}
         <Reveal>
           <div className="mx-auto max-w-3xl text-center">
-            <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-500/10 px-3.5 py-1 text-xs font-bold text-blue-500 mb-4">
-              <Sparkles className="h-3.5 w-3.5" />
-              <span>Partenaire Édtech Officiel</span>
-            </div>
             <h2 className="text-3xl font-black tracking-tight sm:text-4xl md:text-5xl">
               Suivez vos notes et réussissez avec <span className="text-blue-500 italic">Go Study!</span>
             </h2>
@@ -176,18 +172,6 @@ export function GoStudyPartnerSection() {
                   <div className="flex items-center justify-between p-3 rounded-xl bg-background/90 border border-border text-xs">
                     <span className="text-muted-foreground">Compatibilité séries</span>
                     <span className="font-bold text-foreground">Première & Terminale C & D</span>
-                  </div>
-                  <div className="flex items-center justify-between p-3 rounded-xl bg-background/90 border border-border text-xs">
-                    <span className="text-muted-foreground">Lien officiel web</span>
-                    <a
-                      href="https://goostudy.vercel.app"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="font-bold text-blue-500 hover:underline flex items-center gap-1"
-                    >
-                      goostudy.vercel.app
-                      <ExternalLink className="h-3 w-3" />
-                    </a>
                   </div>
                 </div>
               </div>
