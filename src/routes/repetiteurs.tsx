@@ -104,15 +104,15 @@ function TutorsPage() {
   return (
     <>
       <section className="hero-clean-bg border-b border-border/40">
-        <div className="mx-auto max-w-7xl px-6 pb-6 pt-12 text-center md:pt-16">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 pb-4 sm:pb-6 pt-8 sm:pt-12 text-center md:pt-16">
           <Reveal>
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[color:var(--sage)]">
               Nos répétiteurs
             </p>
-            <h1 className="mx-auto mt-4 max-w-2xl font-sans text-4xl font-bold tracking-tight md:text-5xl">
+            <h1 className="mx-auto mt-3 sm:mt-4 max-w-2xl font-sans text-2xl sm:text-4xl font-bold tracking-tight md:text-5xl">
               Des enseignants qui inspirent
             </h1>
-            <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
+            <p className="mx-auto mt-3 sm:mt-4 max-w-xl text-sm sm:text-base text-muted-foreground">
               Parcourez notre équipe de répétiteurs en mathématiques et en physique, pour la
               Première et la Terminale, séries C & D.
             </p>
@@ -123,9 +123,9 @@ function TutorsPage() {
           <TutorArcCarousel tutors={tutors} onActiveChange={handleActiveChange} />
         </div>
 
-        <div className="mx-auto max-w-lg px-6 pb-10 pt-0 text-center">
+        <div className="mx-auto max-w-lg px-4 sm:px-6 pb-8 sm:pb-10 pt-0 text-center">
           <Reveal key={active.name}>
-            <div className="font-display text-2xl" style={{ fontFamily: "var(--font-display)" }}>
+            <div className="font-display text-xl sm:text-2xl" style={{ fontFamily: "var(--font-display)" }}>
               {active.name}
             </div>
             <div className="mt-1 text-sm font-medium text-[color:var(--sun-deep)]">
@@ -151,7 +151,7 @@ function TutorsPage() {
 
           <div className="mt-8 flex items-center justify-center gap-3 text-xs text-muted-foreground">
             <ChevronLeft className="h-4 w-4 opacity-40" aria-hidden />
-            <span>Défilement automatique · survolez pour pause</span>
+            <span>Défilement automatique · touchez pour pause</span>
             <ChevronRight className="h-4 w-4 opacity-40" aria-hidden />
           </div>
         </div>

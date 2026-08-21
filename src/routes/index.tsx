@@ -3,6 +3,9 @@ import heroImg from "@/assets/hero-students-group.jpg";
 import classroomBg from "@/assets/hero-classroom.png";
 import tutoringImg from "@/assets/tutoring.jpg";
 import lateNightImg from "@/assets/student-late-night.png";
+import locationEntrance from "@/assets/location-entrance.jpg";
+import locationClassroom from "@/assets/location-classroom.jpg";
+import locationBuilding from "@/assets/location-building.png";
 import {
   ArrowRight,
   Award,
@@ -10,6 +13,7 @@ import {
   GraduationCap,
   Lightbulb,
   Phone,
+  MapPin,
   ShieldCheck,
   Target,
   Users,
@@ -47,6 +51,7 @@ function Home() {
       <WhySection />
       <SessionFlow />
       <FinalCTA />
+      <LocationSection />
       <FaqSection />
       <CallbackCta />
     </>
@@ -361,6 +366,85 @@ function FinalCTA() {
                 {PHONE_DISPLAY}
               </a>
             </div>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+const MAPS_URL = "https://maps.app.goo.gl/dM2WfBp1MVEzQVro9";
+
+const locationPhotos = [
+  { src: locationBuilding, alt: "Vue extérieure du centre CPP-Ancilla à Lomé", caption: "Le bâtiment" },
+  { src: locationClassroom, alt: "Salle de cours équipée de tables et chaises", caption: "Notre salle de cours" },
+  { src: locationEntrance, alt: "Entrée du centre avec cour ombragée", caption: "L'entrée du centre" },
+];
+
+function LocationSection() {
+  return (
+    <section className="border-y border-border bg-background">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 py-16 sm:py-24">
+        {/* Heading */}
+        <Reveal>
+          <div className="mx-auto max-w-2xl text-center">
+            <p className="text-xs font-bold uppercase tracking-[0.24em] text-[color:var(--sun-deep)]">
+              Lieu des cours
+            </p>
+            <h2 className="mt-4 text-3xl font-black tracking-tight sm:text-4xl md:text-5xl">
+              Où nous retrouver à <span className="italic">Lomé</span>
+            </h2>
+            <p className="mt-4 text-sm sm:text-base text-muted-foreground max-w-lg mx-auto">
+              Les cours de Stage Kékéli se déroulent chaque samedi au centre CPP-Ancilla, un cadre spacieux et calme idéal pour apprendre.
+            </p>
+          </div>
+        </Reveal>
+
+        {/* Photo Grid */}
+        <div className="mt-12 grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-3">
+          {locationPhotos.map((photo, i) => (
+            <Reveal key={photo.caption} anim="up" delay={i * 120}>
+              <div className="group relative overflow-hidden rounded-2xl sm:rounded-[1.5rem] border border-border shadow-[var(--shadow-soft)]">
+                <img
+                  src={photo.src}
+                  alt={photo.alt}
+                  className="w-full aspect-[4/3] object-cover transition-transform duration-500 group-hover:scale-105"
+                  loading="lazy"
+                  width={800}
+                  height={600}
+                />
+                {/* Caption Overlay */}
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent px-4 pb-4 pt-10">
+                  <span className="text-white text-sm font-semibold drop-shadow">{photo.caption}</span>
+                </div>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+
+        {/* Address + Map CTA */}
+        <Reveal>
+          <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-10 text-center sm:text-left">
+            <div className="flex items-start gap-3">
+              <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[color:var(--sun-deep)]/10 text-[color:var(--sun-deep)]">
+                <MapPin className="h-5 w-5" />
+              </div>
+              <div>
+                <p className="font-bold text-foreground">Centre CPP-Ancilla</p>
+                <p className="text-sm text-muted-foreground">Lomé, Togo</p>
+                <p className="text-xs text-muted-foreground mt-1">Tous les samedis · 8h00 — 17h00</p>
+              </div>
+            </div>
+
+            <a
+              href={MAPS_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3.5 text-sm font-bold text-primary-foreground transition hover:opacity-90 shadow-md"
+            >
+              <MapPin className="h-4 w-4" />
+              Voir sur Google Maps
+            </a>
           </div>
         </Reveal>
       </div>

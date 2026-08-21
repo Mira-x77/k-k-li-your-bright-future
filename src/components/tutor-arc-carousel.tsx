@@ -14,9 +14,34 @@ type TutorArcCarouselProps = {
   onActiveChange?: (tutor: TutorCarouselItem, index: number) => void;
 };
 
-const CARD_WIDTH = 300;
-const CARD_HEIGHT = Math.round(CARD_WIDTH * (4 / 3));
-const RADIUS = 340;
+/* ── Responsive dimensions ── */
+function useDimensions() {
+  const [dims, setDims] = useState(() => getDims());
+
+  function getDims() {
+    if (typeof window === "undefined") return { cardW: 300, cardH: 400, radius: 340, containerH: 500 };
+    const vw = window.innerWidth;
+    if (vw < 480) {
+      // Phone: smaller cards, tighter radius, taller container relative to card
+      const cardW = Math.min(200, vw * 0.5);
+      return { cardW, cardH: Math.round(cardW * 1.35), radius: Math.max(180, vw * 0.48), containerH: Math.round(cardW * 1.55) };
+    }
+    if (vw < 768) {
+      const cardW = 240;
+      return { cardW, cardH: 320, radius: 280, containerH: 400 };
+    }
+    return { cardW: 300, cardH: 400, radius: 340, containerH: 500 };
+  }
+
+  useEffect(() => {
+    const update = () => setDims(getDims());
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
+
+  return dims;
+}
+
 const CYCLE_MS = 32000;
 const VISIBLE_ARC = 115;
 
@@ -32,6 +57,7 @@ function facingAngle(spin: number, index: number, theta: number) {
 export function TutorArcCarousel({ tutors, onActiveChange }: TutorArcCarouselProps) {
   const count = tutors.length;
   const theta = 360 / count;
+  const { cardW, cardH, radius, containerH } = useDimensions();
 
   const [spin, setSpin] = useState(0);
   const [paused, setPaused] = useState(false);
@@ -81,12 +107,14 @@ export function TutorArcCarousel({ tutors, onActiveChange }: TutorArcCarouselPro
       className="relative mx-auto w-full max-w-7xl select-none overflow-hidden"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
+      onTouchStart={() => setPaused(true)}
+      onTouchEnd={() => setPaused(false)}
       onFocus={() => setPaused(true)}
       onBlur={() => setPaused(false)}
     >
       <div
-        className="relative mx-auto h-[min(500px,70vw)] w-full"
-        style={{ perspective: "1400px", perspectiveOrigin: "50% 46%" }}
+        className="relative mx-auto w-full"
+        style={{ height: containerH, perspective: "1400px", perspectiveOrigin: "50% 46%" }}
       >
         <div
           className="absolute left-1/2 top-1/2"
@@ -112,11 +140,11 @@ export function TutorArcCarousel({ tutors, onActiveChange }: TutorArcCarouselPro
                 key={`${tutor.name}-${i}`}
                 className="absolute"
                 style={{
-                  width: CARD_WIDTH,
-                  height: CARD_HEIGHT,
-                  left: -CARD_WIDTH / 2,
-                  top: -CARD_HEIGHT / 2,
-                  transform: `rotateY(${i * theta}deg) translateZ(${RADIUS}px) scale(${scale})`,
+                  width: cardW,
+                  height: cardH,
+                  left: -cardW / 2,
+                  top: -cardH / 2,
+                  transform: `rotateY(${i * theta}deg) translateZ(${radius}px) scale(${scale})`,
                   transformStyle: "preserve-3d",
                   opacity,
                   zIndex: Math.round(t * 100),
@@ -124,7 +152,7 @@ export function TutorArcCarousel({ tutors, onActiveChange }: TutorArcCarouselPro
                 }}
               >
                 <div
-                  className={`h-full overflow-hidden rounded-[2rem] bg-card shadow-[var(--shadow-soft)] ring-1 ring-border/40 ${
+                  className={`h-full overflow-hidden rounded-2xl sm:rounded-[2rem] bg-card shadow-[var(--shadow-soft)] ring-1 ring-border/40 ${
                     isCenter
                       ? "shadow-[var(--shadow-warm)] ring-2 ring-[color:var(--sun-deep)]/35"
                       : ""
@@ -146,7 +174,7 @@ export function TutorArcCarousel({ tutors, onActiveChange }: TutorArcCarouselPro
       </div>
 
       <div
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-background via-background/80 to-transparent"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-20 sm:h-28 bg-gradient-to-t from-background via-background/80 to-transparent"
         aria-hidden
       />
     </div>
