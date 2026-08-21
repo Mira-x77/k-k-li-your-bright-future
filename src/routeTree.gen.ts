@@ -16,6 +16,7 @@ import { Route as PolitiqueDeConfidentialiteRouteImport } from './routes/politiq
 import { Route as PaiementRouteImport } from './routes/paiement'
 import { Route as OffreRouteImport } from './routes/offre'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AProposRouteImport } from './routes/a-propos'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
@@ -58,6 +59,11 @@ const ContactRoute = ContactRouteImport.update({
   path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AProposRoute = AProposRouteImport.update({
   id: '/a-propos',
   path: '/a-propos',
@@ -69,24 +75,25 @@ const IndexRoute = IndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
-  id: '/admin/',
-  path: '/admin/',
-  getParentRoute: () => rootRouteImport,
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
 } as any)
 const AdminStatistiquesRoute = AdminStatistiquesRouteImport.update({
-  id: '/admin/statistiques',
-  path: '/admin/statistiques',
-  getParentRoute: () => rootRouteImport,
+  id: '/statistiques',
+  path: '/statistiques',
+  getParentRoute: () => AdminRoute,
 } as any)
 const AdminInscriptionsRoute = AdminInscriptionsRouteImport.update({
-  id: '/admin/inscriptions',
-  path: '/admin/inscriptions',
-  getParentRoute: () => rootRouteImport,
+  id: '/inscriptions',
+  path: '/inscriptions',
+  getParentRoute: () => AdminRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/a-propos': typeof AProposRoute
+  '/admin': typeof AdminRouteWithChildren
   '/contact': typeof ContactRoute
   '/offre': typeof OffreRoute
   '/paiement': typeof PaiementRoute
@@ -116,6 +123,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/a-propos': typeof AProposRoute
+  '/admin': typeof AdminRouteWithChildren
   '/contact': typeof ContactRoute
   '/offre': typeof OffreRoute
   '/paiement': typeof PaiementRoute
@@ -132,6 +140,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/a-propos'
+    | '/admin'
     | '/contact'
     | '/offre'
     | '/paiement'
@@ -160,6 +169,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/a-propos'
+    | '/admin'
     | '/contact'
     | '/offre'
     | '/paiement'
@@ -175,6 +185,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AProposRoute: typeof AProposRoute
+  AdminRoute: typeof AdminRouteWithChildren
   ContactRoute: typeof ContactRoute
   OffreRoute: typeof OffreRoute
   PaiementRoute: typeof PaiementRoute
@@ -182,9 +193,6 @@ export interface RootRouteChildren {
   RepetiteursRoute: typeof RepetiteursRoute
   SamediRoute: typeof SamediRoute
   TarifsRoute: typeof TarifsRoute
-  AdminInscriptionsRoute: typeof AdminInscriptionsRoute
-  AdminStatistiquesRoute: typeof AdminStatistiquesRoute
-  AdminIndexRoute: typeof AdminIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -238,6 +246,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/a-propos': {
       id: '/a-propos'
       path: '/a-propos'
@@ -254,31 +269,46 @@ declare module '@tanstack/react-router' {
     }
     '/admin/': {
       id: '/admin/'
-      path: '/admin'
+      path: '/'
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/admin/statistiques': {
       id: '/admin/statistiques'
-      path: '/admin/statistiques'
+      path: '/statistiques'
       fullPath: '/admin/statistiques'
       preLoaderRoute: typeof AdminStatistiquesRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/admin/inscriptions': {
       id: '/admin/inscriptions'
-      path: '/admin/inscriptions'
+      path: '/inscriptions'
       fullPath: '/admin/inscriptions'
       preLoaderRoute: typeof AdminInscriptionsRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRoute
     }
   }
 }
 
+interface AdminRouteChildren {
+  AdminInscriptionsRoute: typeof AdminInscriptionsRoute
+  AdminStatistiquesRoute: typeof AdminStatistiquesRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminInscriptionsRoute: AdminInscriptionsRoute,
+  AdminStatistiquesRoute: AdminStatistiquesRoute,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AProposRoute: AProposRoute,
+  AdminRoute: AdminRouteWithChildren,
   ContactRoute: ContactRoute,
   OffreRoute: OffreRoute,
   PaiementRoute: PaiementRoute,
@@ -286,9 +316,6 @@ const rootRouteChildren: RootRouteChildren = {
   RepetiteursRoute: RepetiteursRoute,
   SamediRoute: SamediRoute,
   TarifsRoute: TarifsRoute,
-  AdminInscriptionsRoute: AdminInscriptionsRoute,
-  AdminStatistiquesRoute: AdminStatistiquesRoute,
-  AdminIndexRoute: AdminIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

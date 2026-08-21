@@ -50,7 +50,8 @@ function AdminDashboardPage() {
 
   const selectedStudent = signIns.find((s) => s.id === selectedStudentId) || signIns[0];
 
-  const fmt = (n: number) => n.toLocaleString("fr-FR");
+  const fmt = (n: number | undefined | null) =>
+    (typeof n === "number" && !isNaN(n) ? n : 0).toLocaleString("fr-FR");
 
   return (
     <AdminShell onDataChange={loadData}>

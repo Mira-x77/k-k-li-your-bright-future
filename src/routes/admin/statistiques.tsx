@@ -57,7 +57,8 @@ function AdminStatistiquesPage() {
 
   if (!metrics || !visitorStats) return null;
 
-  const fmt = (n: number) => n.toLocaleString("fr-FR");
+  const fmt = (n: number | undefined | null) =>
+    (typeof n === "number" && !isNaN(n) ? n : 0).toLocaleString("fr-FR");
 
   const formatDate = (iso: string) => {
     try {
