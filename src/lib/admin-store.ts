@@ -502,36 +502,28 @@ export function getVisitorAnalytics(): VisitorAnalytics {
     const raw = localStorage.getItem(VISITOR_STORAGE_KEY);
     if (!raw) {
       return {
-        totalVisits: 142,
-        uniqueVisitorsCount: 89,
-        visitsToday: 18,
-        lastVisitAt: new Date().toISOString(),
-        recentVisits: [
-          {
-            id: "visit-1",
-            visitorId: "v_sample1",
-            path: "/",
-            device: "Mobile",
-            timestamp: new Date(Date.now() - 300000).toISOString(),
-          },
-          {
-            id: "visit-2",
-            visitorId: "v_sample2",
-            path: "/paiement",
-            device: "Mobile",
-            timestamp: new Date(Date.now() - 900000).toISOString(),
-          },
-          {
-            id: "visit-3",
-            visitorId: "v_sample3",
-            path: "/repetiteurs",
-            device: "Desktop",
-            timestamp: new Date(Date.now() - 3600000).toISOString(),
-          },
-        ],
+        totalVisits: 0,
+        uniqueVisitorsCount: 0,
+        visitsToday: 0,
+        recentVisits: [],
       };
     }
     const data: VisitorAnalytics = JSON.parse(raw);
+    const recent = Array.isArray(data.recentVisits) ? data.recentVisits : [];
+
+    // Clean up sample demo visits if any exist from earlier versions
+    const hasDemo = recent.some(
+      (v) => v?.id?.startsWith("visit-") || v?.visitorId?.startsWith("v_sample")
+    );
+    if (hasDemo) {
+      localStorage.removeItem(VISITOR_STORAGE_KEY);
+      return {
+        totalVisits: 0,
+        uniqueVisitorsCount: 0,
+        visitsToday: 0,
+        recentVisits: [],
+      };
+    }
     const todayIso = new Date().toISOString().slice(0, 10);
     const visitsToday = (data.recentVisits || []).filter((v) =>
       v.timestamp.startsWith(todayIso)
