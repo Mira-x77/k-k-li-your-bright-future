@@ -131,13 +131,16 @@ export function AdminShell({ children, onDataChange }: AdminShellProps) {
   const routerState = useRouterState();
   const currentPath = routerState.location.pathname;
 
-  /* ── Auth State ── */
-  const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    if (typeof window !== "undefined") {
-      return sessionStorage.getItem(AUTH_KEY) === "true";
+  /* ── Hydration & Auth State ── */
+  const [isMounted, setIsMounted] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+    if (typeof window !== "undefined" && sessionStorage.getItem(AUTH_KEY) === "true") {
+      setIsAuthenticated(true);
     }
-    return false;
-  });
+  }, []);
 
   /* ── Mobile Sidebar State ── */
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -277,7 +280,15 @@ export function AdminShell({ children, onDataChange }: AdminShellProps) {
     { label: "Statistiques", path: "/admin/statistiques", icon: BarChart3 },
   ];
 
-  /* ── Auth Gate ── */
+  /* ── Hydration & Auth Gate ── */
+  if (!isMounted) {
+    return (
+      <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#0F1115]">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#CDFE00] border-t-transparent" />
+      </div>
+    );
+  }
+
   if (!isAuthenticated) {
     return <AdminLoginGate onAuthenticated={() => setIsAuthenticated(true)} />;
   }

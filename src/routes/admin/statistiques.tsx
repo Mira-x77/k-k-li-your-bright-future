@@ -39,7 +39,7 @@ export const Route = createFileRoute("/admin/statistiques")({
 
 function AdminStatistiquesPage() {
   const [metrics, setMetrics] = useState<DashboardMetrics | null>(null);
-  const [visitorStats, setVisitorStats] = useState<VisitorAnalytics>(getVisitorAnalytics());
+  const [visitorStats, setVisitorStats] = useState<VisitorAnalytics | null>(null);
 
   const loadData = () => {
     setMetrics(getDashboardMetrics());
@@ -55,7 +55,7 @@ function AdminStatistiquesPage() {
     return () => window.removeEventListener("sk_visit_recorded", handleVisit);
   }, []);
 
-  if (!metrics) return null;
+  if (!metrics || !visitorStats) return null;
 
   const fmt = (n: number) => n.toLocaleString("fr-FR");
 

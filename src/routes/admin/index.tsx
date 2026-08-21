@@ -20,7 +20,7 @@ function AdminDashboardPage() {
   const [metrics, setMetrics] = useState<DashboardMetrics | null>(null);
   const [signIns, setSignIns] = useState<ProgramSignIn[]>([]);
   const [selectedStudentId, setSelectedStudentId] = useState<string | null>(null);
-  const [visitorStats, setVisitorStats] = useState<VisitorAnalytics>(getVisitorAnalytics());
+  const [visitorStats, setVisitorStats] = useState<VisitorAnalytics | null>(null);
 
   const loadData = () => {
     const data = getSignIns();
@@ -46,7 +46,7 @@ function AdminDashboardPage() {
     loadData();
   };
 
-  if (!metrics) return null;
+  if (!metrics || !visitorStats) return null;
 
   const selectedStudent = signIns.find((s) => s.id === selectedStudentId) || signIns[0];
 
