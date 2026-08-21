@@ -179,7 +179,7 @@ function AdminInscriptionsPage() {
                         </td>
                         <td className="py-3.5 px-4">
                           <div className="flex flex-wrap gap-1">
-                            {item.subjects.map((sub) => (
+                            {(item.subjects || []).map((sub) => (
                               <span
                                 key={sub}
                                 className="inline-block rounded bg-slate-800 px-2 py-0.5 text-[10px] font-semibold text-slate-200 border border-slate-700"

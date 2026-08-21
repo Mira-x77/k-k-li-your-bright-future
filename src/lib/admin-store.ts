@@ -106,17 +106,41 @@ const INITIAL_DEMO_DATA: ProgramSignIn[] = [
   },
 ];
 
+function sanitizeRecord(row: any): ProgramSignIn {
+  return {
+    id: String(row?.id || `SK-${Date.now()}`),
+    studentName: String(row?.studentName || row?.student_name || "Élève"),
+    parentName: String(row?.parentName || row?.parent_name || "Parent"),
+    parentPhone: String(row?.parentPhone || row?.parent_phone || ""),
+    series: (row?.series as any) || "Terminale C",
+    subjects: Array.isArray(row?.subjects) && row.subjects.length > 0 ? row.subjects : ["Mathématiques"],
+    paymentPlan: (row?.paymentPlan || row?.payment_plan as any) || "mensuel",
+    paymentMethod: (row?.paymentMethod || row?.payment_method as any) || "Moov Money",
+    registrationFeePaid: Boolean(row?.registrationFeePaid ?? row?.registration_fee_paid ?? false),
+    tuitionFeePaid: Number(row?.tuitionFeePaid ?? row?.tuition_fee_paid ?? 0),
+    totalAmountDue: Number(row?.totalAmountDue ?? row?.total_amount_due ?? 0),
+    status: (row?.status as any) || "En attente",
+    saturdaySessionIncluded: true,
+    photoUrl: String(row?.photoUrl || row?.photo_url || ""),
+    createdAt: String(row?.createdAt || row?.created_at || new Date().toISOString()),
+    readByAdmin: Boolean(row?.readByAdmin ?? row?.read_by_admin ?? false),
+    notes: String(row?.notes || ""),
+  };
+}
+
 export function getSignIns(): ProgramSignIn[] {
-  if (typeof window === "undefined") return INITIAL_DEMO_DATA;
+  if (typeof window === "undefined") return INITIAL_DEMO_DATA.map(sanitizeRecord);
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (!saved) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(INITIAL_DEMO_DATA));
-      return INITIAL_DEMO_DATA;
+      return INITIAL_DEMO_DATA.map(sanitizeRecord);
     }
-    return JSON.parse(saved);
+    const parsed = JSON.parse(saved);
+    if (!Array.isArray(parsed)) return INITIAL_DEMO_DATA.map(sanitizeRecord);
+    return parsed.map(sanitizeRecord);
   } catch {
-    return INITIAL_DEMO_DATA;
+    return INITIAL_DEMO_DATA.map(sanitizeRecord);
   }
 }
 
@@ -126,25 +150,7 @@ export async function syncFromSupabase(): Promise<ProgramSignIn[]> {
   try {
     const { data, error } = await supabase.from("sign_ins").select("*").order("created_at", { ascending: false });
     if (!error && data && data.length > 0) {
-      const formatted: ProgramSignIn[] = data.map((row) => ({
-        id: row.id,
-        studentName: row.student_name,
-        parentName: row.parent_name,
-        parentPhone: row.parent_phone,
-        series: row.series,
-        subjects: row.subjects || [],
-        paymentPlan: row.payment_plan,
-        paymentMethod: row.payment_method,
-        registrationFeePaid: row.registration_fee_paid,
-        tuitionFeePaid: row.tuition_fee_paid,
-        totalAmountDue: row.total_amount_due,
-        status: row.status,
-        saturdaySessionIncluded: row.saturday_session_included,
-        photoUrl: row.photo_url,
-        createdAt: row.created_at,
-        readByAdmin: row.read_by_admin,
-        notes: row.notes,
-      }));
+      const formatted = data.map(sanitizeRecord);
       localStorage.setItem(STORAGE_KEY, JSON.stringify(formatted));
       window.dispatchEvent(new CustomEvent("sk_data_updated"));
       return formatted;
@@ -364,16 +370,18 @@ export function getDashboardMetrics(): DashboardMetrics {
 }
 
 export function generateWhatsAppReceiptLink(record: ProgramSignIn): string {
-  const cleanPhone = record.parentPhone.replace(/[^0-9]/g, "");
+  const phone = record?.parentPhone || "";
+  const cleanPhone = phone.replace(/[^0-9]/g, "");
+  const subjects = Array.isArray(record?.subjects) ? record.subjects.join(" & ") : "Mathématiques";
   const text = encodeURIComponent(
     `*STAGE KÉKÉLI — REÇU D'INSCRIPTION*\n\n` +
-      `Référence : *${record.id}*\n` +
-      `Élève : *${record.studentName}* (${record.series})\n` +
-      `Matière(s) : ${record.subjects.join(" & ")}\n` +
-      `Formule : ${record.paymentPlan === "annuel" ? "Annuel" : "Mensuel"} (Séances du Samedi)\n` +
-      `Mode de règlement : ${record.paymentMethod} (T-Money Togocel : ${TMONEY_TOGOCEL_PHONE})\n` +
-      `Montant Réglé : *${(record.tuitionFeePaid || 0).toLocaleString("fr-FR")} FCFA*\n` +
-      `Statut : ${record.status === "Confirmé" ? "✅ Confirmé" : "⏳ En attente de règlement"}\n\n` +
+      `Référence : *${record?.id || "N/A"}*\n` +
+      `Élève : *${record?.studentName || "Élève"}* (${record?.series || ""})\n` +
+      `Matière(s) : ${subjects}\n` +
+      `Formule : ${record?.paymentPlan === "annuel" ? "Annuel" : "Mensuel"} (Séances du Samedi)\n` +
+      `Mode de règlement : ${record?.paymentMethod || "Mobile Money"} (T-Money Togocel : ${TMONEY_TOGOCEL_PHONE})\n` +
+      `Montant Réglé : *${(record?.tuitionFeePaid || 0).toLocaleString("fr-FR")} FCFA*\n` +
+      `Statut : ${record?.status === "Confirmé" ? "✅ Confirmé" : "⏳ En attente de règlement"}\n\n` +
       `Merci d'avoir choisi Stage Kékéli, la lumière qui guide vers la réussite !`
   );
   return `https://wa.me/${cleanPhone}?text=${text}`;

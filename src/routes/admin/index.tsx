@@ -50,6 +50,17 @@ function AdminDashboardPage() {
 
   const selectedStudent = signIns.find((s) => s.id === selectedStudentId) || signIns[0];
 
+  const formatDateSafe = (dateStr: string | undefined | null) => {
+    if (!dateStr) return "Date inconnue";
+    try {
+      const d = new Date(dateStr);
+      if (isNaN(d.getTime())) return "Date inconnue";
+      return d.toLocaleDateString("fr-FR");
+    } catch {
+      return "Date inconnue";
+    }
+  };
+
   const fmt = (n: number | undefined | null) =>
     (typeof n === "number" && !isNaN(n) ? n : 0).toLocaleString("fr-FR");
 
@@ -184,7 +195,7 @@ function AdminDashboardPage() {
                         Parent : <strong className="text-slate-200">{selectedStudent.parentName}</strong> ({selectedStudent.parentPhone})
                       </p>
                       <p className="text-xs text-slate-400 mt-0.5">
-                        Inscrit le : {new Date(selectedStudent.createdAt).toLocaleDateString("fr-FR")} · Référence : <span className="font-mono text-amber-400 font-bold">{selectedStudent.id}</span>
+                        Inscrit le : {formatDateSafe(selectedStudent.createdAt)} · Référence : <span className="font-mono text-amber-400 font-bold">{selectedStudent.id}</span>
                       </p>
                     </div>
                   </div>
@@ -221,7 +232,7 @@ function AdminDashboardPage() {
                     Envoyer Reçu WhatsApp
                   </a>
                   <a
-                    href={`tel:${selectedStudent.parentPhone.replace(/[^0-9]/g, "")}`}
+                    href={`tel:${(selectedStudent.parentPhone || "").replace(/[^0-9]/g, "")}`}
                     className="inline-flex items-center gap-2 rounded-full bg-slate-800 px-4 py-2 text-xs font-bold text-slate-200 hover:bg-slate-700 hover:text-white transition"
                   >
                     <Phone className="h-3.5 w-3.5 text-[#CDFE00]" />
@@ -243,7 +254,7 @@ function AdminDashboardPage() {
                   <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800/80 space-y-2">
                     <span className="text-[11px] font-semibold text-slate-400 block">Matières Enseignées</span>
                     <div className="flex flex-wrap gap-1.5">
-                      {selectedStudent.subjects.map((sub) => (
+                      {(selectedStudent.subjects || []).map((sub) => (
                         <span key={sub} className="rounded-md bg-[#CDFE00]/10 text-[#CDFE00] border border-[#CDFE00]/20 px-2.5 py-1 text-xs font-bold">
                           {sub}
                         </span>
