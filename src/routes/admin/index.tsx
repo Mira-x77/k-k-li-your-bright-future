@@ -1,8 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
-import { Users, Phone, MessageSquare, CheckCircle2, Clock, AlertCircle, Calendar, BookOpen, ShieldCheck, Sparkles, User, ExternalLink, Send, FileText } from "lucide-react";
+import { Users, Phone, MessageSquare, CheckCircle2, Clock, AlertCircle, Calendar, BookOpen, ShieldCheck, Sparkles, User, ExternalLink, Send, FileText, Eye } from "lucide-react";
 import { AdminShell } from "@/components/admin/admin-shell";
-import { getDashboardMetrics, getSignIns, syncFromSupabase, generateWhatsAppReceiptLink, updateSignInStatus, type ProgramSignIn, type DashboardMetrics } from "@/lib/admin-store";
+import { getDashboardMetrics, getSignIns, syncFromSupabase, generateWhatsAppReceiptLink, updateSignInStatus, getVisitorAnalytics, type ProgramSignIn, type DashboardMetrics, type VisitorAnalytics } from "@/lib/admin-store";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
@@ -20,11 +20,13 @@ function AdminDashboardPage() {
   const [metrics, setMetrics] = useState<DashboardMetrics | null>(null);
   const [signIns, setSignIns] = useState<ProgramSignIn[]>([]);
   const [selectedStudentId, setSelectedStudentId] = useState<string | null>(null);
+  const [visitorStats, setVisitorStats] = useState<VisitorAnalytics>(getVisitorAnalytics());
 
   const loadData = () => {
     const data = getSignIns();
     setSignIns(data);
     setMetrics(getDashboardMetrics());
+    setVisitorStats(getVisitorAnalytics());
     if (data.length > 0 && !selectedStudentId) {
       setSelectedStudentId(data[0].id);
     }
@@ -33,6 +35,10 @@ function AdminDashboardPage() {
   useEffect(() => {
     loadData();
     syncFromSupabase().then(() => loadData());
+
+    const handleVisit = () => setVisitorStats(getVisitorAnalytics());
+    window.addEventListener("sk_visit_recorded", handleVisit);
+    return () => window.removeEventListener("sk_visit_recorded", handleVisit);
   }, []);
 
   const handleStatusChange = (id: string, newStatus: ProgramSignIn["status"]) => {
@@ -325,6 +331,33 @@ function AdminDashboardPage() {
                 <div className="flex justify-between">
                   <span>En attente :</span>
                   <span className="font-bold">{metrics.pendingSignIns} élèves</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Cyan Visitor Analytics Widget */}
+            <div className="rounded-3xl bg-[#0F172A] text-white p-6 space-y-4 shadow-xl border border-cyan-500/30">
+              <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                <span className="text-xs font-extrabold uppercase tracking-wider text-slate-200 flex items-center gap-1.5">
+                  <Eye className="h-4 w-4 text-cyan-400" />
+                  <span>Visites du Site</span>
+                </span>
+                <Badge className="bg-cyan-500/20 text-cyan-400 border border-cyan-500/40 text-[10px] font-bold">En direct</Badge>
+              </div>
+
+              <div>
+                <p className="text-3xl font-black text-cyan-400 tracking-tight">{fmt(visitorStats.totalVisits || 0)}</p>
+                <p className="text-xs text-slate-400 mt-1">Pages vues au total sur le site</p>
+              </div>
+
+              <div className="pt-2 border-t border-slate-800 text-xs text-slate-300 space-y-1.5">
+                <div className="flex justify-between items-center">
+                  <span className="text-slate-400">Visiteurs uniques :</span>
+                  <span className="font-bold text-white">{fmt(visitorStats.uniqueVisitorsCount || 0)}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-slate-400">Visites aujourd'hui :</span>
+                  <span className="font-bold text-cyan-400">{fmt(visitorStats.visitsToday || 0)}</span>
                 </div>
               </div>
             </div>

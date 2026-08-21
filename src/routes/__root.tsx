@@ -136,10 +136,14 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
-import { GoStudyPopupModal } from "@/components/gostudy-popup";
-
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const routerState = useRouterState();
+  const pathname = routerState.location.pathname;
+
+  useEffect(() => {
+    recordSiteVisit(pathname);
+  }, [pathname]);
 
   return (
     <QueryClientProvider client={queryClient}>

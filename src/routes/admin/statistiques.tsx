@@ -1,15 +1,37 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
-import { Wallet, Smartphone, Landmark, CalendarCheck, BookOpen, ShieldCheck, TrendingUp, BarChart3, Globe } from "lucide-react";
+import {
+  Wallet,
+  Smartphone,
+  Landmark,
+  CalendarCheck,
+  ShieldCheck,
+  TrendingUp,
+  Globe,
+  Eye,
+  Users,
+  Calendar,
+  Laptop,
+} from "lucide-react";
 import { AdminShell } from "@/components/admin/admin-shell";
-import { getDashboardMetrics, getSignIns, syncFromSupabase, type DashboardMetrics } from "@/lib/admin-store";
+import {
+  getDashboardMetrics,
+  syncFromSupabase,
+  getVisitorAnalytics,
+  type DashboardMetrics,
+  type VisitorAnalytics,
+} from "@/lib/admin-store";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const Route = createFileRoute("/admin/statistiques")({
   head: () => ({
     meta: [
       { title: "Statistiques & Financials — Admin Stage Kékéli" },
-      { name: "description", content: "Chiffre d'affaires, répartition TMoney vs Espèces et métriques des cours Stage Kékéli." },
+      {
+        name: "description",
+        content:
+          "Chiffre d'affaires, suivi de la fréquentation des visiteurs du site et métriques des cours Stage Kékéli.",
+      },
     ],
   }),
   component: AdminStatistiquesPage,
@@ -17,19 +39,39 @@ export const Route = createFileRoute("/admin/statistiques")({
 
 function AdminStatistiquesPage() {
   const [metrics, setMetrics] = useState<DashboardMetrics | null>(null);
+  const [visitorStats, setVisitorStats] = useState<VisitorAnalytics>(getVisitorAnalytics());
 
   const loadData = () => {
     setMetrics(getDashboardMetrics());
+    setVisitorStats(getVisitorAnalytics());
   };
 
   useEffect(() => {
     loadData();
     syncFromSupabase().then(() => loadData());
+
+    const handleVisit = () => setVisitorStats(getVisitorAnalytics());
+    window.addEventListener("sk_visit_recorded", handleVisit);
+    return () => window.removeEventListener("sk_visit_recorded", handleVisit);
   }, []);
 
   if (!metrics) return null;
 
   const fmt = (n: number) => n.toLocaleString("fr-FR");
+
+  const formatDate = (iso: string) => {
+    try {
+      const d = new Date(iso);
+      return d.toLocaleDateString("fr-FR", {
+        day: "2-digit",
+        month: "short",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    } catch {
+      return iso;
+    }
+  };
 
   return (
     <AdminShell onDataChange={loadData}>
@@ -40,7 +82,7 @@ function AdminStatistiquesPage() {
             Statistiques & Métriques Financières
           </h1>
           <p className="text-sm text-slate-400 mt-1">
-            Indicateurs de performance, répartition TMoney (Togocel) et suivi des inscriptions du samedi.
+            Indicateurs de performance, trafic des visiteurs du site et suivi des règlements Stage Kékéli.
           </p>
         </div>
 
@@ -54,9 +96,12 @@ function AdminStatistiquesPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-black text-emerald-400">{fmt(metrics.totalRevenue || 0)} FCFA</div>
+              <div className="text-2xl font-black text-emerald-400">
+                {fmt(metrics.totalRevenue || 0)} FCFA
+              </div>
               <p className="text-xs text-slate-400 mt-1.5">
-                Inscriptions validées par l'admin ({metrics.confirmedSignIns} élève{metrics.confirmedSignIns > 1 ? "s" : ""})
+                Inscriptions validées par l'admin ({metrics.confirmedSignIns} élève
+                {metrics.confirmedSignIns > 1 ? "s" : ""})
               </p>
             </CardContent>
           </Card>
@@ -69,9 +114,12 @@ function AdminStatistiquesPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-black text-amber-400">{fmt(metrics.pendingRevenue || 0)} FCFA</div>
+              <div className="text-2xl font-black text-amber-400">
+                {fmt(metrics.pendingRevenue || 0)} FCFA
+              </div>
               <p className="text-xs text-slate-400 mt-1.5">
-                Paiements en attente de vérification ({metrics.pendingSignIns} dossier{metrics.pendingSignIns > 1 ? "s" : ""})
+                Paiements en attente de vérification ({metrics.pendingSignIns} dossier
+                {metrics.pendingSignIns > 1 ? "s" : ""})
               </p>
             </CardContent>
           </Card>
@@ -84,7 +132,9 @@ function AdminStatistiquesPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-black text-blue-400">{fmt(metrics.tmoneyRevenue || 0)} FCFA</div>
+              <div className="text-2xl font-black text-blue-400">
+                {fmt(metrics.tmoneyRevenue || 0)} FCFA
+              </div>
               <p className="text-xs text-slate-400 mt-1.5">
                 Transferts validés sur le +228 93 51 00 74
               </p>
@@ -99,7 +149,9 @@ function AdminStatistiquesPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-black text-purple-400">{fmt(metrics.cashRevenue || 0)} FCFA</div>
+              <div className="text-2xl font-black text-purple-400">
+                {fmt(metrics.cashRevenue || 0)} FCFA
+              </div>
               <p className="text-xs text-slate-400 mt-1.5">
                 Règlements encaissés le samedi à Lomé
               </p>
@@ -107,8 +159,126 @@ function AdminStatistiquesPage() {
           </Card>
         </div>
 
+        {/* SITE VISITORS & AUDIENCE SECTION */}
+        <div className="space-y-4 pt-2">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-bold text-white tracking-tight flex items-center gap-2">
+              <Eye className="h-5 w-5 text-cyan-400" />
+              Fréquentation & Audience du Site Vitrine
+            </h2>
+            <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+              Mises à jour en direct
+            </span>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-3">
+            <Card className="bg-slate-900 border-slate-800 text-white border-cyan-500/20">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-xs font-medium text-slate-400 flex items-center justify-between">
+                  <span>Total Pages Vues</span>
+                  <Eye className="h-4 w-4 text-cyan-400" />
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-black text-cyan-400">
+                  {fmt(visitorStats.totalVisits || 0)}
+                </div>
+                <p className="text-xs text-slate-400 mt-1">
+                  Visites totales enregistrées sur le site
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-slate-900 border-slate-800 text-white">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-xs font-medium text-slate-400 flex items-center justify-between">
+                  <span>Visiteurs Uniques</span>
+                  <Users className="h-4 w-4 text-purple-400" />
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-black text-purple-400">
+                  {fmt(visitorStats.uniqueVisitorsCount || 0)}
+                </div>
+                <p className="text-xs text-slate-400 mt-1">
+                  Appareils / utilisateurs distincts
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-slate-900 border-slate-800 text-white">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-xs font-medium text-slate-400 flex items-center justify-between">
+                  <span>Visites Aujourd'hui</span>
+                  <Calendar className="h-4 w-4 text-emerald-400" />
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-black text-emerald-400">
+                  {fmt(visitorStats.visitsToday || 0)}
+                </div>
+                <p className="text-xs text-slate-400 mt-1">
+                  Trafic de la journée en cours
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Recent Visits History Table */}
+          <Card className="bg-slate-900 border-slate-800 text-white">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-bold flex items-center gap-2">
+                <Laptop className="h-4 w-4 text-cyan-400" />
+                Journal des Dernières Visites
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-0">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs text-slate-300">
+                  <thead className="border-b border-slate-800 bg-slate-950/80 text-slate-400 uppercase text-[10px]">
+                    <tr>
+                      <th className="py-3 px-4">Page Visitée</th>
+                      <th className="py-3 px-4">Appareil</th>
+                      <th className="py-3 px-4">Identifiant Visiteur</th>
+                      <th className="py-3 px-4 text-right">Date & Heure</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-800/60">
+                    {(visitorStats.recentVisits || []).slice(0, 15).map((visit) => (
+                      <tr key={visit.id} className="hover:bg-slate-800/40 transition">
+                        <td className="py-3 px-4 font-mono text-cyan-400 font-bold">
+                          {visit.path}
+                        </td>
+                        <td className="py-3 px-4">
+                          <span
+                            className={`inline-block rounded px-2 py-0.5 text-[10px] font-semibold ${
+                              visit.device === "Mobile"
+                                ? "bg-amber-500/10 text-amber-400 border border-amber-500/20"
+                                : visit.device === "Tablette"
+                                ? "bg-purple-500/10 text-purple-400 border border-purple-500/20"
+                                : "bg-blue-500/10 text-blue-400 border border-blue-500/20"
+                            }`}
+                          >
+                            {visit.device}
+                          </span>
+                        </td>
+                        <td className="py-3 px-4 font-mono text-slate-400 text-[11px]">
+                          {visit.visitorId}
+                        </td>
+                        <td className="py-3 px-4 text-right text-slate-400 text-[11px]">
+                          {formatDate(visit.timestamp)}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
         {/* Operational Analytics */}
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className="grid gap-6 md:grid-cols-2 pt-2">
           <Card className="bg-slate-900 border-slate-800 text-white">
             <CardHeader>
               <CardTitle className="text-sm font-bold flex items-center gap-2">
