@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, Home, ShieldCheck } from "lucide-react";
+import { ArrowRight, ExternalLink, Home, ShieldCheck } from "lucide-react";
 
 import logoLight from "@/assets/logo-light.png";
 import logoDark from "@/assets/logo-dark.png";
@@ -149,6 +149,17 @@ export function SiteFooter() {
                   </Link>
                 </li>
               ))}
+              <li className="pt-1">
+                <a
+                  href="https://goostudy.vercel.app"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-500 hover:underline"
+                >
+                  <span>Go Study! (Partenaire)</span>
+                  <ExternalLink className="h-3 w-3" />
+                </a>
+              </li>
             </ul>
           </div>
 

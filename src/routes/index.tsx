@@ -29,6 +29,8 @@ import {
   SessionFlow,
 } from "@/components/marketing";
 
+import { GoStudyPartnerSection } from "@/components/gostudy-section";
+
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
@@ -50,6 +52,7 @@ function Home() {
       <Teasers />
       <WhySection />
       <SessionFlow />
+      <GoStudyPartnerSection />
       <FinalCTA />
       <LocationSection />
       <FaqSection />
