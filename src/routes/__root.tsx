@@ -136,6 +136,8 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
+import { GoStudyPopupModal } from "@/components/gostudy-popup";
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
@@ -149,6 +151,7 @@ function RootComponent() {
         </main>
         <SiteFooter />
         <PrivacyConsentBanner />
+        <GoStudyPopupModal />
       </div>
     </QueryClientProvider>
   );
