@@ -5,6 +5,7 @@ import tutor1 from "@/assets/tutor-1.jpg";
 import tutor2 from "@/assets/tutor-2.jpg";
 import tutor3 from "@/assets/tutor-3.jpg";
 import kolouDavid from "@/assets/kolou-david.jpg";
+import kofi from "@/assets/kofi.jpg";
 import { Reveal } from "@/components/reveal";
 import {
   TutorArcCarousel,
@@ -40,11 +41,11 @@ const tutors: TutorCarouselItem[] = [
     tags: ["Mathématiques", "Première & Terminale C & D"],
   },
   {
-    img: tutor2,
-    name: "Mlle Efua M.",
-    role: "Mathématiques",
-    bio: "Accompagne les élèves des séries C & D, du cours aux exercices d'application.",
-    tags: ["Mathématiques", "Terminale C & D"],
+    img: kofi,
+    name: "M. KOFI",
+    role: "Physique-Chimie",
+    bio: "Titulaire d'un BAC série D, en formation de Physique et d'Informatique à l'Université. Accompagne les élèves avec méthode et clarté.",
+    tags: ["Physique-Chimie", "Première & Terminale C & D"],
   },
   {
     img: tutor3,
