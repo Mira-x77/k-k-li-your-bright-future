@@ -22,7 +22,7 @@ export function GoStudyPartnerSection() {
               Suivez vos notes et réussissez avec <span className="text-blue-500 italic">Go Study!</span>
             </h2>
             <p className="mt-4 text-sm sm:text-base text-muted-foreground leading-relaxed">
-              Stage Kékéli s'associe à <strong>Go Study! (ScoreTarget)</strong>, l'application de suivi scolaire et de révision spécialement conçue pour les élèves de Première et Terminale en Afrique de l'Ouest.
+              Stage Kékéli s'associe à <strong>Go Study!</strong>, l'application de suivi scolaire et de révision spécialement conçue pour les élèves de Première et Terminale en Afrique de l'Ouest.
             </p>
           </div>
         </Reveal>
@@ -40,7 +40,7 @@ export function GoStudyPartnerSection() {
                     className="h-12 w-12 rounded-2xl object-cover border border-blue-500/30 shadow-md"
                   />
                   <div>
-                    <h3 className="text-xl font-bold text-foreground">Go Study! · ScoreTarget</h3>
+                    <h3 className="text-xl font-bold text-foreground">Go Study!</h3>
                     <p className="text-xs text-muted-foreground">Outil gratuit de révision et calcul de moyenne</p>
                   </div>
                 </div>
