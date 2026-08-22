@@ -226,7 +226,7 @@ function AdminStatistiquesPage() {
           </div>
 
           {/* Recent Visits History Table */}
-          <Card className="bg-slate-900 border-slate-800 text-white">
+          <Card className="bg-slate-900 border-slate-800 text-white overflow-hidden max-w-full">
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-bold flex items-center gap-2">
                 <Laptop className="h-4 w-4 text-cyan-400" />
@@ -234,7 +234,7 @@ function AdminStatistiquesPage() {
               </CardTitle>
             </CardHeader>
             <CardContent className="p-0">
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto max-w-full">
                 <table className="w-full text-left text-xs text-slate-300">
                   <thead className="border-b border-slate-800 bg-slate-950/80 text-slate-400 uppercase text-[10px]">
                     <tr>

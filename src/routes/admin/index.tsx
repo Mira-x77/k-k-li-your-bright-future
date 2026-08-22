@@ -86,7 +86,7 @@ function AdminDashboardPage() {
         </div>
       ) : (
         /* Adapted Modern 3-Pane Dashboard UI */
-        <div className="grid gap-4 md:gap-6 grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[300px_1fr_260px] items-start">
+        <div className="grid gap-4 md:gap-6 grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[300px_1fr_260px] items-start max-w-full overflow-hidden">
           {/* LEFT PANE: Worklist Rail (Dark Theme) */}
           <div className="rounded-3xl bg-[#14171D] border border-slate-800/80 p-4 space-y-4 shadow-lg">
             <div className="flex items-center justify-between px-2 pt-1">

@@ -211,16 +211,16 @@ function PaymentPage() {
 
           {/* Right Column Parent Registration & Payment Form */}
           <Reveal anim="right">
-            <form onSubmit={handleRegisterAndPay} className="rounded-3xl border border-border bg-[#F3F2EC] dark:bg-card p-7 shadow-[var(--shadow-warm)] md:p-8 space-y-6">
+            <form onSubmit={handleRegisterAndPay} className="rounded-3xl border border-border bg-[#F3F2EC] dark:bg-card p-4 sm:p-7 shadow-[var(--shadow-warm)] md:p-8 space-y-5 sm:space-y-6">
               <div className="flex items-center justify-between">
                 <div className="text-xs font-bold uppercase tracking-widest text-[color:var(--sun-deep)]">
                   Formulaire d'Inscription Parent (Samedi uniquement)
                 </div>
-                <Smartphone className="h-5 w-5 text-[color:var(--sun-deep)]" />
+                <Smartphone className="h-5 w-5 text-[color:var(--sun-deep)] shrink-0" />
               </div>
 
               {/* Photo Capture Step (Optionnel) */}
-              <div className="rounded-2xl border border-border bg-[#FAF9F5] dark:bg-background p-4">
+              <div className="rounded-2xl border border-border bg-[#FAF9F5] dark:bg-background p-3.5 sm:p-4">
                 <ProfilePhotoCapture
                   value={photoUrl}
                   onChange={(photo) => setPhotoUrl(photo)}
@@ -228,7 +228,7 @@ function PaymentPage() {
               </div>
 
               {/* Parent & Student Info */}
-              <div className="space-y-4 rounded-2xl border border-border bg-[#FAF9F5] dark:bg-background p-4">
+              <div className="space-y-3.5 sm:space-y-4 rounded-2xl border border-border bg-[#FAF9F5] dark:bg-background p-3.5 sm:p-4">
                 <div className="text-xs font-bold uppercase tracking-wider text-foreground">
                   Informations de l'élève & de vous-même (parent)
                 </div>
@@ -245,7 +245,7 @@ function PaymentPage() {
                     className="w-full rounded-xl border border-border bg-card px-3.5 py-2.5 text-sm font-medium text-foreground focus:outline-none focus:ring-2 focus:ring-[color:var(--sun-deep)]"
                   />
                 </div>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label className="block text-xs font-semibold text-muted-foreground mb-1">
                       Votre Nom (Parent / Tuteur) *
@@ -280,13 +280,13 @@ function PaymentPage() {
                 <div className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2">
                   Classe de votre enfant
                 </div>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                   {(["Première C", "Première D", "Terminale C", "Terminale D"] as const).map((s) => (
                     <button
                       type="button"
                       key={s}
                       onClick={() => setSeries(s)}
-                      className={`rounded-xl px-3 py-2 text-xs font-bold transition ${
+                      className={`rounded-xl px-2.5 py-2 text-xs font-bold transition cursor-pointer ${
                         series === s
                           ? "bg-[color:var(--sun)] text-[color:var(--ink)] ring-2 ring-[color:var(--sun-deep)]"
                           : "bg-background border border-border hover:bg-muted"
@@ -303,11 +303,11 @@ function PaymentPage() {
                 <div className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-2">
                   Matières à suivre (Séances du Samedi)
                 </div>
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                   <button
                     type="button"
                     onClick={() => setSubjectsChoice("both")}
-                    className={`rounded-xl px-2.5 py-2 text-xs font-bold transition ${
+                    className={`rounded-xl px-2.5 py-2 text-xs font-bold transition cursor-pointer ${
                       subjectsChoice === "both"
                         ? "bg-[color:var(--sun)] text-[color:var(--ink)] ring-2 ring-[color:var(--sun-deep)]"
                         : "bg-background border border-border hover:bg-muted"
@@ -318,7 +318,7 @@ function PaymentPage() {
                   <button
                     type="button"
                     onClick={() => setSubjectsChoice("math")}
-                    className={`rounded-xl px-2.5 py-2 text-xs font-bold transition ${
+                    className={`rounded-xl px-2.5 py-2 text-xs font-bold transition cursor-pointer ${
                       subjectsChoice === "math"
                         ? "bg-[color:var(--sun)] text-[color:var(--ink)] ring-2 ring-[color:var(--sun-deep)]"
                         : "bg-background border border-border hover:bg-muted"
@@ -329,7 +329,7 @@ function PaymentPage() {
                   <button
                     type="button"
                     onClick={() => setSubjectsChoice("physics")}
-                    className={`rounded-xl px-2.5 py-2 text-xs font-bold transition ${
+                    className={`rounded-xl px-2.5 py-2 text-xs font-bold transition cursor-pointer ${
                       subjectsChoice === "physics"
                         ? "bg-[color:var(--sun)] text-[color:var(--ink)] ring-2 ring-[color:var(--sun-deep)]"
                         : "bg-background border border-border hover:bg-muted"

@@ -91,15 +91,15 @@ export function SiteHeader() {
 function MobileNav() {
   return (
     <div className="lg:hidden border-t border-border/40 bg-background/95 backdrop-blur-md">
-      <div className="mx-auto flex max-w-7xl gap-1.5 overflow-x-auto px-4 pb-3 pt-2 text-sm">
+      <div className="mx-auto flex max-w-7xl gap-1.5 overflow-x-auto px-4 pb-2.5 pt-2 text-xs font-medium scrollbar-none">
         {NAV_LINKS.map((l) => (
           <Link
             key={l.to}
             to={l.to}
             activeOptions={{ exact: true }}
             activeProps={{ className: "nav-pill-active text-foreground font-bold bg-muted" }}
-            inactiveProps={{ className: "text-foreground/75" }}
-            className="shrink-0 rounded-full px-3.5 py-1.5 text-xs font-semibold"
+            inactiveProps={{ className: "text-muted-foreground hover:text-foreground" }}
+            className="nav-pill relative whitespace-nowrap rounded-full px-3 py-1.5 transition-colors shrink-0"
           >
             {l.label}
           </Link>
