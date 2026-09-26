@@ -82,7 +82,7 @@ function TutorsPage() {
           className="pointer-events-none absolute inset-0 h-full w-full object-cover object-[center_35%]"
         />
         <div
-          className="pointer-events-none absolute inset-0 bg-gradient-to-b from-background/80 via-background/70 to-background/90"
+          className="pointer-events-none absolute inset-0 bg-gradient-to-b from-background/30 via-background/20 to-background/35"
           aria-hidden
         />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 pb-4 sm:pb-6 pt-8 sm:pt-12 text-center md:pt-16">

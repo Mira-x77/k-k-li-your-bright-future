@@ -114,11 +114,11 @@ function Hero() {
         className="pointer-events-none absolute inset-0 h-full w-full object-cover object-center opacity-100"
       />
       <div
-        className="pointer-events-none absolute inset-0 bg-gradient-to-r from-background/85 from-0% via-background/55 via-40% to-background/20 to-80%"
+        className="pointer-events-none absolute inset-0 bg-gradient-to-r from-background/40 from-0% via-background/20 via-40% to-transparent to-75%"
         aria-hidden
       />
       <div
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background to-transparent"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-background/50 to-transparent"
         aria-hidden
       />
       <div className="relative mx-auto max-w-7xl px-6 pb-4 pt-10 md:pt-14 lg:pt-16">

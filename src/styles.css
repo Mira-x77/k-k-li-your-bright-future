@@ -153,7 +153,7 @@
     background-image: url("./assets/study-group-library.png");
     background-size: cover;
     background-position: center 35%;
-    opacity: 0.3;
+    opacity: 0.62;
     pointer-events: none;
   }
 }

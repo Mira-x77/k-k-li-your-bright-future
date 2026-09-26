@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, BookOpen, CalendarDays, Check, Clock, Target, Users } from "lucide-react";
 import groupTableImg from "@/assets/study-group-table.png";
+import saturdayBg from "@/assets/samedi-offre-backdrop.jpg";
 import { SESSION_STEPS as SEANCE_STEPS } from "@/components/marketing";
 import { Reveal } from "@/components/reveal";
 
@@ -65,13 +66,20 @@ const AUDIENCE = [
 function SamediPage() {
   return (
     <>
-      <section className="hero-clean-bg border-b border-border/50">
-        <div className="mx-auto max-w-7xl px-6 py-16 text-center md:py-20">
+      <section className="hero-clean-bg relative overflow-hidden border-b border-border/50">
+        <img
+          src={saturdayBg}
+          alt=""
+          aria-hidden
+          className="pointer-events-none absolute inset-0 h-full w-full object-cover object-[center_40%]"
+        />
+        <div className="pointer-events-none absolute inset-0 bg-background/20" aria-hidden />
+        <div className="relative mx-auto max-w-7xl px-6 py-16 text-center md:py-20">
           <Reveal>
             <div className="text-xs font-bold uppercase tracking-[0.24em] text-[color:var(--sun-deep)]">
               Cours du samedi
             </div>
-            <h1 className="mx-auto mt-4 max-w-3xl text-4xl font-black leading-[1.05] tracking-tight sm:text-5xl md:text-6xl">
+            <h1 className="mx-auto mt-4 max-w-3xl text-4xl font-black leading-[1.05] tracking-tight sm:text-5xl md:text-6xl drop-shadow-[0_2px_10px_rgba(255,252,245,0.9)]">
               Un rendez-vous hebdomadaire pour avancer toute l'année
             </h1>
             <p className="mx-auto mt-5 max-w-2xl text-muted-foreground">
