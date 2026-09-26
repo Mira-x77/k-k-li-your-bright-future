@@ -1,10 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import heroImg from "@/assets/hero-students-group.jpg";
 import heroVideo from "@/assets/hero-highlight.mp4";
 import classroomBg from "@/assets/hero-classroom-session.jpg";
 import classroomTables from "@/assets/classroom-tables.jpg";
-import lateNightImg from "@/assets/student-late-night.png";
+import studentAtDesk from "@/assets/student-at-desk.jpg";
 import locationEntrance from "@/assets/location-entrance.jpg";
 import locationClassroom from "@/assets/location-classroom.jpg";
 import locationBuilding from "@/assets/location-building.png";
@@ -195,7 +194,7 @@ function Hero() {
                   loop
                   playsInline
                   preload="auto"
-                  poster={heroImg}
+                  poster={classroomTables}
                   controls={false}
                   disablePictureInPicture
                 >
@@ -323,8 +322,8 @@ function WhySection() {
           <div className="relative mx-auto w-full max-w-md">
             <div className="relative overflow-hidden rounded-[2rem] ring-1 ring-border shadow-[var(--shadow-warm)]">
               <img
-                src={lateNightImg}
-                alt="Un élève endormi sur son bureau, la tête posée sur ses bras, au milieu de feuilles éparpillées, de notes autocollantes et d'un ordinateur portable"
+                src={studentAtDesk}
+                alt="Élève concentré à son pupitre, en train d'écrire dans son cahier"
                 className="aspect-square w-full object-cover"
                 loading="lazy"
                 width={735}
