@@ -51,7 +51,6 @@ if (typeof window !== "undefined") {
     }
   }
 
-  // Subscribe to Supabase Postgres Realtime changes
   try {
     supabase
       .channel("public:sign_ins")
@@ -67,44 +66,6 @@ if (typeof window !== "undefined") {
     console.warn("Supabase Realtime subscription warning:", err);
   }
 }
-
-// Initial sample data if no data exists anywhere
-const INITIAL_DEMO_DATA: ProgramSignIn[] = [
-  {
-    id: "SK-2608-001",
-    studentName: "Koffi Amouzou",
-    parentName: "Mme Amouzou",
-    parentPhone: "+228 90 12 34 56",
-    series: "Terminale C",
-    subjects: ["Mathématiques", "Physique-Chimie"],
-    paymentPlan: "mensuel",
-    paymentMethod: "TMoney",
-    registrationFeePaid: true,
-    tuitionFeePaid: 7150,
-    totalAmountDue: 7150,
-    status: "Confirmé",
-    saturdaySessionIncluded: true,
-    createdAt: new Date(Date.now() - 3600000 * 24 * 2).toISOString(),
-    readByAdmin: true,
-  },
-  {
-    id: "SK-2608-002",
-    studentName: "Afiwa Mensah",
-    parentName: "M. Mensah",
-    parentPhone: "+228 91 87 65 43",
-    series: "Première D",
-    subjects: ["Mathématiques"],
-    paymentPlan: "mensuel",
-    paymentMethod: "En personne",
-    registrationFeePaid: true,
-    tuitionFeePaid: 1500,
-    totalAmountDue: 4000,
-    status: "En attente",
-    saturdaySessionIncluded: true,
-    createdAt: new Date(Date.now() - 3600000 * 12).toISOString(),
-    readByAdmin: true,
-  },
-];
 
 function sanitizeRecord(row: any): ProgramSignIn {
   return {
@@ -129,36 +90,54 @@ function sanitizeRecord(row: any): ProgramSignIn {
 }
 
 export function getSignIns(): ProgramSignIn[] {
-  if (typeof window === "undefined") return INITIAL_DEMO_DATA.map(sanitizeRecord);
+  if (typeof window === "undefined") return [];
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
-    if (!saved) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(INITIAL_DEMO_DATA));
-      return INITIAL_DEMO_DATA.map(sanitizeRecord);
-    }
+    if (!saved) return [];
     const parsed = JSON.parse(saved);
-    if (!Array.isArray(parsed)) return INITIAL_DEMO_DATA.map(sanitizeRecord);
+    if (!Array.isArray(parsed)) return [];
     return parsed.map(sanitizeRecord);
   } catch {
-    return INITIAL_DEMO_DATA.map(sanitizeRecord);
+    return [];
   }
 }
 
-// Asynchronously sync data with Supabase table
+const DEMO_SIGN_IN_IDS = new Set(["SK-2608-001", "SK-2608-002", "SK-TEST-READY"]);
+
+function isPersistedRegistration(record: ProgramSignIn): boolean {
+  if (DEMO_SIGN_IN_IDS.has(record.id)) return false;
+  if (record.studentName === "Koffi Amouzou" && record.parentPhone.includes("90 12 34 56")) return false;
+  if (record.studentName === "Afiwa Mensah" && record.parentPhone.includes("91 87 65 43")) return false;
+  return Boolean(record.id && record.studentName);
+}
+
 export async function syncFromSupabase(): Promise<ProgramSignIn[]> {
   if (typeof window === "undefined") return getSignIns();
+  const localRecords = getSignIns().filter(isPersistedRegistration);
+
   try {
+    await Promise.all(localRecords.map((record) => persistToSupabase(record)));
+
     const { data, error } = await supabase.from("sign_ins").select("*").order("created_at", { ascending: false });
-    if (!error && data && data.length > 0) {
-      const formatted = data.map(sanitizeRecord);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(formatted));
+    if (!error && data) {
+      const remote = data.map(sanitizeRecord).filter(isPersistedRegistration);
+      const byId = new Map<string, ProgramSignIn>();
+      for (const record of remote) byId.set(record.id, record);
+      for (const record of localRecords) {
+        if (!byId.has(record.id)) byId.set(record.id, record);
+      }
+      const merged = [...byId.values()].sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
       window.dispatchEvent(new CustomEvent("sk_data_updated"));
-      return formatted;
+      return merged;
+    }
+    if (error) {
+      console.warn("Supabase fetch fallback to local state:", error.message);
     }
   } catch (err) {
     console.warn("Supabase fetch fallback to local state:", err);
   }
-  return getSignIns();
+  return localRecords;
 }
 
 async function persistToSupabase(record: ProgramSignIn) {
@@ -182,7 +161,10 @@ async function persistToSupabase(record: ProgramSignIn) {
       read_by_admin: record.readByAdmin,
       notes: record.notes,
     };
-    await supabase.from("sign_ins").upsert(payload);
+    const { error } = await supabase.from("sign_ins").upsert(payload);
+    if (error) {
+      console.warn("Supabase upsert error:", error.message);
+    }
   } catch (err) {
     console.warn("Supabase upsert error:", err);
   }
@@ -242,7 +224,6 @@ export function savePublicRegistration(entry: {
     window.dispatchEvent(new CustomEvent("sk_new_registration", { detail: newRecord }));
   }
 
-  // Sync to Supabase in background
   persistToSupabase(newRecord);
 
   return newRecord;
@@ -335,6 +316,7 @@ export function markAllAsRead() {
   const updated = current.map((item) => ({ ...item, readByAdmin: true }));
   localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
   window.dispatchEvent(new CustomEvent("sk_data_updated"));
+  updated.forEach((record) => persistToSupabase(record));
 }
 
 export function getDashboardMetrics(): DashboardMetrics {
@@ -588,7 +570,6 @@ export function recordSiteVisit(path: string) {
     } catch {}
   }
 
-  // Sync to Supabase table if available
   try {
     supabase.from("site_visits").insert({
       visitor_id: visitorId,

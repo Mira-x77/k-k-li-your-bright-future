@@ -33,6 +33,9 @@ function AdminInscriptionsPage() {
   useEffect(() => {
     loadData();
     syncFromSupabase().then(() => loadData());
+    const handleData = () => loadData();
+    window.addEventListener("sk_data_updated", handleData);
+    return () => window.removeEventListener("sk_data_updated", handleData);
   }, []);
 
   const handleStatusChange = (id: string, newStatus: ProgramSignIn["status"]) => {

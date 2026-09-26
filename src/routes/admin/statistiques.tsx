@@ -51,8 +51,13 @@ function AdminStatistiquesPage() {
     syncFromSupabase().then(() => loadData());
 
     const handleVisit = () => setVisitorStats(getVisitorAnalytics());
+    const handleData = () => loadData();
     window.addEventListener("sk_visit_recorded", handleVisit);
-    return () => window.removeEventListener("sk_visit_recorded", handleVisit);
+    window.addEventListener("sk_data_updated", handleData);
+    return () => {
+      window.removeEventListener("sk_visit_recorded", handleVisit);
+      window.removeEventListener("sk_data_updated", handleData);
+    };
   }, []);
 
   if (!metrics || !visitorStats) return null;

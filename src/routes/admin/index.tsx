@@ -35,10 +35,15 @@ function AdminDashboardPage() {
   useEffect(() => {
     loadData();
     syncFromSupabase().then(() => loadData());
+    const handleData = () => loadData();
+    window.addEventListener("sk_data_updated", handleData);
 
     const handleVisit = () => setVisitorStats(getVisitorAnalytics());
     window.addEventListener("sk_visit_recorded", handleVisit);
-    return () => window.removeEventListener("sk_visit_recorded", handleVisit);
+    return () => {
+      window.removeEventListener("sk_visit_recorded", handleVisit);
+      window.removeEventListener("sk_data_updated", handleData);
+    };
   }, []);
 
   const handleStatusChange = (id: string, newStatus: ProgramSignIn["status"]) => {
