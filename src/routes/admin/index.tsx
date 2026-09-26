@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
-import { Users, Phone, MessageSquare, CheckCircle2, Clock, AlertCircle, Calendar, BookOpen, ShieldCheck, Sparkles, User, ExternalLink, Send, FileText, Eye } from "lucide-react";
+import { Phone, MessageSquare, CheckCircle2, Sparkles, User, Eye } from "lucide-react";
 import { AdminShell } from "@/components/admin/admin-shell";
+import { DeleteStudentButton } from "@/components/admin/delete-student-button";
 import { getDashboardMetrics, getSignIns, syncFromSupabase, generateWhatsAppReceiptLink, updateSignInStatus, getVisitorAnalytics, type ProgramSignIn, type DashboardMetrics, type VisitorAnalytics } from "@/lib/admin-store";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -27,9 +28,10 @@ function AdminDashboardPage() {
     setSignIns(data);
     setMetrics(getDashboardMetrics());
     setVisitorStats(getVisitorAnalytics());
-    if (data.length > 0 && !selectedStudentId) {
-      setSelectedStudentId(data[0].id);
-    }
+    setSelectedStudentId((current) => {
+      if (current && data.some((student) => student.id === current)) return current;
+      return data[0]?.id ?? null;
+    });
   };
 
   useEffect(() => {
@@ -243,6 +245,7 @@ function AdminDashboardPage() {
                     <Phone className="h-3.5 w-3.5 text-[#CDFE00]" />
                     Appeler Parent ({selectedStudent.parentPhone})
                   </a>
+                  <DeleteStudentButton student={selectedStudent} appearance="button" />
                 </div>
               </div>
 

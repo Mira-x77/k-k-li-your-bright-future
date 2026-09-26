@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
-import { Search, Filter, Phone, CheckCircle, Clock, AlertCircle, Eye, Download, MessageSquare, Sparkles, User } from "lucide-react";
+import { Search, Phone, Eye, Download, MessageSquare, Sparkles, User } from "lucide-react";
 import { AdminShell } from "@/components/admin/admin-shell";
+import { DeleteStudentButton } from "@/components/admin/delete-student-button";
 import { getSignIns, syncFromSupabase, updateSignInStatus, exportToCSV, generateWhatsAppReceiptLink, type ProgramSignIn } from "@/lib/admin-store";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -228,14 +229,23 @@ function AdminInscriptionsPage() {
                           </select>
                         </td>
                         <td className="py-3.5 px-4 text-right">
-                          <Button
-                            onClick={() => setSelectedStudent(item)}
-                            size="sm"
-                            variant="ghost"
-                            className="h-8 w-8 p-0 text-slate-400 hover:text-white hover:bg-slate-800"
-                          >
-                            <Eye className="h-4 w-4" />
-                          </Button>
+                          <div className="inline-flex items-center justify-end gap-1">
+                            <Button
+                              onClick={() => setSelectedStudent(item)}
+                              size="sm"
+                              variant="ghost"
+                              className="h-8 w-8 p-0 text-slate-400 hover:text-white hover:bg-slate-800"
+                            >
+                              <Eye className="h-4 w-4" />
+                            </Button>
+                            <DeleteStudentButton
+                              student={item}
+                              onDeleted={(remaining) => {
+                                setData(remaining);
+                                if (selectedStudent?.id === item.id) setSelectedStudent(null);
+                              }}
+                            />
+                          </div>
                         </td>
                       </tr>
                     ))
@@ -322,7 +332,7 @@ function AdminInscriptionsPage() {
                   </div>
                 </div>
 
-                <div className="pt-3 flex gap-2">
+                <div className="pt-3 flex flex-col sm:flex-row gap-2">
                   <a
                     href={generateWhatsAppReceiptLink(selectedStudent)}
                     target="_blank"
@@ -334,6 +344,14 @@ function AdminInscriptionsPage() {
                       Envoyer le Reçu par WhatsApp au Parent
                     </Button>
                   </a>
+                  <DeleteStudentButton
+                    student={selectedStudent}
+                    appearance="button"
+                    onDeleted={(remaining) => {
+                      setData(remaining);
+                      setSelectedStudent(null);
+                    }}
+                  />
                 </div>
               </div>
             </DialogContent>

@@ -35,6 +35,7 @@ export interface DashboardMetrics {
 
 const STORAGE_KEY = "stage_kekeli_real_sign_ins";
 const UNREAD_KEY = "stage_kekeli_unread_count";
+const DELETED_KEY = "stage_kekeli_deleted_sign_ins";
 
 export const OFFICIAL_PHONE = "+228 98 93 02 11";
 export const TMONEY_TOGOCEL_PHONE = "+228 93 51 00 74";
@@ -96,7 +97,8 @@ export function getSignIns(): ProgramSignIn[] {
     if (!saved) return [];
     const parsed = JSON.parse(saved);
     if (!Array.isArray(parsed)) return [];
-    return parsed.map(sanitizeRecord);
+    const deleted = getDeletedIds();
+    return parsed.map(sanitizeRecord).filter((record) => !deleted.has(record.id));
   } catch {
     return [];
   }
@@ -111,18 +113,50 @@ function isPersistedRegistration(record: ProgramSignIn): boolean {
   return Boolean(record.id && record.studentName);
 }
 
+function getDeletedIds(): Set<string> {
+  if (typeof window === "undefined") return new Set();
+  try {
+    const saved = localStorage.getItem(DELETED_KEY);
+    if (!saved) return new Set();
+    const parsed = JSON.parse(saved);
+    return new Set(Array.isArray(parsed) ? parsed.map(String) : []);
+  } catch {
+    return new Set();
+  }
+}
+
+function rememberDeletedId(id: string) {
+  if (typeof window === "undefined") return;
+  const ids = getDeletedIds();
+  ids.add(id);
+  localStorage.setItem(DELETED_KEY, JSON.stringify([...ids].slice(-500)));
+}
+
 export async function syncFromSupabase(): Promise<ProgramSignIn[]> {
   if (typeof window === "undefined") return getSignIns();
-  const localRecords = getSignIns().filter(isPersistedRegistration);
+  const deletedIds = getDeletedIds();
+  const localRecords = getSignIns().filter(isPersistedRegistration).filter((record) => !deletedIds.has(record.id));
 
   try {
-    await Promise.all(
-      localRecords.map((record) => persistToSupabase(record).catch((err) => console.warn(err)))
-    );
+    await Promise.all([
+      ...localRecords.map((record) => persistToSupabase(record).catch((err) => console.warn(err))),
+      ...[...deletedIds].map((id) =>
+        supabase
+          .from("sign_ins")
+          .delete()
+          .eq("id", id)
+          .then(({ error }) => {
+            if (error) console.warn("Supabase delete retry:", error.message);
+          })
+      ),
+    ]);
 
     const { data, error } = await supabase.from("sign_ins").select("*").order("created_at", { ascending: false });
     if (!error && data) {
-      const remote = data.map(sanitizeRecord).filter(isPersistedRegistration);
+      const remote = data
+        .map(sanitizeRecord)
+        .filter(isPersistedRegistration)
+        .filter((record) => !deletedIds.has(record.id));
       const byId = new Map<string, ProgramSignIn>();
       for (const record of remote) byId.set(record.id, record);
       for (const record of localRecords) {
@@ -143,6 +177,7 @@ export async function syncFromSupabase(): Promise<ProgramSignIn[]> {
 }
 
 async function persistToSupabase(record: ProgramSignIn) {
+  if (getDeletedIds().has(record.id)) return;
   const photo =
     record.photoUrl && record.photoUrl.startsWith("data:") && record.photoUrl.length > 180000
       ? ""
@@ -289,16 +324,19 @@ export function addSignIn(newEntry: Omit<ProgramSignIn, "id" | "createdAt">): Pr
   return record;
 }
 
-export function deleteSignIn(id: string): ProgramSignIn[] {
-  const current = getSignIns();
-  const updated = current.filter((item) => item.id !== id);
+export async function deleteSignIn(id: string): Promise<ProgramSignIn[]> {
+  rememberDeletedId(id);
+  const updated = getSignIns().filter((item) => item.id !== id);
   if (typeof window !== "undefined") {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
     window.dispatchEvent(new CustomEvent("sk_data_updated"));
   }
 
   try {
-    supabase.from("sign_ins").delete().eq("id", id).then();
+    const { error } = await supabase.from("sign_ins").delete().eq("id", id);
+    if (error) {
+      console.warn("Supabase delete error:", error.message);
+    }
   } catch (err) {
     console.warn("Supabase delete error:", err);
   }

@@ -16,6 +16,7 @@ import { SiteHeader, SiteFooter } from "@/components/site-chrome";
 import { PrivacyConsentBanner } from "@/components/privacy-consent-banner";
 import { GoStudyPopupModal } from "@/components/gostudy-popup";
 import { recordSiteVisit } from "@/lib/admin-store";
+import { Toaster } from "@/components/ui/sonner";
 
 function NotFoundComponent() {
   return (
@@ -159,6 +160,7 @@ function RootComponent() {
         <SiteFooter />
         <PrivacyConsentBanner />
         <GoStudyPopupModal />
+        <Toaster />
       </div>
     </QueryClientProvider>
   );
