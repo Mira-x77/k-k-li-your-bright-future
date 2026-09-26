@@ -12,4 +12,9 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  // Live site is stagekekeli.vercel.app. Default nitro target is Cloudflare,
+  // which makes the GitHub Vercel check fail (0/1) and never updates production.
+  nitro: {
+    preset: "vercel",
+  },
 });
