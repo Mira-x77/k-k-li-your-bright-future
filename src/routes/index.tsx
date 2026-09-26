@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import heroImg from "@/assets/hero-students-group.jpg";
+import heroVideo from "@/assets/hero-highlight.mp4";
 import classroomBg from "@/assets/hero-classroom-session.jpg";
 import tutoringImg from "@/assets/tutoring.jpg";
 import lateNightImg from "@/assets/student-late-night.png";
@@ -136,13 +137,17 @@ function Hero() {
           <Reveal anim="right" delay={120}>
             <div className="relative mx-auto max-w-md lg:max-w-none lg:mx-0">
               <div className="relative overflow-hidden rounded-[2rem] bg-card/40 shadow-[var(--shadow-soft)]">
-                <img
-                  src={heroImg}
-                  alt="Groupe d'élèves travaillant ensemble"
+                <video
                   className="aspect-[4/5] w-full object-cover"
-                  width={900}
-                  height={1125}
-                />
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  poster={heroImg}
+                  aria-label="Séance de répétition Stage Kékéli"
+                >
+                  <source src={heroVideo} type="video/mp4" />
+                </video>
               </div>
               {FLOATING_BADGES.map(({ icon: Icon, className }, i) => (
                 <div
