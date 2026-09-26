@@ -118,6 +118,16 @@
     overflow-x: hidden;
     max-width: 100vw;
     width: 100%;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  video {
+    max-width: 100%;
+  }
+
+  .hero-clean-bg img[aria-hidden] {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
   }
 
   body {
@@ -143,8 +153,7 @@
   isolation: isolate;
   background-image: var(--gradient-hero);
 
-  /* Photo d'ambiance sous le contenu : peinte au-dessus du dégradé
-     (qui se termine par une couleur opaque) mais derrière le texte. */
+  {/* Photo d'ambiance sous le contenu. attachment:scroll évite le bug iOS de background-fixed. */}
   &::before {
     content: "";
     position: absolute;
@@ -153,8 +162,11 @@
     background-image: url("./assets/classroom-tables.jpg");
     background-size: cover;
     background-position: center 35%;
+    background-attachment: scroll;
     opacity: 0.62;
     pointer-events: none;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
   }
 }
 

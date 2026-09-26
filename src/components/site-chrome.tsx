@@ -38,7 +38,7 @@ export function Logo({ className = "" }: { className?: string }) {
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-xl border-b border-border/40">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-6 py-3 lg:grid lg:grid-cols-[auto_1fr_auto]">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:gap-6 sm:px-6 lg:grid lg:grid-cols-[auto_1fr_auto]">
         <div className="flex items-center gap-3">
           <Logo />
           <Link
@@ -77,7 +77,7 @@ export function SiteHeader() {
           </Link>
           <Link
             to="/paiement"
-            className="inline-flex items-center gap-2 rounded-full bg-foreground px-6 py-3 text-sm font-bold text-background transition hover:opacity-90 shadow-md"
+            className="inline-flex items-center gap-2 rounded-full bg-foreground px-4 py-2.5 text-xs font-bold text-background transition hover:opacity-90 shadow-md sm:px-6 sm:py-3 sm:text-sm"
           >
             S'inscrire <ArrowRight className="h-4 w-4" />
           </Link>

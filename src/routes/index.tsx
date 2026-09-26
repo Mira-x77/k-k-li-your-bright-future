@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import heroImg from "@/assets/hero-students-group.jpg";
 import heroVideo from "@/assets/hero-highlight.mp4";
 import classroomBg from "@/assets/hero-classroom-session.jpg";
@@ -16,6 +16,7 @@ import {
   MapPin,
   ShieldCheck,
   Users,
+  Volume2,
 } from "lucide-react";
 import { Reveal } from "@/components/reveal";
 import { Typewriter } from "@/components/typewriter";
@@ -80,28 +81,49 @@ const HERO_FEATURES = [
 
 function Hero() {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [soundOn, setSoundOn] = useState(false);
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
-    const playWithSound = () => {
-      video.loop = true;
-      video.muted = false;
-      video.volume = 1;
-      if (video.ended) video.currentTime = 0;
+    video.loop = true;
+    video.playsInline = true;
+    video.muted = true;
+    video.preload = "auto";
+    video.setAttribute("playsinline", "true");
+    video.setAttribute("webkit-playsinline", "true");
+    video.setAttribute("x5-playsinline", "true");
+
+    const tryPlay = () => {
       void video.play().catch(() => {});
     };
 
-    video.loop = true;
-    video.addEventListener("ended", playWithSound);
-    playWithSound();
-    window.addEventListener("pointerdown", playWithSound, { once: true });
-    window.addEventListener("keydown", playWithSound, { once: true });
+    const enableSound = () => {
+      video.muted = false;
+      video.volume = 1;
+      setSoundOn(true);
+      if (video.ended) video.currentTime = 0;
+      tryPlay();
+    };
+
+    const restart = () => {
+      video.currentTime = 0;
+      video.loop = true;
+      tryPlay();
+    };
+
+    tryPlay();
+    video.addEventListener("ended", restart);
+    window.addEventListener("pointerdown", enableSound, { once: true });
+    window.addEventListener("touchstart", enableSound, { once: true, passive: true });
+    window.addEventListener("keydown", enableSound, { once: true });
+
     return () => {
-      video.removeEventListener("ended", playWithSound);
-      window.removeEventListener("pointerdown", playWithSound);
-      window.removeEventListener("keydown", playWithSound);
+      video.removeEventListener("ended", restart);
+      window.removeEventListener("pointerdown", enableSound);
+      window.removeEventListener("touchstart", enableSound);
+      window.removeEventListener("keydown", enableSound);
     };
   }, []);
 
@@ -121,8 +143,8 @@ function Hero() {
         className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-background/50 to-transparent"
         aria-hidden
       />
-      <div className="relative mx-auto max-w-7xl px-6 pb-4 pt-10 md:pt-14 lg:pt-16">
-        <div className="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
+      <div className="relative mx-auto max-w-7xl px-4 pb-4 pt-8 sm:px-6 md:pt-14 lg:pt-16">
+        <div className="grid items-center gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
           <div className="max-w-xl">
             <Reveal anim="left">
               <h1 className="text-foreground">
@@ -153,19 +175,38 @@ function Hero() {
           </div>
 
           <Reveal anim="right" delay={120}>
-            <div className="relative mx-auto max-w-md lg:max-w-none lg:mx-0">
-              <div className="relative overflow-hidden rounded-[2rem] bg-card/40 shadow-[var(--shadow-soft)]">
+            <div className="relative mx-auto w-full max-w-sm sm:max-w-md lg:max-w-none lg:mx-0">
+              <div
+                className="relative w-full overflow-hidden rounded-[1.5rem] bg-card/40 shadow-[var(--shadow-soft)] sm:rounded-[2rem]"
+                onClick={() => {
+                  const video = videoRef.current;
+                  if (!video) return;
+                  video.muted = false;
+                  video.volume = 1;
+                  setSoundOn(true);
+                  void video.play().catch(() => {});
+                }}
+              >
                 <video
                   ref={videoRef}
-                  className="aspect-[4/5] w-full object-cover"
+                  className="aspect-[3/4] max-h-[62vh] w-full object-cover sm:aspect-[4/5] sm:max-h-none"
                   autoPlay
+                  muted
                   loop
                   playsInline
+                  preload="auto"
                   poster={heroImg}
-                  aria-label="Séance de répétition Stage Kékéli"
+                  controls={false}
+                  disablePictureInPicture
                 >
                   <source src={heroVideo} type="video/mp4" />
                 </video>
+                {!soundOn && (
+                  <span className="pointer-events-none absolute bottom-3 right-3 inline-flex items-center gap-1.5 rounded-full bg-black/65 px-3 py-1.5 text-[11px] font-semibold text-white sm:bottom-4 sm:right-4">
+                    <Volume2 className="h-3.5 w-3.5" />
+                    Touchez pour le son
+                  </span>
+                )}
               </div>
             </div>
           </Reveal>
