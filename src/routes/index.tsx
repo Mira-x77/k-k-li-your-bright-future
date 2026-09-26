@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import heroImg from "@/assets/hero-students-group.jpg";
-import classroomBg from "@/assets/hero-classroom.png";
+import classroomBg from "@/assets/hero-classroom-session.jpg";
 import tutoringImg from "@/assets/tutoring.jpg";
 import lateNightImg from "@/assets/student-late-night.png";
 import locationEntrance from "@/assets/location-entrance.jpg";
@@ -95,7 +95,7 @@ function Hero() {
         className="pointer-events-none absolute inset-0 h-full w-full object-cover object-center opacity-100"
       />
       <div
-        className="pointer-events-none absolute inset-0 bg-gradient-to-r from-background from-0% via-background/90 via-40% to-transparent to-80%"
+        className="pointer-events-none absolute inset-0 bg-gradient-to-r from-background/85 from-0% via-background/55 via-40% to-background/20 to-80%"
         aria-hidden
       />
       <div
