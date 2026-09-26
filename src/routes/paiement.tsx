@@ -77,7 +77,7 @@ function PaymentPage() {
   const taf = operator === "TMoney" ? Math.round(subtotal * 0.1) : 0;
   const total = subtotal + taf;
 
-  const handleRegisterAndPay = (e: React.FormEvent) => {
+    const handleRegisterAndPay = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!operator) {
@@ -97,7 +97,7 @@ function PaymentPage() {
         ? ["Mathématiques"]
         : ["Physique-Chimie"];
 
-    const record = savePublicRegistration({
+    const record = await savePublicRegistration({
       studentName: studentName.trim(),
       parentName: parentName.trim() || "Parent",
       parentPhone: parentPhone.trim(),

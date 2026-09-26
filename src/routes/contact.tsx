@@ -60,7 +60,7 @@ function ContactPage() {
 
   const [confirmationRecord, setConfirmationRecord] = useState<ProgramSignIn | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!parentPhone.trim() || !studentName.trim()) {
       alert("Veuillez renseigner le nom de votre enfant et votre numéro de téléphone (parent).");
@@ -72,7 +72,7 @@ function ContactPage() {
     if (physicsSelected) selectedSubjects.push("Physique-Chimie");
     if (selectedSubjects.length === 0) selectedSubjects.push("Mathématiques");
 
-    const record = savePublicRegistration({
+    const record = await savePublicRegistration({
       studentName: studentName.trim(),
       parentName: parentName.trim() || "Parent",
       parentPhone: parentPhone.trim(),

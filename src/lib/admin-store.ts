@@ -116,7 +116,9 @@ export async function syncFromSupabase(): Promise<ProgramSignIn[]> {
   const localRecords = getSignIns().filter(isPersistedRegistration);
 
   try {
-    await Promise.all(localRecords.map((record) => persistToSupabase(record)));
+    await Promise.all(
+      localRecords.map((record) => persistToSupabase(record).catch((err) => console.warn(err)))
+    );
 
     const { data, error } = await supabase.from("sign_ins").select("*").order("created_at", { ascending: false });
     if (!error && data) {
@@ -141,36 +143,42 @@ export async function syncFromSupabase(): Promise<ProgramSignIn[]> {
 }
 
 async function persistToSupabase(record: ProgramSignIn) {
-  try {
-    const payload = {
-      id: record.id,
-      student_name: record.studentName,
-      parent_name: record.parentName,
-      parent_phone: record.parentPhone,
-      series: record.series,
-      subjects: record.subjects,
-      payment_plan: record.paymentPlan,
-      payment_method: record.paymentMethod,
-      registration_fee_paid: record.registrationFeePaid,
-      tuition_fee_paid: record.tuitionFeePaid,
-      total_amount_due: record.totalAmountDue,
-      status: record.status,
-      saturday_session_included: record.saturdaySessionIncluded,
-      photo_url: record.photoUrl,
-      created_at: record.createdAt,
-      read_by_admin: record.readByAdmin,
-      notes: record.notes,
-    };
-    const { error } = await supabase.from("sign_ins").upsert(payload);
-    if (error) {
-      console.warn("Supabase upsert error:", error.message);
+  const photo =
+    record.photoUrl && record.photoUrl.startsWith("data:") && record.photoUrl.length > 180000
+      ? ""
+      : record.photoUrl || "";
+
+  const payload = {
+    id: record.id,
+    student_name: record.studentName,
+    parent_name: record.parentName,
+    parent_phone: record.parentPhone,
+    series: record.series,
+    subjects: record.subjects,
+    payment_plan: record.paymentPlan,
+    payment_method: record.paymentMethod,
+    registration_fee_paid: record.registrationFeePaid,
+    tuition_fee_paid: record.tuitionFeePaid,
+    total_amount_due: record.totalAmountDue,
+    status: record.status,
+    saturday_session_included: record.saturdaySessionIncluded,
+    photo_url: photo,
+    created_at: record.createdAt,
+    read_by_admin: Boolean(record.readByAdmin),
+    notes: record.notes || "",
+  };
+
+  const { error } = await supabase.from("sign_ins").upsert(payload);
+  if (error) {
+    const { error: retryError } = await supabase.from("sign_ins").upsert({ ...payload, photo_url: "" });
+    if (retryError) {
+      console.warn("Supabase upsert error:", retryError.message);
+      throw retryError;
     }
-  } catch (err) {
-    console.warn("Supabase upsert error:", err);
   }
 }
 
-export function savePublicRegistration(entry: {
+export async function savePublicRegistration(entry: {
   studentName: string;
   parentName: string;
   parentPhone: string;
@@ -180,7 +188,7 @@ export function savePublicRegistration(entry: {
   paymentMethod: "TMoney" | "Moov Money" | "En personne" | "Virement";
   saturdaySessionIncluded?: boolean;
   photoUrl?: string;
-}): ProgramSignIn {
+}): Promise<ProgramSignIn> {
   const current = getSignIns();
   const dateStr = new Date().toISOString().slice(2, 7).replace("-", "");
   const newId = `SK-${dateStr}-${String(current.length + 1).padStart(3, "0")}`;
@@ -224,7 +232,11 @@ export function savePublicRegistration(entry: {
     window.dispatchEvent(new CustomEvent("sk_new_registration", { detail: newRecord }));
   }
 
-  persistToSupabase(newRecord);
+  try {
+    await persistToSupabase(newRecord);
+  } catch (err) {
+    console.warn("Supabase upsert error:", err);
+  }
 
   return newRecord;
 }
