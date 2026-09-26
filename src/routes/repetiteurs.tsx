@@ -3,6 +3,7 @@ import { ArrowRight, BookOpen, ChevronLeft, ChevronRight, GraduationCap, HeartHa
 import { useCallback, useState } from "react";
 import kolouDavid from "@/assets/kolou-david.jpg";
 import kofi from "@/assets/kofi.jpg";
+import teachersBg from "@/assets/repetiteurs-backdrop.jpg";
 import { Reveal } from "@/components/reveal";
 import {
   TutorArcCarousel,
@@ -73,8 +74,18 @@ function TutorsPage() {
 
   return (
     <>
-      <section className="hero-clean-bg border-b border-border/40">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 pb-4 sm:pb-6 pt-8 sm:pt-12 text-center md:pt-16">
+      <section className="hero-clean-bg relative overflow-hidden border-b border-border/40">
+        <img
+          src={teachersBg}
+          alt=""
+          aria-hidden
+          className="pointer-events-none absolute inset-0 h-full w-full object-cover object-[center_35%]"
+        />
+        <div
+          className="pointer-events-none absolute inset-0 bg-gradient-to-b from-background/80 via-background/70 to-background/90"
+          aria-hidden
+        />
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 pb-4 sm:pb-6 pt-8 sm:pt-12 text-center md:pt-16">
           <Reveal>
             <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[color:var(--sage)]">
               Nos répétiteurs
