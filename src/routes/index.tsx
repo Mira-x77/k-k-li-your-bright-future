@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react";
 import heroImg from "@/assets/hero-students-group.jpg";
 import heroVideo from "@/assets/hero-highlight.mp4";
 import classroomBg from "@/assets/hero-classroom-session.jpg";
-import tutoringImg from "@/assets/tutoring.jpg";
+import classroomTables from "@/assets/classroom-tables.jpg";
 import lateNightImg from "@/assets/student-late-night.png";
 import locationEntrance from "@/assets/location-entrance.jpg";
 import locationClassroom from "@/assets/location-classroom.jpg";
@@ -348,8 +348,8 @@ function FinalCTA() {
         <Reveal anim="left">
           <div className="overflow-hidden rounded-[2rem] border border-border shadow-[var(--shadow-warm)]">
             <img
-              src={tutoringImg}
-              alt="Séance de tutorat"
+              src={classroomTables}
+              alt="Répétiteur auprès des élèves autour des pupitres, pendant une séance"
               className="h-full w-full object-cover"
               loading="lazy"
               width={1400}

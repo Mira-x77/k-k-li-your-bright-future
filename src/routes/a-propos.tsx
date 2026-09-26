@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, BadgeCheck, HeartHandshake, MapPin, Sparkles } from "lucide-react";
-import tutoringImg from "@/assets/tutoring.jpg";
+import classroomTables from "@/assets/classroom-tables.jpg";
 import studentImg from "@/assets/student-at-desk.jpg";
 import { Reveal } from "@/components/reveal";
 import { CallbackCta, SectionHeading } from "@/components/marketing";
@@ -67,8 +67,8 @@ function AboutPage() {
           <div className="relative">
             <div className="overflow-hidden rounded-[2rem] border border-border shadow-[var(--shadow-warm)]">
               <img
-                src={tutoringImg}
-                alt="Jeunes gens réunis autour d'une table, penchés sur des livres et des cahiers ouverts"
+                src={classroomTables}
+                alt="Répétiteur auprès des élèves autour des pupitres, pendant une séance"
                 className="h-full w-full object-cover"
                 loading="lazy"
                 width={1400}
