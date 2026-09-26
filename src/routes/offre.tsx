@@ -12,7 +12,7 @@ import {
   Target,
 } from "lucide-react";
 import { useState } from "react";
-import studyGroupImg from "@/assets/study-group-library.png";
+import studyGroupImg from "@/assets/classroom-tables.jpg";
 import offerBg from "@/assets/samedi-offre-backdrop.jpg";
 import { Reveal } from "@/components/reveal";
 import {
@@ -324,7 +324,7 @@ function OffrePage() {
             <div className="relative mx-auto w-full max-w-md overflow-hidden rounded-3xl ring-1 ring-border shadow-[var(--shadow-warm)]">
               <img
                 src={studyGroupImg}
-                alt="Trois élèves assis à une table de bibliothèque devant un ordinateur portable, l'un montrant un détail à l'écran"
+                alt="Répétiteur auprès des élèves, autour des pupitres, pendant une séance"
                 className="aspect-[3/2] w-full object-cover"
                 loading="lazy"
                 width={630}

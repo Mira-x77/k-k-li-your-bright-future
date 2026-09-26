@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, CheckCircle2, ShieldCheck, Sparkles, Smartphone } from "lucide-react";
 import { Reveal } from "@/components/reveal";
 import { CallbackCta, FaqSection, type FaqItem } from "@/components/marketing";
+import paymentBg from "@/assets/payment-calculator.jpg";
 
 export const Route = createFileRoute("/tarifs")({
   head: () => ({
@@ -70,13 +71,20 @@ function TarifsPage() {
 
   return (
     <>
-      <section className="hero-clean-bg border-b border-border/50">
-        <div className="mx-auto max-w-7xl px-6 py-16 text-center md:py-20">
+      <section className="hero-clean-bg relative overflow-hidden border-b border-border/50">
+        <img
+          src={paymentBg}
+          alt=""
+          aria-hidden
+          className="pointer-events-none absolute inset-0 h-full w-full object-cover object-center"
+        />
+        <div className="pointer-events-none absolute inset-0 bg-background/25" aria-hidden />
+        <div className="relative mx-auto max-w-7xl px-6 py-16 text-center md:py-20">
           <Reveal>
             <div className="text-xs font-bold uppercase tracking-[0.24em] text-[color:var(--sun-deep)]">
               Grille Tarifaire Offiicielle
             </div>
-            <h1 className="mx-auto mt-4 max-w-3xl text-4xl font-black leading-[1.05] tracking-tight sm:text-5xl md:text-6xl">
+            <h1 className="mx-auto mt-4 max-w-3xl text-4xl font-black leading-[1.05] tracking-tight sm:text-5xl md:text-6xl drop-shadow-[0_2px_10px_rgba(255,252,245,0.9)]">
               Des tarifs clairs pour l'excellence scientifique
             </h1>
             <p className="mx-auto mt-5 max-w-2xl text-muted-foreground">

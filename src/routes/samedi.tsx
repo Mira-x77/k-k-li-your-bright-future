@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, BookOpen, CalendarDays, Check, Clock, Target, Users } from "lucide-react";
-import groupTableImg from "@/assets/study-group-table.png";
+import groupTableImg from "@/assets/classroom-tables.jpg";
 import saturdayBg from "@/assets/samedi-offre-backdrop.jpg";
 import { SESSION_STEPS as SEANCE_STEPS } from "@/components/marketing";
 import { Reveal } from "@/components/reveal";
@@ -131,7 +131,7 @@ function SamediPage() {
             <div className="relative mx-auto w-full max-w-sm overflow-hidden rounded-[2rem] ring-1 ring-border shadow-[var(--shadow-warm)]">
               <img
                 src={groupTableImg}
-                alt="Quatre élèves réunis autour d'une table ronde avec un ordinateur portable, des cahiers et des tasses, en train de travailler ensemble"
+                alt="Répétiteur auprès des élèves autour des tables, pendant une séance du samedi"
                 className="aspect-[3/4] w-full object-cover"
                 loading="lazy"
                 width={735}

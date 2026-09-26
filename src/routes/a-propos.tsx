@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, BadgeCheck, HeartHandshake, MapPin, Sparkles } from "lucide-react";
 import tutoringImg from "@/assets/tutoring.jpg";
-import studentImg from "@/assets/hero-student.jpg";
+import studentImg from "@/assets/student-at-desk.jpg";
 import { Reveal } from "@/components/reveal";
 import { CallbackCta, SectionHeading } from "@/components/marketing";
 
@@ -168,7 +168,7 @@ function AboutPage() {
               <div className="relative mx-auto w-full max-w-sm overflow-hidden rounded-[2rem] ring-1 ring-border shadow-[var(--shadow-warm)]">
                 <img
                   src={studentImg}
-                  alt="Élève souriant assis à son bureau, un stylo à la main, devant un cahier ouvert"
+                  alt="Élève concentré à son pupitre, en train d'écrire dans son cahier"
                   className="aspect-square w-full object-cover"
                   loading="lazy"
                   width={900}
