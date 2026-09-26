@@ -67,8 +67,8 @@ export function DeleteStudentButton({ student, appearance = "icon", onDeleted }:
           <AlertDialogHeader>
             <AlertDialogTitle>Supprimer cette inscription ?</AlertDialogTitle>
             <AlertDialogDescription className="text-slate-400">
-              {student.studentName} ({student.id}) sera retiré du registre admin et de la base partagée. Cette action
-              ne peut pas être annulée.
+              {student.studentName} ({student.id}) sera retiré du registre admin et supprimé de la base Supabase.
+              Cette action ne peut pas être annulée.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

@@ -86,15 +86,20 @@ function Hero() {
     if (!video) return;
 
     const playWithSound = () => {
+      video.loop = true;
       video.muted = false;
       video.volume = 1;
+      if (video.ended) video.currentTime = 0;
       void video.play().catch(() => {});
     };
 
+    video.loop = true;
+    video.addEventListener("ended", playWithSound);
     playWithSound();
     window.addEventListener("pointerdown", playWithSound, { once: true });
     window.addEventListener("keydown", playWithSound, { once: true });
     return () => {
+      video.removeEventListener("ended", playWithSound);
       window.removeEventListener("pointerdown", playWithSound);
       window.removeEventListener("keydown", playWithSound);
     };

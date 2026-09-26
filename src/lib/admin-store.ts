@@ -132,24 +132,27 @@ function rememberDeletedId(id: string) {
   localStorage.setItem(DELETED_KEY, JSON.stringify([...ids].slice(-500)));
 }
 
+function isRecentUnsynced(record: ProgramSignIn): boolean {
+  const created = Date.parse(record.createdAt);
+  return Number.isFinite(created) && Date.now() - created < 10 * 60 * 1000;
+}
+
+async function deleteRemoteSignIn(id: string) {
+  const { error } = await supabase.from("sign_ins").delete().eq("id", id).select("id");
+  if (error) throw error;
+}
+
 export async function syncFromSupabase(): Promise<ProgramSignIn[]> {
   if (typeof window === "undefined") return getSignIns();
   const deletedIds = getDeletedIds();
   const localRecords = getSignIns().filter(isPersistedRegistration).filter((record) => !deletedIds.has(record.id));
 
   try {
-    await Promise.all([
-      ...localRecords.map((record) => persistToSupabase(record).catch((err) => console.warn(err))),
-      ...[...deletedIds].map((id) =>
-        supabase
-          .from("sign_ins")
-          .delete()
-          .eq("id", id)
-          .then(({ error }) => {
-            if (error) console.warn("Supabase delete retry:", error.message);
-          })
-      ),
-    ]);
+    await Promise.all(
+      [...deletedIds].map((id) =>
+        deleteRemoteSignIn(id).catch((err) => console.warn("Supabase delete retry:", err))
+      )
+    );
 
     const { data, error } = await supabase.from("sign_ins").select("*").order("created_at", { ascending: false });
     if (!error && data) {
@@ -157,9 +160,16 @@ export async function syncFromSupabase(): Promise<ProgramSignIn[]> {
         .map(sanitizeRecord)
         .filter(isPersistedRegistration)
         .filter((record) => !deletedIds.has(record.id));
+      const remoteIds = new Set(remote.map((record) => record.id));
+
+      const pendingUploads = localRecords.filter(
+        (record) => !remoteIds.has(record.id) && isRecentUnsynced(record)
+      );
+      await Promise.all(pendingUploads.map((record) => persistToSupabase(record).catch((err) => console.warn(err))));
+
       const byId = new Map<string, ProgramSignIn>();
       for (const record of remote) byId.set(record.id, record);
-      for (const record of localRecords) {
+      for (const record of pendingUploads) {
         if (!byId.has(record.id)) byId.set(record.id, record);
       }
       const merged = [...byId.values()].sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
@@ -325,20 +335,24 @@ export function addSignIn(newEntry: Omit<ProgramSignIn, "id" | "createdAt">): Pr
 }
 
 export async function deleteSignIn(id: string): Promise<ProgramSignIn[]> {
-  rememberDeletedId(id);
-  const updated = getSignIns().filter((item) => item.id !== id);
+  const targetId = String(id || "").trim();
+  rememberDeletedId(targetId);
+  const updated = getSignIns().filter((item) => item.id !== targetId);
   if (typeof window !== "undefined") {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
     window.dispatchEvent(new CustomEvent("sk_data_updated"));
   }
 
-  try {
-    const { error } = await supabase.from("sign_ins").delete().eq("id", id);
-    if (error) {
-      console.warn("Supabase delete error:", error.message);
-    }
-  } catch (err) {
-    console.warn("Supabase delete error:", err);
+  await deleteRemoteSignIn(targetId);
+  const { data: leftover, error: leftoverError } = await supabase
+    .from("sign_ins")
+    .select("id")
+    .eq("id", targetId);
+  if (leftoverError) {
+    throw leftoverError;
+  }
+  if (leftover && leftover.length > 0) {
+    throw new Error("L'inscription est encore présente sur le serveur.");
   }
 
   return updated;
