@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useRef } from "react";
 import heroImg from "@/assets/hero-students-group.jpg";
 import heroVideo from "@/assets/hero-highlight.mp4";
 import classroomBg from "@/assets/hero-classroom-session.jpg";
@@ -9,14 +10,11 @@ import locationClassroom from "@/assets/location-classroom.jpg";
 import locationBuilding from "@/assets/location-building.png";
 import {
   ArrowRight,
-  Award,
   BookOpen,
   GraduationCap,
-  Lightbulb,
   Phone,
   MapPin,
   ShieldCheck,
-  Target,
   Users,
 } from "lucide-react";
 import { Reveal } from "@/components/reveal";
@@ -80,13 +78,28 @@ const HERO_FEATURES = [
   },
 ];
 
-const FLOATING_BADGES = [
-  { icon: Lightbulb, className: "left-0 top-8 bg-emerald-100 text-emerald-700" },
-  { icon: Award, className: "right-4 top-16 bg-violet-100 text-violet-700" },
-  { icon: Target, className: "bottom-16 left-1/4 bg-orange-100 text-orange-700" },
-];
-
 function Hero() {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const playWithSound = () => {
+      video.muted = false;
+      video.volume = 1;
+      void video.play().catch(() => {});
+    };
+
+    playWithSound();
+    window.addEventListener("pointerdown", playWithSound, { once: true });
+    window.addEventListener("keydown", playWithSound, { once: true });
+    return () => {
+      window.removeEventListener("pointerdown", playWithSound);
+      window.removeEventListener("keydown", playWithSound);
+    };
+  }, []);
+
   return (
     <section className="hero-clean-bg relative overflow-hidden">
       <img
@@ -138,9 +151,9 @@ function Hero() {
             <div className="relative mx-auto max-w-md lg:max-w-none lg:mx-0">
               <div className="relative overflow-hidden rounded-[2rem] bg-card/40 shadow-[var(--shadow-soft)]">
                 <video
+                  ref={videoRef}
                   className="aspect-[4/5] w-full object-cover"
                   autoPlay
-                  muted
                   loop
                   playsInline
                   poster={heroImg}
@@ -149,14 +162,6 @@ function Hero() {
                   <source src={heroVideo} type="video/mp4" />
                 </video>
               </div>
-              {FLOATING_BADGES.map(({ icon: Icon, className }, i) => (
-                <div
-                  key={i}
-                  className={`absolute flex h-14 w-14 items-center justify-center rounded-2xl shadow-[var(--shadow-soft)] ${className}`}
-                >
-                  <Icon className="h-6 w-6" strokeWidth={1.75} />
-                </div>
-              ))}
             </div>
           </Reveal>
         </div>
